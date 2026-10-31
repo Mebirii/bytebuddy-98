@@ -1,0 +1,19 @@
+{
+  "name": "ByteBuddy ’98 — Mon compagnon virtuel",
+  "short_name": "ByteBuddy ’98",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101d29",
+  "theme_color": "#101d29",
+  "description": "Élève ton monstre numérique avec sons et alertes.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
