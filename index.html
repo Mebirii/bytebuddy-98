@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-  <title>ByteBuddy '98 — V0.5 • Édition Console</title>
+  <title>ByteBuddy '98 — V0.6 • Scènes animées</title>
   <style>
     :root{--bg:#101d29;--bg2:#192c39;--ink:#f1f1e8;--muted:#9fb5bf;--accent:#ffe07b;--mint:#80e0c4;--panel:#1c2d3b;--line:#35515c;--screen:#c5d9a2;--screen-dark:#344a34;--screen-mid:#64815a;--red:#ff8b84;--gold:#f9ca69}
     *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;min-height:100vh;background:radial-gradient(ellipse at 20% 0%,#2b4c55 0%,transparent 43%),radial-gradient(ellipse at 90% 80%,#233c57 0%,transparent 48%),#101d29;overflow-x:hidden}
@@ -213,6 +213,20 @@
       .pad-label{font-size:9px}.aside-note{margin-top:13px}
     }
     @media(max-width:360px){.screen{height:415px}.lcd-app .actions{grid-template-columns:repeat(2,minmax(0,1fr))}.lcd-menu-grid button{height:72px}.screen .modal{padding:9px}}
+    /* V0.6 — Full-LCD animated care sequences. No new game state or save keys. */
+    .activity-scene{position:absolute;inset:0;z-index:60;display:none;overflow:hidden;background:#cfdfb2;color:#324e36;isolation:isolate}
+    .activity-scene.active{display:block}
+    .activity-title{position:absolute;top:0;left:0;right:0;z-index:2;padding:13px 14px 10px;min-height:52px;background:#e6efcb;border-bottom:3px solid #829d75;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;letter-spacing:1px;font-weight:1000}
+    .activity-title small{font-size:9px;letter-spacing:0;color:#526f50;text-align:right}
+    .activity-scene canvas{position:absolute;inset:52px 0 70px;width:100%;height:calc(100% - 122px);image-rendering:pixelated;image-rendering:crisp-edges}
+    .activity-bottom{position:absolute;bottom:0;left:0;right:0;min-height:70px;background:#e5efc7;border-top:3px solid #829d75;padding:8px 12px;display:grid;grid-template-columns:1fr auto;grid-template-rows:18px 8px;gap:7px 10px;align-items:center}
+    .activity-message{font-size:11px;font-weight:1000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:18px}
+    .activity-skip{grid-column:2;grid-row:1/3;border:2px solid #547956;border-radius:5px;color:#effbdc;background:#345f44;font-weight:1000;font-size:10px;letter-spacing:.2px;padding:9px 10px;min-height:40px}
+    .activity-progress{grid-column:1;grid-row:2;height:8px;border:1px solid #789675;background:#aabc91;overflow:hidden;border-radius:2px}
+    .activity-progress>div{height:100%;width:0;background:#496e4b;transition:width .08s linear}
+    .screen:has(.activity-scene.active) .toast{opacity:0;pointer-events:none}
+    @media(max-width:510px){.activity-title{font-size:12px;padding:12px 10px}.activity-message{font-size:10px}.activity-skip{padding:7px 9px}}
+    @media(prefers-reduced-motion:reduce){.activity-progress>div{transition:none}}
     @media(prefers-reduced-motion:reduce){.lcd-menu-grid button{transition:none}}
 
   </style>
@@ -221,9 +235,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● CONSOLE EDITION / 0.5</div>
+    <div class="edition">● ANIMATION EDITION / 0.6</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.5</strong> — 16 formes · héritages génétiques · œufs rares · arbre de famille · arène tactique</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.6</strong> — scènes de repas et entraînement animées · élevage vivant · 16 formes · arène tactique</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -240,6 +254,11 @@
                 <button type="button" data-action="feed" class="lcd-quick">🍖 NOURRIR</button>
                 <button type="button" data-action="play" class="lcd-quick">🎾 JOUER</button>
               </div>
+            </section>
+            <section class="activity-scene" id="activityScene" aria-label="Animation de la créature" aria-live="off">
+              <div class="activity-title"><span id="activityTitle">ACTIVITÉ</span><small id="activityStep">PRÉPARATION</small></div>
+              <canvas id="activityCanvas" width="240" height="230" aria-label="Scène animée pixel art"></canvas>
+              <div class="activity-bottom"><span id="activityMessage" class="activity-message">C'EST PARTI !</span><div class="activity-progress" aria-hidden="true"><div id="activityProgress"></div></div><button id="activitySkip" type="button" class="activity-skip" aria-label="Terminer l'animation">PASSER ↪</button></div>
             </section>
             <div id="lcdApp" class="lcd-app" aria-live="off"><div id="lcdViewHeading" class="lcd-view-heading"></div></div>
             <section id="lcdMenu" class="lcd-menu" aria-label="Menu du jeu">
@@ -424,7 +443,7 @@
     }else if(type==='clean'){
       state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');notify('🫧 Tout propre ! +35 hygiène');
     }else{return}
-    actionFx={type,until:Date.now()+850};evolve();save();render();
+    const actorForm=state.form;actionFx={type,until:Date.now()+850};evolve();save();render();startActivityScene(type,actorForm);
   }
   function availablePartners(){
     const unique=new Map(travelers.map(p=>[p.id,p]));
@@ -648,7 +667,7 @@
       for(let i=0;i<18;i++){const angle=i*Math.PI*2/18+elapsed*.07;const radius=27+(elapsed%35)*1.3;const x=120+Math.cos(angle)*radius,y=92+Math.sin(angle)*radius*.6;ctx.fillStyle=i%2?'#415c3f':'#718a62';ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,6,6)}
     }
     if(state.health<25&&state.stage>0){ctx.font='bold 18px monospace';ctx.fillStyle='#3b563d';ctx.fillText('!',165,110)}
-    requestAnimationFrame(paint);
+    drawActivityScene(t);requestAnimationFrame(paint);
   }
   const metrics=[['fullness','SATIÉTÉ'],['energy','ÉNERGIE'],['joy','MORAL'],['hygiene','HYGIÈNE'],['health','SANTÉ']];
   function renderDaily(){
@@ -865,12 +884,94 @@
   app.appendChild(dashboard);
   // Move existing dialogs inside the handheld; original game handlers stay intact.
   screen.append($('battleOverlay'),$('helpOverlay'),$('toast'));
+  // V0.6 — The pet acts inside the actual handheld LCD, not in an external dialog.
+  const activityCanvas=$('activityCanvas'),activityCtx=activityCanvas.getContext('2d');
+  const activitySprite=document.createElement('canvas');activitySprite.width=100;activitySprite.height=100;
+  const activitySpecs={
+    feed:{title:'🍖 REPAS',messages:['UN PETIT CREUX...','MIAM, MIAM !','REPAS TERMINÉ !'],result:'+30 SATIÉTÉ',duration:3400},
+    train:{title:'🥊 ENTRAÎNEMENT',messages:['ÉCHAUFFEMENT','1 · 2 · 3... FRAPPE !','PLUS FORT !'],result:'+1 ENTRAÎNEMENT · +4 BITS',duration:4000},
+    play:{title:'🎾 JEU',messages:['ON JOUE ?','ATTRAPE LA BALLE !','SUPER PARTIE !'],result:'+27 MORAL · +2 BITS',duration:3200},
+    clean:{title:'🫧 DOUCHE',messages:['PRÉPARATION','SPLASH !','TOUT PROPRE !'],result:'+35 HYGIÈNE',duration:3200},
+    heal:{title:'💊 SOINS',messages:['PETIT REMÈDE...','LES FORCES REVIENNENT','BON RÉTABLISSEMENT !'],result:'+45 PV',duration:3100}
+  };
+  let activitySceneState=null;
+  const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  function startActivityScene(type,actorForm){
+    const spec=activitySpecs[type];if(!spec)return;
+    activitySceneState={type,form:actorForm||state.form,start:performance.now(),duration:reducedMotion?.matches?1600:spec.duration};
+    $('activityTitle').textContent=spec.title;$('activityStep').textContent='00%';$('activityMessage').textContent=spec.messages[0];$('activityProgress').style.width='0%';
+    $('activityScene').classList.add('active');$('activityScene').setAttribute('aria-live','off');
+    // The action's effects have already been saved by the original V0.5 logic.
+  }
+  function finishActivityScene(){
+    if(!activitySceneState)return;
+    const result=activitySpecs[activitySceneState.type]?.result;
+    activitySceneState=null;$('activityScene').classList.remove('active');
+    if(result)notify('✓ '+result);
+  }
+  $('activitySkip').addEventListener('click',finishActivityScene);
+  const dark='#344e39',mid='#68835c',light='#92ad79',pale='#dceac0';
+  function activityRect(x,y,w,h,color){activityCtx.fillStyle=color;activityCtx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+  function activityText(label,x,y,size=11){activityCtx.fillStyle=dark;activityCtx.font=`900 ${size}px monospace`;activityCtx.textAlign='center';activityCtx.fillText(label,x,y);activityCtx.textAlign='left'}
+  function drawActivityScene(t){
+    const a=activitySceneState;if(!a)return;
+    const spec=activitySpecs[a.type],elapsed=Math.max(0,t-a.start),p=Math.min(1,elapsed/a.duration);
+    if(p>=1){finishActivityScene();return;}
+    const frame=Math.floor(elapsed/115),phase=(p<.33?0:p<.76?1:2),bounce=Math.abs(Math.sin(t/190));
+    $('activityStep').textContent=`${Math.round(p*100)}%`;
+    const msg=a.type==='train'&&phase===1?`RÉPÉTITION ${Math.min(3,Math.floor((p-.33)*7)+1)} / 3`:spec.messages[phase];
+    if($('activityMessage').textContent!==msg)$('activityMessage').textContent=msg;
+    $('activityProgress').style.width=`${p*100}%`;
+    const c=activityCtx; c.imageSmoothingEnabled=false;
+    // Pixel scenery shared by all activity episodes.
+    activityRect(0,0,240,230,'#cbdcaf');activityRect(0,184,240,46,'#afc795');activityRect(0,182,240,3,'#668960');
+    for(let i=0;i<11;i++){activityRect((i*31+13)%236,191+i%3*7,7,3,'#83a376')}
+    activityRect(13,31,23,4,'#9fb98a');activityRect(18,26,13,5,'#9fb98a');activityRect(195,53,27,5,'#9fb98a');
+    // Show the user's actual species, including rare evolutions, in each animation.
+    drawPixelCreature(activitySprite,a.form,t,{still:a.type==='feed'||a.type==='heal'});
+    if(a.type==='feed'){
+      // Food bowl is progressively emptied as the companion takes bites.
+      activityRect(160,158,51,7,dark);activityRect(164,165,43,15,mid);activityRect(171,176,28,5,dark);
+      const bites=Math.min(4,Math.floor(Math.max(0,p-.15)*6));
+      for(let i=0;i<5-bites;i++){const x=168+i*8,y=149-(i%2)*7-Math.abs(Math.sin(t/175+i))*2;activityRect(x,y,6,7,dark);activityRect(x+1,y+1,4,4,light)}
+      const munch=p>.12&&p<.87&&Math.floor(t/220)%2===0;
+      c.drawImage(activitySprite,0,0,100,100,37+(munch?9:0),74+(munch?5:0),126,126);
+      if(munch){activityRect(146,133,9,4,dark);activityRect(152,132,4,4,light)}
+      for(let i=0;i<3;i++){const s=(elapsed/550+i*.4)%1;activityText(['♥','✦','♥'][i],114+i*21,70-s*25,12)}
+      activityText('BON APPÉTIT !',120,28,12);
+    }else if(a.type==='train'){
+      // Punching bag reacts to each impact; the creature lunges towards it.
+      const strike=phase===1&&Math.sin(elapsed/160)>0.35;
+      const sway=strike?Math.sin(elapsed/85)*8:Math.sin(elapsed/290)*2;
+      activityRect(195,44,5,27,dark);activityRect(188+sway,70,24,12,dark);activityRect(183+sway,82,34,74,dark);activityRect(187+sway,87,26,62,mid);activityRect(191+sway,151,18,5,dark);activityRect(195+sway,156,5,27,dark);
+      activityRect(183+sway,109,34,3,light);activityRect(183+sway,128,34,3,light);
+      c.drawImage(activitySprite,0,0,100,100,22+(strike?20:0),81-(strike?6:Math.round(bounce*6)),131,131);
+      if(strike){activityText('✦',175,108,23);activityText('!',167,127,17);for(let i=0;i<4;i++)activityRect(164+i*4,118-i*5,5,3,dark)}
+      if(p<.30){activityText('PRÊT ?',120,29,13)}else{activityText('ALLEZ !',120,29,13)}
+      activityRect(10,199,Math.round(p*218),5,dark);
+    }else if(a.type==='play'){
+      c.drawImage(activitySprite,0,0,100,100,41,77-Math.round(bounce*10),130,130);
+      const bx=178+Math.sin(t/380)*27,by=167-Math.abs(Math.sin(t/260))*56;
+      activityRect(bx-13,by-12,26,24,dark);activityRect(bx-9,by-9,18,18,light);activityRect(bx-2,by-12,4,24,dark);
+      activityText('♪',172,76-Math.sin(t/300)*8,21);activityText('ATTRAPE !',120,27,13);
+    }else if(a.type==='clean'){
+      c.drawImage(activitySprite,0,0,100,100,53,81,134,134);
+      activityRect(67,28,112,6,dark);activityRect(112,29,8,16,dark);activityRect(105,42,25,5,mid);
+      for(let i=0;i<13;i++){const x=67+((i*19+frame)%112),y=54+((i*37+frame*8)%122);activityRect(x,y,4+(i%3)*2,6,mid)}
+      for(let i=0;i<8;i++){let yy=177-((frame*3+i*19)%145);const xx=35+i*25+Math.sin(t/400+i)*5;activityRect(xx,yy,9,9,pale);activityRect(xx+2,yy+2,4,4,light)}
+      activityText('SPLASH !',120,22,13);
+    }else if(a.type==='heal'){
+      c.drawImage(activitySprite,0,0,100,100,53,79-Math.round(bounce*3),134,134);
+      for(let i=0;i<7;i++){const an=t/600+i*Math.PI*2/7,rad=57+Math.sin(t/300+i)*6;const x=120+Math.cos(an)*rad,y=134+Math.sin(an)*rad*.65;activityRect(x-2,y-9,5,22,mid);activityRect(x-10,y,21,5,mid)}
+      activityText('+ SANTÉ +',120,24,13);activityText('♥',189,72,25);
+    }
+  }
   function showScreen(name){
-    if(!orderedScreens.includes(name))return;
+    if(!orderedScreens.includes(name)||activitySceneState)return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.5 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.6 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -889,7 +990,7 @@
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.5 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.6 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // Keep original rendering/data logic intact; mirror its state into the console header.
   showScreen('home');
@@ -900,9 +1001,10 @@
   $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
   $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
   const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
-  $('leftBtn').addEventListener('click',()=>navigate(-1));
-  $('rightBtn').addEventListener('click',()=>navigate(1));
+  $('leftBtn').addEventListener('click',()=>activitySceneState?finishActivityScene():navigate(-1));
+  $('rightBtn').addEventListener('click',()=>activitySceneState?finishActivityScene():navigate(1));
   $('middleBtn').addEventListener('click',()=>{
+    if(activitySceneState){finishActivityScene();return;}
     if(activeScreen==='home'){if(state.stage===0)hatch();else showScreen('care')}
     else if(activeScreen==='menu')showScreen('stats');
     else if(activeScreen==='arena')startBattle();
@@ -911,6 +1013,7 @@
     else showScreen('menu');
   });
   document.addEventListener('keydown',e=>{
+    if(activitySceneState){if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();finishActivityScene();}return;}
     if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
     if(!e.altKey&&!e.ctrlKey&&!e.metaKey&&['ArrowLeft','ArrowRight'].includes(e.key)){
       if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
