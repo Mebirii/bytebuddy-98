@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-  <title>ByteBuddy '98 — V0.6.1 • Animations automatiques</title>
+  <title>ByteBuddy '98 — V0.7 • Sons & Alertes</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ByteBuddy '98" />
   <style>
     :root{--bg:#101d29;--bg2:#192c39;--ink:#f1f1e8;--muted:#9fb5bf;--accent:#ffe07b;--mint:#80e0c4;--panel:#1c2d3b;--line:#35515c;--screen:#c5d9a2;--screen-dark:#344a34;--screen-mid:#64815a;--red:#ff8b84;--gold:#f9ca69}
     *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;min-height:100vh;background:radial-gradient(ellipse at 20% 0%,#2b4c55 0%,transparent 43%),radial-gradient(ellipse at 90% 80%,#233c57 0%,transparent 48%),#101d29;overflow-x:hidden}
@@ -229,13 +233,20 @@
     @media(prefers-reduced-motion:reduce){.activity-progress>div{transition:none}}
     @media(prefers-reduced-motion:reduce){.lcd-menu-grid button{transition:none}}
 
+  
+    /* Sound and notifications controls live entirely in the LCD. */
+    .bb-setting{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:9px;margin:11px 0;padding:10px;border:2px solid #94b08b;background:#d4e6b8;border-radius:7px;color:#34543c;font-size:11px}
+    .bb-setting strong{font-size:11px}.bb-setting input[type="range"]{accent-color:#315f46;min-width:120px;max-width:175px}
+    .bb-setting-help{font-size:10px;line-height:1.55;color:#45644a;margin:11px 0}
+    #settingsPanel .primary{font-size:10px;padding:8px;min-height:36px;white-space:normal;flex-shrink:0}
+    #settingsPanel .tiny-btn{min-height:37px;margin-bottom:9px}
   </style>
 </head>
 <body>
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● ANIMATION EDITION / 0.6.1</div>
+    <div class="edition">● SOUND EDITION / 0.7</div>
   </header>
   <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.6</strong> — scènes de repas et entraînement animées · élevage vivant · 16 formes · arène tactique</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
@@ -272,7 +283,7 @@
                 <button type="button" data-view="lab"><span>🥚</span>LABO</button>
                 <button type="button" data-view="dex"><span>▦</span>BESTIAIRE</button>
                 <button type="button" data-view="journal"><span>▤</span>JOURNAL</button>
-                <button type="button" id="menuHelp"><span>?</span>AIDE</button>
+                <button type="button" data-view="settings"><span>♫</span>SON / ALERTES</button><button type="button" id="menuHelp"><span>?</span>AIDE</button>
               </div>
               <div class="lcd-menu-tip">◀ ▶ NAVIGUER • ● VALIDER</div>
             </section>
@@ -324,6 +335,16 @@
       </section>
       <section class="panel"><div class="panel-header"><h2>07 / BESTIAIRE PIXEL</h2><span class="section-number" id="dexCount">0 / 16</span></div><p class="section-desc">Les formes découvertes restent dans le bestiaire, même après une nouvelle génération. Les silhouettes cachent des secrets…</p><div id="dexGrid" class="dex-grid"></div></section>
       <section class="panel"><div class="panel-header"><h2>08 / CARNET DE BORD</h2><span class="section-number">DERNIERS ÉVÉNEMENTS</span></div><ul class="journal" id="journal" aria-live="polite"></ul><div class="footer-actions"><button class="tiny-btn" type="button" id="helpBtn">? COMMENT JOUER</button><button class="tiny-btn" type="button" id="exportBtn">↓ SAUVEGARDE</button><button class="tiny-btn" type="button" id="importBtn">↑ RESTAURER</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="tiny-btn" type="button" id="resetBtn">↺ NOUVELLE PARTIE</button></div></section>
+      <section class="panel" id="settingsPanel">
+        <div class="panel-header"><h2>09 / SON & ALERTES</h2><span class="section-number">PRÉFÉRENCES</span></div>
+        <div class="bb-setting"><strong>♫ EFFETS SONORES 8-BIT</strong><button type="button" id="soundSwitch" class="primary">🔊 SON ACTIVÉ</button></div>
+        <label class="bb-setting" for="soundVolume"><strong>VOLUME</strong><input id="soundVolume" type="range" min="0" max="100" step="5" value="45" /></label>
+        <button type="button" class="tiny-btn" id="testSound">♫ ÉCOUTER UN SON</button>
+        <div class="bb-setting"><strong>🔔 ALERTES DU MONSTRE</strong><button type="button" id="enableNotifications" class="primary">ACTIVER</button></div>
+        <p id="notificationStatus" class="bb-setting-help" aria-live="polite">Les alertes sont désactivées.</p>
+        <button type="button" class="tiny-btn" id="testNotification">🔔 ENVOYER UNE NOTIFICATION TEST</button>
+        <p class="bb-setting-help">Alertes faim, santé, fatigue et hygiène quand le jeu reste ouvert en arrière-plan. Pour les recevoir même avec le jeu fermé, il faudra un service push distant. Sur iPhone, ajoute ByteBuddy à l’écran d’accueil depuis Safari.</p>
+      </section>
     </section>
   </section>
   <footer class="foot">BYTEBUDDY '98 — V0.5 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
@@ -408,7 +429,7 @@
   }
   function evolve(){
     if(state.stage===1&&state.care>=7){
-      const next=rookieRoute();state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`✦ ÉVOLUTION : ${names[next]} ! +15 Bits`);
+      const next=rookieRoute();state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`✦ ÉVOLUTION : ${names[next]} ! +15 Bits`);playSound('evolve');
     }else if(state.stage===2&&state.care>=24&&state.wins>=3){
       let next=state.form+'2';
       // To reveal a secret, the player needs to win enough before the usual evolution.
@@ -417,16 +438,16 @@
       if(state.genetics?.mutation==='prisme'&&state.wins>=5)next='prism';
       if(state.genetics?.mutation==='aurore'&&state.wins>=5)next='auror';
       if(!names[next])next='volt2';
-      state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`★ ÉVOLUTION : ${names[next]} ! +50 Bits`);
+      state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`★ ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
     }
   }
-  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');actionFx={type:'evolve',until:Date.now()+2200};save();render()}
+  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};save();render()}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
     if(activitySceneState)return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
-      state.sleeping=!state.sleeping;log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();return;
+      state.sleeping=!state.sleeping;log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();playSound('sleep');return;
     }
     if(state.sleeping){notify('Il dort. Réveille-le avant de jouer !');return}
     if(state.health<=0 && type!=='heal'){notify('Ton compagnon est épuisé. Il lui faut des soins !');return}
@@ -814,7 +835,7 @@
       fight.enemyHp=Math.max(0,fight.enemyHp-dmg);
       if(move==='special'){state.energy=CLAMP(state.energy-10);fight.focus=0}
       else fight.focus=Math.min(3,fight.focus+1);
-      battleFx('enemy',types[state.form]);
+      battleFx('enemy',types[state.form]);playSound(move==='special'?'special':'hit');
       const attackName=move==='special'?(signature[types[state.form]]||signature.neutre)[1]:'FRAPPE PIXEL';
       const effLabel=eff>1?' • SUPER EFFICACE':eff<1?' • Résistance ennemie':'';
       msg=`${attackName} : -${dmg} PV${critical?' • CRITIQUE':''}${effLabel}${guardFactor<.5?' • Bloqué par la garde':''}`;
@@ -848,6 +869,7 @@
     },570);
   }
   function finishFight(won){if(!fight)return;fight.done=true;fight.won=won;
+    playSound(won?'victory':'defeat');
     if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=fight.ownHp;state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('🏆 Victoire dans l’arène !');evolve()}
     else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';battleHistory('☾ Défaite : soigne ton compagnon.');notify('💔 Défaite : pense à le soigner !')}
     $('battleHeading').textContent=won?'★ VICTOIRE !':'COMBAT TERMINÉ';fight.busy=false;updateFight();save();render();
@@ -879,9 +901,9 @@
   const app=$('lcdApp');
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
-  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal'];
-  const headings={home:'MON COMPAGNON',stats:'♥ ÉTAT DU MONSTRE',care:'🍖 PRENDRE SOIN',arena:'⚔ ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'🥚 LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',menu:'▦ MENU PRINCIPAL'};
-  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','menu'];
+  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings'];
+  const headings={home:'MON COMPAGNON',stats:'♥ ÉTAT DU MONSTRE',care:'🍖 PRENDRE SOIN',arena:'⚔ ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'🥚 LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',menu:'▦ MENU PRINCIPAL'};
+  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','menu'];
   let activeScreen='home';
   app.appendChild(dashboard);
   // Move existing dialogs inside the handheld; original game handlers stay intact.
@@ -903,7 +925,7 @@
     activitySceneState={type,form:actorForm||state.form,start:performance.now(),duration:reducedMotion?.matches?1600:spec.duration};
     $('activityTitle').textContent=spec.title;$('activityStep').textContent='00%';$('activityMessage').textContent=spec.messages[0];$('activityProgress').style.width='0%';
     $('activityScene').classList.add('active');$('activityScene').setAttribute('aria-live','off');
-    drawActivityScene(activitySceneState.start); // Draw the first frame synchronously.
+    playSound(type);drawActivityScene(activitySceneState.start); // Draw the first frame synchronously.
     // The action's effects have already been saved by the original V0.5 logic.
   }
   function finishActivityScene(){
@@ -921,6 +943,8 @@
     const a=activitySceneState;if(!a)return;
     const spec=activitySpecs[a.type],elapsed=Math.max(0,t-a.start),p=Math.min(1,elapsed/a.duration);
     if(p>=1){finishActivityScene();return;}
+    const beat=Math.floor(elapsed/730);
+    if(beat>0&&beat!==a.lastBeat){a.lastBeat=beat;if(beat<=5)playSound(a.type==='train'?'hit':a.type==='feed'?'nibble':a.type==='clean'?'bubble':a.type==='play'?'bounce':'healStep')}
     const frame=Math.floor(elapsed/115),phase=(p<.33?0:p<.76?1:2),bounce=Math.abs(Math.sin(t/190));
     $('activityStep').textContent=`${Math.round(p*100)}%`;
     const msg=a.type==='train'&&phase===1?`RÉPÉTITION ${Math.min(3,Math.floor((p-.33)*7)+1)} / 3`:spec.messages[phase];
@@ -975,7 +999,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.6.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.7 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -994,7 +1018,7 @@
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.6.1 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.7 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // Keep original rendering/data logic intact; mirror its state into the console header.
   showScreen('home');
@@ -1024,6 +1048,113 @@
       e.preventDefault();navigate(e.key==='ArrowLeft'?-1:1);
     }
   });
+
+
+  // Original retro SFX generated locally, no files or audio downloads.
+  const SETTINGS_KEY='bytebuddy98-av-settings-v1';
+  const previousPrefs=(()=>{try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}})();
+  const avPrefs={sound:previousPrefs.sound!==false,volume:Number.isFinite(previousPrefs.volume)?Math.min(1,Math.max(0,previousPrefs.volume)):.45,notifications:previousPrefs.notifications===true};
+  const persistPrefs=()=>{try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(avPrefs))}catch(_){}};
+  const AudioEngine=window.AudioContext||window.webkitAudioContext;
+  let soundContext=null;
+  const tunes={
+    feed:[[392,0,.09],[494,.11,.09],[587,.24,.14]],nibble:[[250,0,.045],[340,.08,.05]],
+    train:[[196,0,.08],[240,.12,.08],[196,.25,.09]],hit:[[150,0,.05],[100,.045,.065]],
+    play:[[440,0,.11],[660,.12,.12],[880,.26,.15]],bounce:[[523,0,.08]],
+    clean:[[784,0,.06],[988,.09,.09]],bubble:[[620,0,.045],[800,.08,.055]],
+    heal:[[330,0,.12],[440,.13,.13],[660,.28,.17]],healStep:[[500,0,.08]],
+    sleep:[[494,0,.12],[392,.15,.15]],hatch:[[392,0,.12],[523,.13,.11],[784,.26,.28]],
+    evolve:[[440,0,.13],[554,.14,.13],[659,.28,.13],[880,.43,.27]],
+    special:[[660,0,.09],[440,.1,.1],[880,.2,.22]],
+    victory:[[523,0,.11],[659,.12,.12],[784,.25,.11],[1047,.38,.3]],
+    defeat:[[392,0,.18],[330,.21,.21],[261,.43,.35]],alert:[[784,0,.13],[587,.18,.16]]
+  };
+  function playSound(name){
+    if(!avPrefs.sound||avPrefs.volume<=0||!AudioEngine)return;
+    try{
+      if(!soundContext)soundContext=new AudioEngine();
+      if(soundContext.state==='suspended')void soundContext.resume().catch(()=>{});
+      const start=soundContext.currentTime+.015;
+      for(const [hz,offset,duration] of tunes[name]||tunes.hit){
+        const osc=soundContext.createOscillator(),gain=soundContext.createGain();
+        osc.type=['hit','train','nibble','bubble'].includes(name)?'square':'triangle';
+        osc.frequency.setValueAtTime(hz,start+offset);
+        gain.gain.setValueAtTime(.0001,start+offset);
+        gain.gain.exponentialRampToValueAtTime(Math.max(.0002,avPrefs.volume*.095),start+offset+.012);
+        gain.gain.exponentialRampToValueAtTime(.0001,start+offset+duration);
+        osc.connect(gain).connect(soundContext.destination);
+        osc.start(start+offset);osc.stop(start+offset+duration+.025);
+      }
+    }catch(err){console.warn('Son indisponible',err)}
+  }
+  const notificationsAvailable=()=>('Notification' in window && 'serviceWorker' in navigator && isSecureContext);
+  function refreshPreferences(){
+    const btn=$('enableNotifications'),label=$('notificationStatus');
+    if(!notificationsAvailable()){
+      btn.disabled=true;btn.textContent='INDISPONIBLE';
+      label.textContent=/iPhone|iPad|iPod/i.test(navigator.userAgent)?'Sur iPhone : Safari → Partager → Ajouter à l’écran d’accueil, puis ouvre ByteBuddy depuis son icône.':'Notifications non prises en charge par ce navigateur.';
+    }else if(Notification.permission==='denied'){
+      btn.disabled=true;btn.textContent='BLOQUÉ';
+      label.textContent='Autorisation refusée : réactive les notifications dans les réglages du navigateur ou du téléphone.';
+    }else{
+      btn.disabled=false;btn.textContent=avPrefs.notifications?'✓ ALERTES ACTIVÉES':'ACTIVER LES ALERTES';
+      label.textContent=avPrefs.notifications?'Alertes activées pendant que le jeu reste ouvert en arrière-plan.':'Les alertes sont désactivées. Clique pour les autoriser.';
+    }
+    $('soundSwitch').textContent=avPrefs.sound?'🔊 SON ACTIVÉ':'🔇 SON COUPÉ';
+    $('soundVolume').value=Math.round(avPrefs.volume*100);
+  }
+  let swRegistrationPromise=null;
+  if('serviceWorker' in navigator&&isSecureContext){
+    swRegistrationPromise=navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(err=>{console.warn('Service worker indisponible',err);return null});
+  }
+  async function showSystemNotification(title,body,tag='needs',force=false){
+    if(!notificationsAvailable()||Notification.permission!=='granted'||!avPrefs.notifications)return false;
+    if(!force&&!document.hidden)return false;
+    try{
+      const registration=await swRegistrationPromise;
+      if(!registration||!registration.showNotification)return false;
+      await registration.showNotification(title,{
+        body,tag:'bytebuddy-'+tag,icon:'./icon.svg',renotify:false,
+        data:{url:new URL('./',location.href).href}
+      });
+      return true;
+    }catch(err){console.warn('Notification indisponible',err);return false}
+  }
+  const lastAlerts={};let lastOverallAlert=0;
+  async function checkPetAlerts(){
+    if(!avPrefs.notifications||!document.hidden||state.stage===0||state.sleeping)return;
+    const issues=[
+      {key:'health',when:state.health<27,title:'ByteBuddy a besoin de soins !',body:'La santé de ta créature est faible. Viens la soigner.'},
+      {key:'fullness',when:state.fullness<27,title:'Ton ByteBuddy a faim !',body:'Son ventre gargouille. Viens lui donner à manger !'},
+      {key:'hygiene',when:state.hygiene<23,title:'Un petit nettoyage ?',body:'Ton compagnon a besoin d’un bain.'},
+      {key:'energy',when:state.energy<18,title:'Ton ByteBuddy est épuisé !',body:'Il devrait se reposer un peu.'}
+    ];
+    const now=Date.now();if(now-lastOverallAlert<30*60*1000)return;
+    for(const issue of issues){
+      if(!issue.when||now-(lastAlerts[issue.key]||0)<2*60*60*1000)continue;
+      if(await showSystemNotification(issue.title,issue.body,issue.key)){lastAlerts[issue.key]=now;lastOverallAlert=now;break;}
+    }
+  }
+  $('soundSwitch').addEventListener('click',()=>{avPrefs.sound=!avPrefs.sound;persistPrefs();refreshPreferences();playSound('play')});
+  $('soundVolume').addEventListener('input',e=>{avPrefs.volume=Number(e.target.value)/100;persistPrefs()});
+  $('soundVolume').addEventListener('change',()=>playSound('feed'));
+  $('testSound').addEventListener('click',()=>{if(!avPrefs.sound){avPrefs.sound=true;refreshPreferences();persistPrefs()}playSound('victory')});
+  $('enableNotifications').addEventListener('click',async()=>{
+    if(!notificationsAvailable()){refreshPreferences();return}
+    if(avPrefs.notifications){avPrefs.notifications=false;persistPrefs();refreshPreferences();return}
+    try{
+      const permission=Notification.permission==='default'?await Notification.requestPermission():Notification.permission;
+      avPrefs.notifications=permission==='granted';persistPrefs();refreshPreferences();
+      if(avPrefs.notifications){playSound('play');notify('🔔 Notifications activées !')}
+    }catch(err){console.warn(err);refreshPreferences()}
+  });
+  $('testNotification').addEventListener('click',async()=>{
+    const ok=await showSystemNotification('ByteBuddy ’98 🎮','Test réussi ! Ton compagnon peut t’alerter pendant que le jeu reste ouvert.', 'test',true);
+    notify(ok?'🔔 Notification test envoyée !':'🔔 Active les alertes, ou installe le jeu sur l’écran d’accueil.');
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)void checkPetAlerts()});
+  setInterval(()=>void checkPetAlerts(),45000);
+  refreshPreferences();
 
   render();syncConsole();save();requestAnimationFrame(paint);
 })();
