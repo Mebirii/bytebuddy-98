@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-  <title>ByteBuddy '98 — Mon compagnon virtuel</title>
+  <title>ByteBuddy '98 — V0.5 • Édition Console</title>
   <style>
     :root{--bg:#101d29;--bg2:#192c39;--ink:#f1f1e8;--muted:#9fb5bf;--accent:#ffe07b;--mint:#80e0c4;--panel:#1c2d3b;--line:#35515c;--screen:#c5d9a2;--screen-dark:#344a34;--screen-mid:#64815a;--red:#ff8b84;--gold:#f9ca69}
     *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;min-height:100vh;background:radial-gradient(ellipse at 20% 0%,#2b4c55 0%,transparent 43%),radial-gradient(ellipse at 90% 80%,#233c57 0%,transparent 48%),#101d29;overflow-x:hidden}
@@ -21,17 +21,209 @@
     .arena{display:flex;justify-content:space-between;align-items:center;gap:12px}.arena h2{margin-bottom:6px}.arena p{font:12px/1.5 system-ui,sans-serif;color:#b2cacc;margin:0}.primary{background:var(--accent);border:0;color:#1c3540;font-weight:1000;font-size:11px;border-radius:10px;padding:14px 15px;box-shadow:0 4px 0 #a17d39;white-space:nowrap}.primary:hover:not(:disabled){filter:brightness(1.05)}.primary:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #a17d39}.progress-area{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#c2d2d0;margin-bottom:8px}.progress-track{height:8px;border-radius:100px;background:#0d2730;overflow:hidden}.progress-track>div{height:100%;background:linear-gradient(90deg,#7dd9b9,#f4d77d);width:0%;transition:width .4s}.evo-hint{font-size:10px;color:#92acaf;line-height:1.65;margin-top:10px}.journal{list-style:none;margin:0;padding:0;display:grid;gap:9px;max-height:174px;overflow:auto}.journal li{color:#b1c9ca;font-size:11px;display:flex;gap:10px;line-height:1.4}.journal li:before{content:"›";color:var(--mint);font-weight:900}.footer-actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;flex-wrap:wrap}.tiny-btn{background:transparent;border:1px solid #49636a;color:#a6c5c3;border-radius:8px;padding:8px 10px;font-size:10px}.tiny-btn:hover{color:#fff;border-color:#8da6a3}.foot{font-family:system-ui,sans-serif;color:#75929a;font-size:11px;text-align:center;margin-top:30px;line-height:1.6}
     .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,150px);background:#f9e5a5;color:#1b3233;border-radius:12px;box-shadow:0 10px 32px #0008;padding:12px 17px;font-size:12px;font-weight:900;max-width:min(94vw,500px);text-align:center;z-index:40;transition:transform .25s;pointer-events:none}.toast.show{transform:translate(-50%,0)}
     .overlay{position:fixed;inset:0;background:#071720c9;backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.overlay.visible{display:flex}.modal{width:min(100%,500px);border-radius:19px;border:2px solid #5b888b;background:#1b3442;padding:24px;box-shadow:0 25px 70px #000b}.modal-top{display:flex;justify-content:space-between;align-items:start;gap:10px}.modal h2{font-size:19px;margin:0 0 5px;color:#ffdf85}.close{background:none;border:1px solid #4d6a73;color:#c8e1df;border-radius:8px;padding:7px 10px;font-size:12px}.battle-field{display:flex;justify-content:space-around;align-items:center;gap:15px;background:#bfd4a3;border:5px solid #546e5e;border-radius:10px;margin:20px 0 10px;padding:18px 8px 12px;min-height:188px;position:relative;overflow:hidden;color:#38503b}.battle-field:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#16270e0b 0,#16270e0b 1px,transparent 2px,transparent 4px)}.fighter{position:relative;text-align:center;flex:1;z-index:1}.fighter canvas{width:110px;max-width:100%;height:110px;image-rendering:pixelated}.fighter-name{font-size:11px;font-weight:900;color:#33483a}.hpbar{height:9px;background:#58765c;border-radius:4px;overflow:hidden;margin:6px auto;max-width:140px}.hpbar>div{height:100%;background:#264d2c;transition:width .25s}.vs{font-size:13px;font-weight:1000;color:#43573e}.fight-message{font-size:12px;color:#d0e2df;line-height:1.5;min-height:38px;margin:12px 0 14px}.battle-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.battle-actions button{padding:13px 6px;border-radius:9px;border:1px solid #658c8b;background:#305964;color:#e4f5ed;font-size:11px;font-weight:900}.battle-actions button:hover:not(:disabled){background:#44737a}.battle-actions button.super{background:#f3d273;color:#2d4042;border-color:#d2af54}.battle-actions button:disabled{opacity:.35}.battle-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:15px;color:#aac7c9;font-size:10px}.modal-help{color:#c2d7d4;font-family:system-ui,sans-serif;font-size:13px;line-height:1.6;margin:12px 0 0}
+
+    /* V0.3 : arène lisible, décisions annoncées et effets pixel */
+    .creature-signature{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:0 0 17px;padding:10px 13px;border:1px solid #406d6a;background:#173939;border-radius:10px;color:#c9eadc;font:11px/1.45 system-ui,sans-serif}
+    .creature-signature b{color:#ffe59a;font-family:ui-monospace,monospace;letter-spacing:.4px}
+    .signature-symbol{width:31px;height:31px;display:grid;place-items:center;border:1px solid #7fab94;border-radius:8px;font-size:19px;background:#284e46}
+    .v03-banner{border-color:#78916b;background:linear-gradient(100deg,#25433a,#1e3441)}
+    .arena-legend{color:#c2dbc9;font-size:10px;line-height:1.55;margin-top:12px}
+    .battle-modal{width:min(100%,590px);max-height:min(92vh,830px);overflow-y:auto}
+    .battle-intent{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;margin:13px 0 -4px;padding:11px 12px;border:1px solid #647e6b;border-radius:10px;background:#263e39;color:#e7f6df;font-size:11px}
+    .battle-intent strong{font-size:20px;color:#ffdf87}.battle-intent b{display:block;color:#fff2ac;margin-bottom:3px}.battle-intent small{font-size:10px;line-height:1.35;color:#b8dbcd}
+    .battle-field{isolation:isolate;min-height:205px;transition:background .18s}
+    .battle-field[data-biome="flamme"]{background:#ddc4a0}.battle-field[data-biome="eau"]{background:#b2d8c7}.battle-field[data-biome="nature"]{background:#c6dbad}.battle-field[data-biome="foudre"]{background:#dbd3a6}.battle-field[data-biome="ombre"]{background:#acb8ac}
+    .battle-field:after{content:"";position:absolute;bottom:11px;left:14%;right:14%;height:3px;background:repeating-linear-gradient(90deg,#41654d 0 6px,transparent 6px 12px);opacity:.42;z-index:0}
+    .battle-field.fx-own .fighter:first-child canvas{animation:heroLunge .36s steps(3)}
+    .battle-field.fx-enemy .fighter:last-child canvas{animation:enemyLunge .36s steps(3)}
+    @keyframes heroLunge{40%{transform:translate(22px,-8px) scale(1.12)}100%{transform:translate(0)}}
+    @keyframes enemyLunge{40%{transform:translate(-17px,-5px) scale(1.07)}100%{transform:translate(0)}}
+    .pixel-burst{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+    .pixel-burst i{position:absolute;display:block;width:8px;height:8px;background:#385e43;box-shadow:8px 0 #fff9c6,-8px 7px #466b55;animation:burst .53s steps(4) forwards;left:var(--x);top:var(--y);transform:rotate(var(--rot))}
+    @keyframes burst{0%{opacity:1;translate:0 0;scale:.45}75%{opacity:1;translate:var(--dx) var(--dy);scale:1}100%{opacity:0;translate:var(--dx) var(--dy);scale:.1}}
+    .battle-meter{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0}.battle-meter span{background:#18323d;border:1px solid #41616a;padding:9px;border-radius:8px;color:#c7ddda;font-size:11px;display:flex;gap:7px;justify-content:space-between;align-items:center}.battle-meter b{color:#ffe093}
+    .battle-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.battle-actions button{min-height:47px;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}.battle-actions button.focus{border-color:#8fb2a5;background:#2e554e}
+    .battle-actions small{font-size:9px;font-weight:600;opacity:.85}
+    .battle-log{font:10px/1.5 ui-monospace,monospace;color:#a7c5bd;display:grid;gap:3px;border-top:1px solid #456069;padding-top:9px;margin-top:12px;min-height:30px}.battle-log div:before{content:"› ";color:#f4da89}
+    .fighter canvas{filter:drop-shadow(1px 4px 0 #6b896d80)}
+    .battle-strategy{padding:10px 11px;border-radius:8px;background:#16303c;border:1px solid #49656d;font:10px/1.55 system-ui,sans-serif;color:#b8d8d2;margin-top:10px}
+    @media (prefers-reduced-motion:reduce){.battle-field.fx-own .fighter:first-child canvas,.battle-field.fx-enemy .fighter:last-child canvas,.pixel-burst i{animation:none}}
+    @media(max-width:510px){.battle-modal{padding:16px}.battle-field{min-height:170px;padding:8px 4px}.fighter canvas{width:82px;height:82px}.battle-actions button{min-height:50px;font-size:10px}.battle-meter span{font-size:10px}.battle-intent{margin-top:8px}}
+    /* V0.4 — laboratoire d'héritages numériques */
+    .breeding-panel{border-color:#6c8670;background:linear-gradient(150deg,#23453f,#162d3c)}
+    .genetic-summary{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid #5d837d;border-radius:11px;background:#163b3e;margin-bottom:15px}
+    .genetic-summary>span,.nest-heading{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#9fe7ca}.genetic-summary b{color:#ffdd8a;font-size:13px}.genetic-summary small{font:11px/1.5 system-ui,sans-serif;color:#b9d9d1}
+    .breed-controls{display:grid;grid-template-columns:1fr 1.15fr;gap:9px;align-items:center}.breed-controls label{grid-column:1/-1;color:#bfe1d4;font-size:10px;font-weight:900;letter-spacing:1px}.breed-controls select{max-width:100%;width:100%;min-height:44px}.breed-controls button{min-height:44px;white-space:normal;line-height:1.35}
+    .lab-status{font:11px/1.5 system-ui,sans-serif;color:#d3dcce;margin:12px 0 15px;min-height:15px}
+    .nest-heading{margin:17px 0 10px}.egg-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.egg-card{border:1px solid #6a9584;border-radius:11px;background:#1b4650;padding:10px 6px;color:#edf9eb;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-height:128px;transition:background .2s}.egg-card:hover{background:#2e6164}.egg-card .egg-icon{font-size:30px;line-height:1.2;animation:eggBob 2s ease-in-out infinite}.egg-card b{font-size:10px;letter-spacing:.5px}.egg-card small{font:9px/1.35 system-ui,sans-serif;color:#c4e2d3}.egg-card.rare{border-color:#ffd475;background:#484c39}.egg-card.rare b{color:#ffdd89}
+    @keyframes eggBob{50%{transform:translateY(-3px)}}
+    .empty-nest{padding:15px;border:1px dashed #587980;border-radius:10px;color:#9fbcb7;font:11px system-ui,sans-serif;grid-column:1/-1}
+    .family-tree{display:grid;gap:7px}.family-member{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 12px;border:1px solid #476a70;background:#17333d;border-radius:8px;font-size:11px}.family-member b{color:#f6e5a7}.family-member span{color:#b1d0ca}.family-member.current{border-color:#9ecc98;background:#244b42}
+    @media(max-width:510px){.breed-controls{grid-template-columns:1fr}.breed-controls label{grid-column:auto}.egg-list{grid-template-columns:repeat(2,minmax(0,1fr))}.family-member{font-size:10px}}
+    @media(prefers-reduced-motion:reduce){.egg-card .egg-icon{animation:none}}
+    /* 0.2: bestiaire, missions, journal des évolutions */
+    .v02-ribbon{margin:0 0 20px;padding:10px 14px;border:1px solid #426d69;border-radius:12px;background:#1b3b3cbb;color:#d0f5d7;font-size:11px;line-height:1.5;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .v02-ribbon strong{color:var(--accent)}.v02-ribbon a{color:#b6e7d4}
+    .pill-row{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 13px}.type-pill{border:1px solid #588579;background:#204943;color:#cff5d9;border-radius:15px;padding:5px 9px;font-size:10px;font-weight:900}.type-pill.legend{border-color:#c8ab62;background:#574c35;color:#fff0af}
+    .dex-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.dex-item{border:1px solid #46636b;border-radius:11px;background:#162c38;min-height:112px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;position:relative}.dex-item canvas{width:62px;height:62px;image-rendering:pixelated}.dex-item strong{font-size:9px;letter-spacing:.2px;overflow-wrap:anywhere}.dex-item small{font-size:8px;color:#aec7c4}.dex-item.locked{filter:saturate(.25);color:#80969a;background:#15242c}.dex-item.locked canvas{opacity:.26;filter:brightness(.25)}.dex-item.new{border-color:#e8c777}.dex-item .rare{color:#f3d486}
+    .mission{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #36505a}.mission:last-child{border-bottom:none}.mission strong{display:block;font-size:11px}.mission small{color:#a8c5bf;font-size:10px}.mission span{font-size:10px;font-weight:900;color:var(--accent)}
+    .section-desc{color:#abc3c0;font:11px/1.55 system-ui,sans-serif;margin:0 0 12px}.stack-row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}.save-alert{color:#e4d39e;font-size:10px;line-height:1.55;margin-top:9px}
+    select.mode-select{color:#e6f5e9;background:#162f3a;border:1px solid #577783;padding:9px 8px;border-radius:8px;font:10px ui-monospace,monospace;max-width:175px}
+    .battle-field.hit-own{animation:hitLeft .25s ease-out}.battle-field.hit-enemy{animation:hitRight .25s ease-out}@keyframes hitLeft{50%{transform:translateX(-6px);filter:brightness(1.23)}}@keyframes hitRight{50%{transform:translateX(6px);filter:brightness(1.23)}}
+    @media(max-width:510px){.dex-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.v02-ribbon{margin-bottom:14px}.pill-row{gap:5px}}
     @media(max-width:910px){.layout{grid-template-columns:1fr;gap:39px}.right{max-width:660px;width:100%;margin:0 auto}.masthead{max-width:660px;margin-left:auto;margin-right:auto}.device{max-width:410px}.aside-note{margin-top:30px}}
     @media(max-width:510px){.page{padding:18px 14px 28px}.masthead{margin-bottom:19px}.mark{width:39px;height:39px;font-size:23px}.brand{font-size:28px;white-space:nowrap}.edition{display:none}.brand-kicker{font-size:9px}.tagline{font-size:11px}.device{width:min(100%,390px);padding:23px 23px 37px;border-radius:40px 40px 72px 72px}.screen-bezel{padding:12px 11px 14px}.pad{width:64px;height:64px}.pad:nth-child(2){width:75px;height:75px}.device-controls{gap:6px}.stat-row{grid-template-columns:90px 1fr 35px;gap:8px}.panel{padding:15px}.actions{gap:6px}.action strong{font-size:9px}.action{min-height:77px}.arena{align-items:flex-start}.arena .primary{font-size:10px;padding:12px 10px}.modal{padding:17px}.battle-field{min-height:163px}.fighter canvas{height:91px;width:91px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+    /* V0.5 — EVERYTHING INSIDE THE LCD: one console, no external dashboard. */
+    .page{max-width:760px;margin:0 auto;padding:16px 16px 36px}
+    .masthead{justify-content:center;margin-bottom:10px}
+    .logo{justify-content:center}.mark{width:38px;height:38px;font-size:21px}
+    .brand{font-size:28px;letter-spacing:-1px}.brand-kicker{font-size:8px;letter-spacing:2px}
+    .tagline{font-size:11px;margin-top:3px}.edition,.v02-ribbon{display:none!important}
+    .layout{display:flex;justify-content:center;align-items:flex-start}
+    .device-wrap{width:100%}.device{width:min(100%,604px);max-width:none;padding:18px 20px 28px;border-radius:44px 44px 68px 68px}
+    .device-id{font-size:11px;letter-spacing:3px;margin-bottom:12px}
+    .screen-bezel{padding:13px;border-radius:20px}
+    .screen-head{margin-bottom:7px;font-size:9px}
+    .screen{aspect-ratio:auto;height:500px;min-width:0;overflow:hidden;border:5px solid #77906b;color:#283c29;background:#cbdca9;touch-action:pan-y}
+    .screen:after{opacity:.20;z-index:14}
+    .screen[data-screen="home"]{background:#c5d9a2}
+    .screen .lcd-hud{font-size:11px;top:9px;left:12px;right:12px;z-index:3}
+    .screen #gameCanvas{position:absolute;inset:32px 0 auto;width:100%;height:calc(100% - 161px);object-fit:contain}
+    .screen:not([data-screen="home"]) #gameCanvas{display:none}
+    .screen .sleep-filter{z-index:2;bottom:64px}
+    .screen:not([data-screen="home"]) .sleep-filter,.screen:not([data-screen="home"]) .sleeping-indicator{display:none!important}
+    .screen .lcd-footer{bottom:126px;z-index:3;font-size:11px;left:13px;right:13px}
+    .screen:not([data-screen="home"]) .lcd-footer{display:none}
+    .lcd-home-info{position:absolute;bottom:64px;left:0;right:0;z-index:4;background:linear-gradient(#e2ecc7,#c2d8a7);border-top:3px solid #829b75;min-height:110px;padding:9px 13px 8px;color:#2c482e}
+    .lcd-pet-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:17px;letter-spacing:.5px}
+    .lcd-pet-line span{font-size:10px;color:#526b4e;font-weight:900}
+    .lcd-pet-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:3px 8px;font-size:10px;margin-top:6px;font-weight:900}
+    .lcd-quick-actions{display:flex;gap:7px;margin-top:9px;justify-content:center}
+    .lcd-quick-actions button{background:#355846;color:#e5f2cf;border:2px solid #2d4836;border-radius:6px;padding:8px 12px;font-size:11px;font-weight:900;flex:1;min-height:37px;box-shadow:0 3px 0 #70866a}
+    .lcd-quick-actions button:disabled{opacity:.3}
+    .lcd-quick-actions .lcd-hatch{background:#3a6844;color:#f3ffc8}
+    .screen[data-screen="home"] .lcd-app,.screen[data-screen="home"] .lcd-menu{display:none}
+    .screen:not([data-screen="home"]) .lcd-home-info{display:none}
+    .lcd-dock{position:absolute;z-index:15;bottom:0;left:0;right:0;height:64px;background:#273e31;border-top:3px solid #6e8764;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:4px 4px 6px}
+    .lcd-dock button{border:0;border-radius:4px;background:transparent;color:#cbdcc0;min-width:0;font-size:9px;font-weight:900;letter-spacing:.1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+    .lcd-dock button span{font-size:21px;line-height:1.1}.lcd-dock button.active{background:#d7e5b7;color:#2c5137;box-shadow:inset 0 0 0 1px #a5bd92}
+    .lcd-app,.lcd-menu{position:absolute;z-index:5;top:37px;bottom:64px;left:0;right:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:#819c74 #cadcae;scrollbar-width:thin;padding:10px 13px 18px;background:#ccddaf}
+    .screen[data-screen="menu"] .lcd-app{display:none}
+    .screen:not([data-screen="menu"]) .lcd-menu{display:none}
+    .lcd-view-heading{display:flex;justify-content:space-between;gap:7px;align-items:center;font-weight:1000;font-size:12px;letter-spacing:1.25px;color:#34533a;padding:0 0 10px;border-bottom:2px dotted #809b76;margin-bottom:12px}
+    .lcd-view-heading span{font-size:9px;color:#66835f}
+    .lcd-app .right{width:100%;max-width:none;min-width:0;margin:0;color:#304831}
+    .lcd-app .right > [hidden], .lcd-app .right > .panel[hidden]{display:none!important}
+    .lcd-app .right > .topline,.lcd-app .right > .name-wrap,.lcd-app .right > .description,.lcd-app .right > .pill-row,.lcd-app .right > .creature-signature,.lcd-app .right > .currency{display:none}
+    .screen[data-screen="stats"] .lcd-app .right > .topline{display:flex}
+    .screen[data-screen="stats"] .lcd-app .right > .name-wrap{display:flex}
+    .screen[data-screen="stats"] .lcd-app .right > .description{display:block}
+    .screen[data-screen="stats"] .lcd-app .right > .pill-row{display:flex}
+    .screen[data-screen="stats"] .lcd-app .right > .creature-signature{display:flex}
+    .screen[data-screen="stats"] .lcd-app .right > .currency{display:flex}
+    .lcd-app .panel{background:#e1edc4;color:#304834;border:2px solid #8da881;border-radius:9px;padding:13px;margin-bottom:12px;box-shadow:inset 2px 2px 0 #f7ffde}
+    .lcd-app .panel h2,.lcd-app .panel .panel-header h2{font-size:12px;color:#36553a}
+    .lcd-app .section-number,.lcd-app .mono-label,.lcd-app .description,.lcd-app .section-desc,.lcd-app .evo-hint,.lcd-app .arena p,.lcd-app .arena-legend{color:#48694b}
+    .lcd-app .panel-header{margin-bottom:10px;gap:5px;flex-wrap:wrap}
+    .lcd-app .currency span,.lcd-app .type-pill,.lcd-app .genetic-summary,.lcd-app .creature-signature,.lcd-app .lab-status,.lcd-app .mission,.lcd-app .family-member{background:#cedeb0;border-color:#95b087;color:#3a563c}
+    .lcd-app .currency b,.lcd-app .creature-signature b,.lcd-app .genetic-summary b,.lcd-app .mission span,.lcd-app .section-number{color:#34563a}
+    .lcd-app .creature-signature{font-family:inherit}
+    .lcd-app .signature-symbol{background:#b2ce9f;border-color:#698e68}
+    .lcd-app .stats{gap:12px}.lcd-app .stat-row{grid-template-columns:83px 1fr 37px;gap:8px;color:#3c5e41}
+    .lcd-app .stat-label,.lcd-app .stat-value{color:#3b563b}.lcd-app .bar,.lcd-app .progress-track{background:#a5be93;border-color:#8da583}
+    .lcd-app .fill{background:#456f4a}.lcd-app .fill.medium{background:#b28c39}.lcd-app .fill.low{background:#9c5149}
+    .lcd-app .actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+    .lcd-app .action{min-height:83px;background:#315841;border:2px solid #4d7251;border-radius:8px;color:#eaf5d6}
+    .lcd-app .action strong{font-size:10px}.lcd-app .action small{color:#d2e5c1}
+    .lcd-app .action-icon{font-size:24px}.lcd-app .primary{background:#3a6243;color:#f4ffdd;border:2px solid #2b4a34;box-shadow:0 3px 0 #8fa780;border-radius:7px;white-space:normal;padding:10px}
+    .lcd-app .arena{flex-direction:column;align-items:stretch}.lcd-app .arena .primary{width:100%;margin-top:7px}
+    .lcd-app .mode-select{max-width:100%;background:#f0f6d8;border:2px solid #8ca77f;color:#2c4d35}
+    .lcd-app .progress-area{color:#425b43}.lcd-app .progress-track>div{background:#52754a}
+    .lcd-app .mission small,.lcd-app .family-member span,.lcd-app .genetic-summary small,.lcd-app .lab-status,.lcd-app .nest-heading{color:#48684b}
+    .lcd-app .egg-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .lcd-app .egg-card{background:#d2e5b9;color:#325238;border-color:#83a37c;min-height:118px}
+    .lcd-app .egg-card small{color:#4d6a4b}.lcd-app .egg-card.rare{background:#f1e6b3}
+    .lcd-app .dex-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+    .lcd-app .dex-item{background:#c4dab0;color:#3b5b41;border:2px solid #8eaa81;min-height:103px}
+    .lcd-app .dex-item canvas{width:60px!important;height:60px!important;display:block;image-rendering:pixelated}
+    .lcd-app .dex-item small{color:#516f53}.lcd-app .dex-item.locked{background:#b1c39f}
+    .lcd-app .journal li{color:#3b5e42;font-size:12px}.lcd-app .journal li:before{color:#365a3c}
+    .lcd-app .tiny-btn{color:#345b3c;border:1px solid #7e9c74;background:#d6e6be}
+    .lcd-app .foot,.screen .right .v02-ribbon{display:none}
+    .lcd-app #statusOnline{font-size:10px;color:#456f4a}
+    .lcd-app .creature-name{font-size:24px;color:#365b3f}
+    .lcd-app .phase{color:#f1f9d5;background:#3e6040}
+    .lcd-menu{padding:15px}
+    .lcd-menu-top{display:flex;justify-content:space-between;align-items:center;gap:7px;font-size:12px;border-bottom:2px dotted #809b76;padding-bottom:12px;margin-bottom:14px;color:#37583d}
+    .lcd-menu-top span{font-size:9px;color:#577254}
+    .lcd-menu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .lcd-menu-grid button{height:91px;border:2px solid #7e9e75;background:#e2efc8;color:#36553a;box-shadow:3px 4px 0 #9ebc90;border-radius:6px;font-size:10px;font-weight:1000;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;min-width:0}
+    .lcd-menu-grid button:active{transform:translate(2px,2px);box-shadow:1px 2px 0 #9ebc90}
+    .lcd-menu-grid button span{font-size:30px;line-height:1}
+    .lcd-menu-tip{text-align:center;color:#577553;font-size:10px;font-weight:900;margin-top:20px}
+    .screen .overlay{position:absolute;z-index:30;inset:0;padding:0;backdrop-filter:none;background:#d1e1b9;align-items:stretch;justify-content:stretch}
+    .screen .overlay.visible{display:flex}
+    .screen .modal{width:100%;height:100%;max-height:none;max-width:none;overflow:auto;border:0;border-radius:0;background:#d2e2b8;color:#304d37;padding:13px 12px 18px;box-shadow:none;scrollbar-width:thin}
+    .screen .modal h2,.screen .modal .mono-label{color:#345a3a}
+    .screen .modal-top{margin:0 0 8px;align-items:center}.screen .modal-top h2{font-size:15px}
+    .screen .close{background:#355742;color:#f3ffda;border:1px solid #4d7149;min-width:32px;min-height:31px}
+    .screen .battle-intent{margin:7px 0;background:#bed3a5;border-color:#809d78;color:#3b583d;padding:8px}
+    .screen .battle-intent b,.screen .battle-intent strong,.screen .battle-intent small{color:#34533d}
+    .screen .battle-field{min-height:145px;padding:5px;gap:1px}
+    .screen .fighter canvas{width:75px!important;height:75px!important;display:block!important;image-rendering:pixelated}
+    .screen .fighter-name,.screen .battle-field .vs{color:#2b4b35}
+    .screen .fight-message{color:#345943}
+    .screen .battle-meter{margin:6px 0}.screen .battle-meter span{background:#b9d4a9;color:#345439;border-color:#829a77;padding:7px}
+    .screen .battle-meter b{color:#2e5638}
+    .screen .battle-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+    .screen .battle-actions button{background:#355f45;border:2px solid #4e7152;color:#ebf7d4;font-size:10px;padding:7px 4px;min-height:47px}
+    .screen .battle-actions button.super{background:#e7d992;color:#34523a}
+    .screen .battle-strategy{background:#bdd3ac;border:1px solid #819c78;color:#436445;padding:7px}
+    .screen .battle-log{color:#446547;border-color:#819c78}
+    .screen .battle-note,.screen .battle-bottom,.screen .modal-help{color:#3a5c41}
+    .screen .battle-bottom .tiny-btn{background:#dceac2;color:#34543d;border-color:#88a479}
+    .screen .modal-help{font-family:system-ui,sans-serif;font-size:12px;line-height:1.4}
+    .screen .toast{position:absolute;z-index:45;bottom:69px;left:50%;width:max-content;max-width:calc(100% - 22px);transform:translate(-50%,140px);background:#314e38;color:#effbdc;border:2px solid #799371;box-shadow:0 5px 0 #8fa780;padding:8px 10px;border-radius:6px;font-size:11px;line-height:1.3}
+    .screen .toast.show{transform:translate(-50%,0)}
+    .device-controls{margin-top:20px;gap:14px;grid-template-columns:repeat(3,1fr)}
+    .device-controls .pad{width:70px;height:70px;font-size:27px}.device-controls .pad:nth-child(2){width:77px;height:77px}
+    .pad-label{font-size:10px;margin-top:11px;color:#e8fce5}
+    .device-bottom{margin-top:11px}.aside-note{font-size:11px;margin-top:19px;max-width:500px}
+    .foot{font-size:10px;margin-top:26px}
+    .screen button:focus-visible{outline:3px solid #d6954e;outline-offset:-2px}
+    @media(max-width:610px){
+      .page{padding:10px 9px 25px}.masthead{margin-bottom:8px}.brand{font-size:25px}.mark{width:33px;height:33px}
+      .device{width:100%;max-width:448px;padding:15px 12px 23px;border-width:3px;border-radius:35px 35px 55px 55px}
+      .screen-bezel{padding:9px;border-width:4px}.screen-head{font-size:8px;letter-spacing:.2px}
+      .screen{height:clamp(405px,65svh,515px)}
+      .lcd-menu-grid{gap:7px}.lcd-menu-grid button{height:78px;font-size:9px;gap:6px}.lcd-menu-grid button span{font-size:26px}
+      .lcd-pet-line{font-size:15px}.lcd-pet-meta{font-size:9px}.lcd-home-info{min-height:108px;padding:9px}
+      .lcd-quick-actions button{font-size:10px;padding:7px 5px}
+      .lcd-app{padding:9px 8px 13px}.lcd-app .panel{padding:10px 9px}.lcd-app .panel h2{font-size:11px}
+      .lcd-app .stat-row{grid-template-columns:70px 1fr 34px;font-size:10px}
+      .lcd-app .action{min-height:76px}.lcd-app .action-icon{font-size:21px}
+      .lcd-app .dex-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lcd-app .dex-item canvas{width:50px!important;height:50px!important}
+      .lcd-app .breed-controls{grid-template-columns:1fr}
+      .lcd-dock button{font-size:8px}.lcd-dock button span{font-size:19px}
+      .screen .fighter canvas{width:62px!important;height:62px!important}
+      .screen .battle-field{min-height:127px}.screen .battle-actions button{min-height:44px}
+      .device-controls{gap:4px;margin-top:15px}.device-controls .pad{width:60px;height:60px}.device-controls .pad:nth-child(2){width:68px;height:68px}
+      .pad-label{font-size:9px}.aside-note{margin-top:13px}
+    }
+    @media(max-width:360px){.screen{height:415px}.lcd-app .actions{grid-template-columns:repeat(2,minmax(0,1fr))}.lcd-menu-grid button{height:72px}.screen .modal{padding:9px}}
+    @media(prefers-reduced-motion:reduce){.lcd-menu-grid button{transition:none}}
+
   </style>
 </head>
 <body>
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● POCKET EDITION / 001</div>
+    <div class="edition">● CONSOLE EDITION / 0.5</div>
   </header>
+  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.5</strong> — 16 formes · héritages génétiques · œufs rares · arbre de famille · arène tactique</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -39,24 +231,58 @@
         <div class="device-id">DIGITAL <span>MONSTER</span> UNIT</div>
         <div class="screen-bezel">
           <div class="screen-head"><span>◧ PIXEL LCD</span><b id="lcdStage">EGG / 01</b><span>◉ ACTIVE</span></div>
-          <div class="screen" id="lcdScreen"><div class="lcd-hud"><span id="lcdTitle">BYTEBUDDY</span><span id="lcdTime">00:00</span></div><canvas id="gameCanvas" width="240" height="190" role="img" aria-label="Monstre pixelisé sur écran LCD"></canvas><div class="sleep-filter"></div><div class="sleeping-indicator">Z z</div><div class="lcd-footer"><span id="lcdMood">♥ PRÊT</span><span id="lcdInfo">GEN 01</span></div></div>
+          <div class="screen" id="lcdScreen"><div class="lcd-hud"><span id="lcdTitle">BYTEBUDDY</span><span id="lcdTime">00:00</span></div><canvas id="gameCanvas" width="240" height="190" role="img" aria-label="Monstre pixelisé sur écran LCD"></canvas><div class="sleep-filter"></div><div class="sleeping-indicator">Z z</div><div class="lcd-footer"><span id="lcdMood">♥ PRÊT</span><span id="lcdInfo">GEN 01</span></div>
+            <section class="lcd-home-info" id="lcdHomeInfo" aria-label="Compagnon virtuel">
+              <div class="lcd-pet-line"><strong id="homeName">ŒUF MYSTÈRE</strong><span id="homeLevel">NIVEAU 1</span></div>
+              <div class="lcd-pet-meta"><span id="homeHealth">♥ SANTÉ 100%</span><span id="homeBits">◈ 20 BITS</span><span id="homeEvolution">ÉCLOSION</span></div>
+              <div class="lcd-quick-actions">
+                <button type="button" id="hatchHome" class="lcd-hatch">✦ FAIRE ÉCLORE</button>
+                <button type="button" data-action="feed" class="lcd-quick">🍖 NOURRIR</button>
+                <button type="button" data-action="play" class="lcd-quick">🎾 JOUER</button>
+              </div>
+            </section>
+            <div id="lcdApp" class="lcd-app" aria-live="off"><div id="lcdViewHeading" class="lcd-view-heading"></div></div>
+            <section id="lcdMenu" class="lcd-menu" aria-label="Menu du jeu">
+              <div class="lcd-menu-top"><b>MENU PRINCIPAL</b><span>CHOISIS UN MODE</span></div>
+              <div class="lcd-menu-grid">
+                <button type="button" data-view="stats"><span>♥</span>ÉTAT</button>
+                <button type="button" data-view="care"><span>🍖</span>SOINS</button>
+                <button type="button" data-view="arena"><span>⚔</span>COMBAT</button>
+                <button type="button" data-view="evolution"><span>✦</span>ÉVOLUTION</button>
+                <button type="button" data-view="missions"><span>☷</span>MISSIONS</button>
+                <button type="button" data-view="lab"><span>🥚</span>LABO</button>
+                <button type="button" data-view="dex"><span>▦</span>BESTIAIRE</button>
+                <button type="button" data-view="journal"><span>▤</span>JOURNAL</button>
+                <button type="button" id="menuHelp"><span>?</span>AIDE</button>
+              </div>
+              <div class="lcd-menu-tip">◀ ▶ NAVIGUER • ● VALIDER</div>
+            </section>
+            <nav class="lcd-dock" aria-label="Navigation du jeu">
+              <button type="button" data-view="home" class="active" aria-pressed="true"><span>⌂</span>MONSTRE</button>
+              <button type="button" data-view="care" aria-pressed="false"><span>♥</span>SOINS</button>
+              <button type="button" data-view="arena" aria-pressed="false"><span>⚔</span>ARÈNE</button>
+              <button type="button" data-view="lab" aria-pressed="false"><span>🥚</span>LABO</button>
+              <button type="button" data-view="menu" aria-pressed="false"><span>▦</span>MENU</button>
+            </nav>
+          </div>
           <div class="display-note" id="displayNote">IL ATTEND UNE PETITE ÉTINCELLE…</div>
         </div>
         <div class="device-controls" aria-label="Commandes de l'appareil">
-          <button type="button" class="pad" id="leftBtn" aria-label="Nourrir">◀</button>
-          <button type="button" class="pad" id="middleBtn" aria-label="Faire éclore ou interagir">●</button>
-          <button type="button" class="pad" id="rightBtn" aria-label="Jouer">▶</button>
+          <button type="button" class="pad" id="leftBtn" aria-label="Écran précédent">◀</button>
+          <button type="button" class="pad" id="middleBtn" aria-label="Valider">●</button>
+          <button type="button" class="pad" id="rightBtn" aria-label="Écran suivant">▶</button>
         </div>
-        <div class="pad-label">A — FEED &nbsp; / &nbsp; B — OK &nbsp; / &nbsp; C — PLAY</div>
+        <div class="pad-label">◀ PRÉCÉDENT &nbsp; / &nbsp; ● OK &nbsp; / &nbsp; ▶ SUIVANT</div>
         <div class="device-bottom"><div class="speaker" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="device-sticker">BATTERY FREE • 1998 VIBES</div></div>
       </div>
-      <p class="aside-note">Un hommage aux compagnons numériques des années 90, avec ses propres créatures et son univers original. La sauvegarde reste dans ce navigateur.</p>
+      <p class="aside-note">Toutes les fonctions se trouvent dans le LCD. Utilise le menu à l’écran ou les trois boutons de la console. Sauvegarde automatique dans ce navigateur.</p>
     </div>
     <section class="right" aria-label="Tableau de bord">
       <div class="topline"><div class="mono-label">// TON PETIT UNIVERS</div><div class="live"><span class="dot"></span><span id="statusOnline">SAUVEGARDE AUTO ACTIVE</span></div></div>
       <div class="name-wrap"><h1 class="creature-name" id="creatureName">ŒUF MYSTÈRE</h1><span class="phase" id="phaseLabel">À ÉCLORE</span></div>
       <p class="description" id="creatureDesc">Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.</p>
-      <div class="currency"><span>◈ BITS <b id="bits">20</b></span><span>✦ VICTOIRES <b id="wins">0</b></span><span>⌛ ÂGE <b id="age">00:00</b></span><span>⟳ GÉN. <b id="gen">01</b></span></div>
+      <div class="pill-row"><span class="type-pill" id="elementBadge">◈ MYSTÈRE</span><span class="type-pill" id="levelBadge">LV. 1 · 0 XP</span><span class="type-pill" id="disciplineBadge">SOINS : 0</span><span class="type-pill" id="geneBadge">◈ PREMIÈRE LIGNÉE</span></div>
+      <div class="creature-signature"><span class="signature-symbol" id="sigSymbol">◈</span><div><b id="sigMove">POUVOIR MYSTÈRE</b><div id="sigTrait">Un destin à découvrir.</div></div></div><div class="currency"><span>◈ BITS <b id="bits">20</b></span><span>✦ VICTOIRES <b id="wins">0</b></span><span>⌛ ÂGE <b id="age">00:00</b></span><span>⟳ GÉN. <b id="gen">01</b></span></div>
       <section class="panel"><div class="panel-header"><h2>01 / ÉTAT DE TON COMPAGNON</h2><span class="section-number" id="wellnessTag">EN ATTENTE</span></div><div class="stats" id="statList"></div></section>
       <section class="panel"><div class="panel-header"><h2>02 / PRENDS SOIN DE LUI</h2><span class="section-number">6 ACTIONS</span></div><div class="actions">
         <button type="button" class="action" data-action="feed"><span class="action-icon">🍖</span><strong>NOURRIR</strong><small>+ satiété</small></button>
@@ -66,37 +292,74 @@
         <button type="button" class="action" data-action="sleep"><span class="action-icon">🌙</span><strong id="sleepText">DORMIR</strong><small>+ énergie</small></button>
         <button type="button" class="action special" data-action="heal"><span class="action-icon">💊</span><strong>SOIGNER</strong><small>10 Bits</small></button>
       </div></section>
-      <section class="panel"><div class="arena"><div><h2>03 / ARÈNE PIXEL</h2><p>Défie un monstre sauvage au tour par tour.<br>Gagne des Bits et prépare tes évolutions.</p></div><button type="button" class="primary" id="battleStart">⚔ COMBATTRE</button></div></section>
+      <section class="panel"><div class="arena"><div><h2>03 / ARÈNE PIXEL</h2><p>4 actions tactiques, intentions ennemies et pouvoirs élémentaires.</p><label class="stack-row" style="margin-top:9px"><span class="mono-label" style="font-size:9px">DÉFI</span><select class="mode-select" id="arenaMode" aria-label="Difficulté du combat"><option value="normal">STANDARD</option><option value="hard">ÉLITE (LV.3)</option></select></label></div><button type="button" class="primary" id="battleStart">⚔ COMBATTRE</button></div><div class="arena-legend">▲ Flamme → Nature → Eau → Flamme &nbsp;·&nbsp; ϟ Foudre → Eau &nbsp;·&nbsp; ✧ Lumière ↔ Ombre</div></section>
       <section class="panel"><div class="panel-header"><h2>04 / PROCHAINE ÉVOLUTION</h2><span class="section-number" id="evoPercent">0 %</span></div><div class="progress-area"><span id="evoTarget">Éclosion</span><span id="evoRequirement">Prêt maintenant</span></div><div class="progress-track"><div id="evoBar"></div></div><div class="evo-hint" id="evoHint">Son destin dépendra de l'attention et de l'entraînement que tu lui donnes.</div></section>
-      <section class="panel"><div class="panel-header"><h2>05 / CARNET DE BORD</h2><span class="section-number">DERNIERS ÉVÉNEMENTS</span></div><ul class="journal" id="journal" aria-live="polite"></ul><div class="footer-actions"><button class="tiny-btn" type="button" id="helpBtn">? COMMENT JOUER</button><button class="tiny-btn" type="button" id="resetBtn">↺ NOUVELLE PARTIE</button></div></section>
+      <section class="panel"><div class="panel-header"><h2>05 / MISSIONS DU JOUR</h2><span class="section-number" id="dailyStatus">0 / 3</span></div><p class="section-desc">Accomplis les trois missions pour gagner 25 Bits. Nouveau défi chaque jour, selon l'horloge de ton appareil.</p><div id="dailyList"></div><div class="stack-row" style="margin-top:12px"><span class="mono-label" id="dailyHint">SOIGNE TON AMI</span><button class="primary" type="button" id="claimDaily" disabled>+25 BITS ◈</button></div></section>
+      <section class="panel breeding-panel" id="breedingPanel"><div class="panel-header"><h2>06 / LABORATOIRE DES GÉNÉRATIONS</h2><span class="section-number" id="eggCount">0 / 3 ŒUFS</span></div>
+        <p class="section-desc">À partir de la forme Rookie et de 2 victoires, associe ton compagnon à un partenaire numérique. Chaque œuf hérite d’une affinité et d’un talent, avec une chance de mutation rare. Le parent reste jouable jusqu'à l’activation de l’œuf.</p>
+        <div class="genetic-summary"><span>✦ ADN DU COMPAGNON</span><b id="currentDna">LIGNÉE ORIGINELLE</b><small id="currentTalent">Les générations suivantes pourront transmettre des talents.</small></div>
+        <div class="breed-controls"><label for="partnerSelect">PARTENAIRE NUMÉRIQUE</label><select id="partnerSelect" class="mode-select" aria-label="Choisir un partenaire de reproduction"></select><button type="button" class="primary" id="breedBtn">🥚 CRÉER UN ŒUF · 40 BITS</button></div>
+        <div class="lab-status" id="breedStatus">Fais évoluer ton compagnon pour accéder au laboratoire.</div>
+        <div class="nest-heading">◈ INCUBATEUR — CHOISIS UN ŒUF POUR LA PROCHAINE GÉNÉRATION</div><div id="eggList" class="egg-list"></div>
+        <div class="nest-heading">⟡ ARBRE GÉNÉALOGIQUE</div><div id="familyTree" class="family-tree"></div>
+      </section>
+      <section class="panel"><div class="panel-header"><h2>07 / BESTIAIRE PIXEL</h2><span class="section-number" id="dexCount">0 / 16</span></div><p class="section-desc">Les formes découvertes restent dans le bestiaire, même après une nouvelle génération. Les silhouettes cachent des secrets…</p><div id="dexGrid" class="dex-grid"></div></section>
+      <section class="panel"><div class="panel-header"><h2>08 / CARNET DE BORD</h2><span class="section-number">DERNIERS ÉVÉNEMENTS</span></div><ul class="journal" id="journal" aria-live="polite"></ul><div class="footer-actions"><button class="tiny-btn" type="button" id="helpBtn">? COMMENT JOUER</button><button class="tiny-btn" type="button" id="exportBtn">↓ SAUVEGARDE</button><button class="tiny-btn" type="button" id="importBtn">↑ RESTAURER</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="tiny-btn" type="button" id="resetBtn">↺ NOUVELLE PARTIE</button></div></section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — Un jeu original créé pour le web · Fonctionne hors ligne après ouverture · Sauvegarde sur cet appareil</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.5 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
-  <div class="modal"><div class="modal-top"><div><div class="mono-label">// COMBAT AU TOUR PAR TOUR</div><h2 id="battleHeading">ARÈNE PIXEL</h2></div><button class="close" id="battleClose" type="button">✕</button></div>
-    <div class="battle-field"><div class="fighter"><div class="fighter-name" id="yourFightName">BUDDY</div><canvas id="fighterOwn" width="88" height="88"></canvas><div class="hpbar"><div id="ownHpBar"></div></div><div class="fighter-name" id="ownHpText">100/100 PV</div></div><div class="vs">VS</div><div class="fighter"><div class="fighter-name" id="enemyFightName">GLITCH</div><canvas id="fighterEnemy" width="88" height="88"></canvas><div class="hpbar"><div id="enemyHpBar"></div></div><div class="fighter-name" id="enemyHpText">25/25 PV</div></div></div>
-    <div class="fight-message" id="fightMessage" aria-live="polite">Choisis ton attaque !</div><div class="battle-actions"><button type="button" id="attackBtn">⚔ ATTAQUER</button><button type="button" id="defendBtn">▣ PARER</button><button type="button" class="super" id="specialBtn">✦ SPÉCIAL</button></div><div class="battle-bottom"><span id="battleNote">Spécial : coûte 10 énergie</span><button class="tiny-btn" id="leaveBattle" type="button">QUITTER</button></div>
+  <div class="modal battle-modal"><div class="modal-top"><div><div class="mono-label">// ARÈNE TACTIQUE</div><h2 id="battleHeading">ARÈNE PIXEL</h2></div><button class="close" id="battleClose" type="button">✕</button></div>
+    <div class="battle-intent"><strong id="intentIcon">⚔</strong><div><b id="intentTitle">INTENTION : ATTAQUE</b><small id="intentDetail">Observe le mouvement ennemi avant d’agir.</small></div></div><div class="battle-field" id="battleField" data-biome="nature"><div class="pixel-burst" id="pixelBurst" aria-hidden="true"></div><div class="fighter"><div class="fighter-name" id="yourFightName">BUDDY</div><canvas id="fighterOwn" width="88" height="88"></canvas><div class="hpbar"><div id="ownHpBar"></div></div><div class="fighter-name" id="ownHpText">100/100 PV</div></div><div class="vs">VS</div><div class="fighter"><div class="fighter-name" id="enemyFightName">GLITCH</div><canvas id="fighterEnemy" width="88" height="88"></canvas><div class="hpbar"><div id="enemyHpBar"></div></div><div class="fighter-name" id="enemyHpText">25/25 PV</div></div></div>
+    <div class="stack-row" style="font-size:10px;color:#c4d9ce;margin-top:12px"><span id="yourTypeLabel">TON ÉLÉMENT</span><span id="enemyTypeLabel">ÉLÉMENT ADVERSE</span></div><div class="fight-message" id="fightMessage" aria-live="polite">Choisis ton attaque !</div><div class="battle-meter"><span>✦ IMPULSION <b id="focusMeter">0 / 3</b></span><span>⚡ ÉNERGIE <b id="energyMeter">100</b></span></div><div class="battle-actions"><button type="button" id="attackBtn">⚔ FRAPPER <small>+1 impulsion</small></button><button type="button" id="defendBtn">▣ PARER <small>réduit les dégâts</small></button><button type="button" class="focus" id="focusBtn">◈ CANALISER <small>énergie + impulsion</small></button><button type="button" class="super" id="specialBtn">✦ POUVOIR <small id="specialLabel">10 énergie</small></button></div><div class="battle-strategy">💡 L’ennemi annonce son prochain mouvement. Pare un coup puissant, frappe pendant sa concentration et emploie ton pouvoir contre sa garde.</div><div class="battle-log" id="battleLog" aria-live="polite"></div><div class="battle-bottom"><span id="battleNote">Pouvoir : 10 énergie</span><button class="tiny-btn" id="leaveBattle" type="button">QUITTER</button></div>
   </div>
 </div>
-<div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button">✕</button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, amuse, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> 6 soins actifs pour atteindre la forme rookie, puis 18 soins et 3 victoires pour la forme ultime. L'entraînement, le jeu et les soins déterminent sa famille évolutive.</p><p class="modal-help"><strong>Combats :</strong> attaque, pare ou utilise un coup spécial. Les combats donnent des Bits pour soigner ton monstre. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons de la console sont aussi interactifs : nourrir, OK et jouer.</p></div></div>
+<div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button">✕</button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, amuse, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> 7 soins pour devenir Rookie puis 24 soins et 3 victoires pour devenir Ultime. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme → Nature → Eau → Flamme ; Foudre → Eau ; Lumière ↔ Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (◀ ▶) et de valider (●). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>V0.5 :</strong> Débloque les 16 formes, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
 <script>
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const KEY = 'bytebuddy98-save-v1';
+  const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
-  const names = {egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR'};
-  const desc = {egg:"Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.",baby:"Une petite boule de pixels pleine d'énergie. Tout reste à construire !",ember:"Un petit dragon intrépide. Il adore les défis et les entraînements.",verd:"Un gardien des forêts, doux et joueur. L'affection le rend plus fort.",volt:"Une créature électrique, vive et équilibrée. Toujours prête à découvrir.",ember2:"Sa force brûlante révèle des années de courage et d'entraînement.",verd2:"Son énergie végétale protège maintenant tous ses compagnons.",volt2:"Le maître des étincelles est devenu une légende de l'arène !"};
-  const base = () => ({version:1,form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,log:['Un mystérieux œuf vient d’apparaître…']});
+  const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
+  const order=['egg','baby','ember','verd','volt','aqua','shade','ember2','verd2','volt2','aqua2','shade2','lumia','nebula','prism','auror'];
+  const types={prism:'lumière',auror:'foudre',egg:'mystère',baby:'neutre',ember:'flamme',ember2:'flamme',verd:'nature',verd2:'nature',volt:'foudre',volt2:'foudre',aqua:'eau',aqua2:'eau',shade:'ombre',shade2:'ombre',lumia:'lumière',nebula:'lumière'};
+  const signature={mystère:['◈','ÉVEIL MYSTÈRE','Un destin encore inconnu.'],neutre:['♥','BULLE AMICALE','Un petit cœur plein de courage.'],flamme:['▲','FLAMME VIVE','Attaque renforcée contre la Nature.'],nature:['❀','RACINES VIVES','Attaque renforcée contre l’Eau.'],eau:['≈','VAGUE AZUR','Attaque renforcée contre la Flamme.'],foudre:['ϟ','ÉCLAIR FULGURANT','Attaque renforcée contre l’Eau.'],ombre:['☾','GRIFFE NOCTURNE','Attaque renforcée contre la Lumière.'],lumière:['✧','ÉCLAT STELLAIRE','Attaque renforcée contre l’Ombre.']};
+  const symbols={mystère:'◈',neutre:'♥',flamme:'▲',nature:'❀',foudre:'ϟ',eau:'≈',ombre:'☾',lumière:'✧'};
+  const isRare=id=>['lumia','nebula','prism','auror'].includes(id);
+  const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+  const blankDaily=()=>({day:today(),feed:0,play:0,win:0,claimed:false});
+  const desc = {prism:'Né d’une mutation prismatique, ce gardien reflète l’énergie de plusieurs générations.',auror:'Une créature des aurores numériques dont l’ADN résonne avec les anciens mondes.',egg:"Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.",baby:"Une petite boule de pixels pleine d'énergie. Tout reste à construire !",ember:"Un petit dragon intrépide. Il adore les défis et les entraînements.",verd:"Un gardien des forêts, doux et joueur. L'affection le rend plus fort.",volt:"Une créature électrique, vive et équilibrée. Toujours prête à découvrir.",ember2:"Sa force brûlante révèle des années de courage et d'entraînement.",verd2:"Son énergie végétale protège maintenant tous ses compagnons.",volt2:"Le maître des étincelles est devenu une légende de l'arène !",aqua:"Un gardien aquatique qui aime un environnement impeccablement entretenu.",shade:"Un rôdeur des ombres, né des défis et de la discipline.",aqua2:"Il commande les marées et protège les rivières numériques.",shade2:"Dans la nuit, ses ailes de pixels ne font aucun bruit.",lumia:"Une rare légende de lumière, révélée par des soins exemplaires.",nebula:"Une créature stellaire apparue au terme de grands défis."};
+  const base = () => ({version:4,genetics:null,eggs:[],family:[],form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,mistakes:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,level:1,xp:0,record:{},dex:{egg:true},daily:blankDaily(),log:['Un mystérieux œuf vient d’apparaître…']});
   let state;
-  try{const saved = JSON.parse(localStorage.getItem(KEY));state = saved && saved.version===1 && typeof saved.form==='string' && names[saved.form] ? {...base(),...saved} : base();}catch(_){state=base()}
+  try{const saved = JSON.parse(localStorage.getItem(KEY));state = saved && [1,2,3,4].includes(saved.version) && names[saved.form] ? {...base(),...saved,version:4} : base();}catch(_){state=base()}
+  const talents={force:{name:'FORCE',detail:'Dégâts directs +12 %.'},garde:{name:'GARDE',detail:'Dégâts reçus −15 %.'},esprit:{name:'ESPRIT',detail:'Pouvoir élémentaire +20 %.'}};
+  const travelers=[{id:'ember',label:'EMBERIX — flamme',type:'flamme',talent:'force'},{id:'verd',label:'VERDIX — nature',type:'nature',talent:'garde'},{id:'aqua',label:'AQUARI — eau',type:'eau',talent:'esprit'}];
+  const knownType=t=>['flamme','nature','eau','foudre','ombre','lumière','neutre'].includes(t);
+  const normalizeGenetics=g=>g && typeof g==='object' && knownType(g.affinity) && Object.hasOwn(talents,g.talent) ? {affinity:g.affinity,talent:g.talent,mutation:['prisme','aurore'].includes(g.mutation)?g.mutation:null,parent:typeof g.parent==='string'&&Object.hasOwn(names,g.parent)?g.parent:'baby',partner:typeof g.partner==='string'&&Object.hasOwn(names,g.partner)?g.partner:'baby'} : null;
+  const normalizeEgg=e=>e&&typeof e==='object'&&Number.isFinite(e.id)&&normalizeGenetics(e.genetics)?{id:e.id,genetics:normalizeGenetics(e.genetics),generation:Math.max(1,Math.min(999,Number(e.generation)||1))}:null;
+  state.genetics=normalizeGenetics(state.genetics);
+  state.eggs=Array.isArray(state.eggs)?state.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];
+  state.family=Array.isArray(state.family)?state.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];
+  state.dex=state.dex&&typeof state.dex==='object'&&!Array.isArray(state.dex)?state.dex:{};
+  state.dex.egg=true;if(state.stage>=1)state.dex.baby=true;if(names[state.form])state.dex[state.form]=true;
+  state.record=state.record&&typeof state.record==='object'?state.record:{};
+  state.daily=state.daily&&state.daily.day===today()?state.daily:blankDaily();
+  state.level=Number.isInteger(state.level)&&state.level>=1?state.level:1;state.xp=Math.max(0,Number(state.xp)||0);state.mistakes=Math.max(0,Number(state.mistakes)||0);
   let fight=null;
   let toastTimer=null;
   let actionFx={type:'',until:0};
   const notify = msg => { const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2300); };
   const log = msg => {state.log.unshift(msg);state.log=state.log.slice(0,7)};
+  const discover = form => {state.dex[form]=true;};
+  function awardXP(n){state.xp+=n;let gain=0;while(state.xp>=state.level*14+12){state.xp-=state.level*14+12;state.level++;gain++}if(gain){log(`Niveau ${state.level} ! Ton compagnon devient plus puissant.`);notify(`✦ NIVEAU ${state.level} !`)}}
+  function progressDaily(field){if(state.daily.day!==today())state.daily=blankDaily();state.daily[field]=Math.min(99,(state.daily[field]||0)+1)}
+  const dailyTasks=()=>[{name:'Deux bons repas',note:'Nourrir 2 fois',count:state.daily.feed,goal:2},{name:'Deux jeux ensemble',note:'Jouer 2 fois',count:state.daily.play,goal:2},{name:'Une victoire',note:'Gagner un combat',count:state.daily.win,goal:1}];
+  function claimDaily(){if(state.daily.day!==today())state.daily=blankDaily();if(state.daily.claimed||!dailyTasks().every(m=>m.count>=m.goal))return;state.daily.claimed=true;state.bits+=25;log('Missions quotidiennes terminées : +25 Bits !');notify('◈ +25 BITS ! Missions accomplies.');save();render()}
+  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];next.lastDate=Date.now();return next}
+  const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download='bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
   const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent='SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
   const timeString = secs => {const n=Math.max(0,Math.floor(secs));return String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n%3600/60)).padStart(2,'0')};
   function degrade(seconds){
@@ -109,22 +372,36 @@
     if(state.fullness<17 || state.hygiene<15)state.health=CLAMP(state.health - m*4);
     else if(state.fullness>50 && state.hygiene>45 && state.energy>40)state.health=CLAMP(state.health+m*1.5);
     state.poopAccum+=seconds;
-    if(state.poopAccum>=165){state.poopAccum%=165;state.poops=Math.min(3,state.poops+1);state.hygiene=CLAMP(state.hygiene-10);log('Oups… un petit accident à nettoyer !')}
+    if(state.poopAccum>=165){state.poopAccum%=165;if(state.poops>=2)state.mistakes=Math.min(99,state.mistakes+1);state.poops=Math.min(3,state.poops+1);state.hygiene=CLAMP(state.hygiene-10);log('Oups… un petit accident à nettoyer !')}
   }
   // On reprend la progression sans punir le joueur d'avoir fermé l'onglet longtemps.
   const offline = Math.max(0,Math.min(15*60,(Date.now()-Number(state.lastDate||Date.now()))/1000));
   if(offline>5 && state.stage>0){degrade(offline);state.age+=offline;log('Te revoilà ! Ton compagnon a continué à vivre.')}
   state.lastDate=Date.now();
-  const evoConfig=()=>state.stage===0?{target:'Éclosion',detail:'Prêt maintenant',fraction:1}:state.stage===1?{target:'Forme rookie',detail:`${Math.min(state.care,6)} / 6 soins`,fraction:CLAMP(state.care/6,0,1)}:state.stage===2?{target:'Forme ultime',detail:`${Math.min(state.care,18)} / 18 soins · ${Math.min(state.wins,3)} / 3 victoires`,fraction:(Math.min(1,state.care/18)+Math.min(1,state.wins/3))/2}:{target:'Évolution accomplie',detail:'Forme ultime atteinte',fraction:1};
+  const evoConfig=()=>state.stage===0?{target:'Éclosion',detail:'Prêt maintenant',fraction:1}:state.stage===1?{target:'Forme Rookie',detail:`${Math.min(state.care,7)} / 7 soins`,fraction:CLAMP(state.care/7,0,1)}:state.stage===2?{target:'Forme Ultime (ou secrète)',detail:`${Math.min(state.care,24)} / 24 soins · ${Math.min(state.wins,3)} / 3 victoires`,fraction:(Math.min(1,state.care/24)+Math.min(1,state.wins/3))/2}:{target:'Évolution accomplie',detail:'Forme ultime atteinte',fraction:1};
+  function rookieRoute(){
+    if(state.train>=(state.genetics?.affinity==='ombre'?3:4)&&state.wins>=1&&state.train>state.play+1)return 'shade';
+    const a=state.genetics?.affinity;const p=state.play+(a==='nature'?2:0),t=state.train+(a==='flamme'?2:0),c=state.clean+(a==='eau'?2:0);
+    if(c>=4&&c>p+1&&c>t+1)return 'aqua';
+    if(t>p+1&&t>=c)return 'ember';
+    if(p>t+1&&p>=c)return 'verd';
+    return 'volt';
+  }
   function evolve(){
-    if(state.stage===1 && state.care>=6){
-      const next=state.train>state.play+1?'ember':state.play>state.train+1?'verd':'volt';
-      state.stage=2;state.form=next;state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2600};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`✦ ÉVOLUTION : ${names[next]} ! +15 Bits`);
-    }else if(state.stage===2 && state.care>=18 && state.wins>=3){
-      state.stage=3;state.form=state.form+'2';state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+2600};log(`ÉVOLUTION ULTIME ! ${names[state.form]} !`);notify(`★ FORME ULTIME : ${names[state.form]} ! +50 Bits`);
+    if(state.stage===1&&state.care>=7){
+      const next=rookieRoute();state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`✦ ÉVOLUTION : ${names[next]} ! +15 Bits`);
+    }else if(state.stage===2&&state.care>=24&&state.wins>=3){
+      let next=state.form+'2';
+      // To reveal a secret, the player needs to win enough before the usual evolution.
+      if(state.wins>=5&&state.mistakes<=1&&state.health>=70&&state.hygiene>=70&&state.joy>=70&&state.train>=5)next='lumia';
+      else if(state.wins>=7&&state.play>=8&&state.level>=4)next='nebula';
+      if(state.genetics?.mutation==='prisme'&&state.wins>=5)next='prism';
+      if(state.genetics?.mutation==='aurore'&&state.wins>=5)next='auror';
+      if(!names[next])next='volt2';
+      state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`★ ÉVOLUTION : ${names[next]} ! +50 Bits`);
     }
   }
-  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');actionFx={type:'evolve',until:Date.now()+2200};save();render()}
+  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');actionFx={type:'evolve',until:Date.now()+2200};save();render()}
   function action(type){
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
@@ -135,24 +412,91 @@
     if(type==='heal'){
       if(state.health>=100){notify('Il est déjà en pleine forme !');return}
       if(state.bits<10){notify('Il faut 10 Bits pour acheter un soin.');return}
-      state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);log('Un remède pixel lui redonne de la santé.');notify('💊 +45 PV !');
+      state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);log('Un remède pixel lui redonne de la santé.');notify('💊 +45 PV !');awardXP(2);
     }else if(type==='feed'){
-      state.fullness=CLAMP(state.fullness+30);state.joy=CLAMP(state.joy+3);state.hygiene=CLAMP(state.hygiene-3);log(`${names[state.form]} a bien mangé !`);notify('🍖 Miam ! +30 satiété');state.care++;
+      state.fullness=CLAMP(state.fullness+30);state.joy=CLAMP(state.joy+3);state.hygiene=CLAMP(state.hygiene-3);log(`${names[state.form]} a bien mangé !`);notify('🍖 Miam ! +30 satiété');state.care++;progressDaily('feed');awardXP(2);
     }else if(type==='play'){
       if(state.energy<8){notify('Il est trop fatigué pour jouer.');return}
-      state.joy=CLAMP(state.joy+27);state.energy=CLAMP(state.energy-8);state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=2;log(`${names[state.form]} s'est amusé avec toi. +2 Bits`);notify('🎾 Super partie ! +2 Bits');
+      state.joy=CLAMP(state.joy+27);state.energy=CLAMP(state.energy-8);state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=2;progressDaily('play');awardXP(3);log(`${names[state.form]} s'est amusé avec toi. +2 Bits`);notify('🎾 Super partie ! +2 Bits');
     }else if(type==='train'){
       if(state.energy<15 || state.fullness<8){notify('Nourris-le et laisse-le se reposer avant de l’entraîner.');return}
-      state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);state.joy=CLAMP(state.joy-3);state.train++;state.care++;state.bits+=4;log('Entraînement terminé. Il gagne en puissance ! +4 Bits');notify('🥊 +1 entraînement · +4 Bits');
+      state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);state.joy=CLAMP(state.joy-3);state.train++;state.care++;state.bits+=4;awardXP(5);log('Entraînement terminé. Il gagne en puissance ! +4 Bits');notify('🥊 +1 entraînement · +4 Bits');
     }else if(type==='clean'){
-      state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;log('Un grand nettoyage, et tout brille à nouveau !');notify('🫧 Tout propre ! +35 hygiène');
+      state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');notify('🫧 Tout propre ! +35 hygiène');
     }else{return}
     actionFx={type,until:Date.now()+850};evolve();save();render();
   }
+  function availablePartners(){
+    const unique=new Map(travelers.map(p=>[p.id,p]));
+    for(const id of order.filter(x=>state.dex[x]&&x!==state.form&&state.stage>=2&&!["egg","baby"].includes(x)))if(!unique.has(id))unique.set(id,{id,label:`${names[id]} — ${types[id]}`,type:types[id],talent:types[id]==='flamme'?'force':types[id]==='eau'?'esprit':'garde'});
+    return [...unique.values()];
+  }
+  function breed(){
+    if(state.stage<2){notify('Débloque d’abord une forme Rookie !');return}
+    if(state.sleeping||state.health<40){notify('Réveille et soigne ton compagnon pour créer un œuf.');return}
+    if(state.wins<2){notify('Il faut deux victoires avec ce compagnon.');return}
+    if(state.eggs.length>=3){notify('L’incubateur est plein (3 œufs).');return}
+    if(state.bits<40){notify('Il faut 40 Bits pour créer un œuf.');return}
+    const partner=availablePartners().find(x=>x.id===$('partnerSelect').value);
+    if(!partner){notify('Sélectionne un partenaire.');return}
+    const parentType=types[state.form];
+    const affinity=Math.random()<.55&&knownType(parentType)&&parentType!=='neutre'?parentType:partner.type;
+    const parentTalent=state.genetics?.talent || (parentType==='flamme'?'force':parentType==='eau'?'esprit':'garde');
+    const talent=Math.random()<.58?parentTalent:partner.talent;
+    // Une hybridation entre deux éléments différents peut révéler une mutation rare.
+    const roll=Math.random(),chance=parentType===partner.type?.06:.14;
+    const mutation=roll<chance*.55?'prisme':roll<chance?'aurore':null;
+    const genetics={affinity,talent,mutation,parent:state.form,partner:partner.id};
+    state.eggs.push({id:Date.now()+Math.floor(Math.random()*10000),genetics,generation:state.generation+1});
+    state.bits-=40;log(`Un œuf de ${names[state.form]} et ${names[partner.id]} rejoint l’incubateur !`);
+    notify(mutation?'✦ Un œuf à l’éclat inhabituel !':'🥚 Nouvel œuf placé en incubateur !');
+    actionFx={type:'evolve',until:Date.now()+1200};save();render();
+  }
+  function activateEgg(id){
+    const i=state.eggs.findIndex(e=>String(e.id)===String(id));if(i<0)return;
+    const egg=state.eggs[i];
+    if(!confirm(`Faire éclore cet œuf à la génération ${state.generation+1} ? Ton compagnon actuel rejoindra l’arbre généalogique et sa progression individuelle sera clôturée. Les autres œufs et ton bestiaire seront conservés.`))return;
+    const family=[...state.family];
+    if(state.stage>0)family.push({generation:state.generation,form:state.form,wins:state.wins,level:state.level,trait:state.genetics?.talent||null,parents:state.genetics?[state.genetics.parent,state.genetics.partner]:[]});
+    const eggs=state.eggs.filter((_,idx)=>idx!==i);
+    const bits=state.bits,dex={...state.dex},daily={...state.daily},genetics=normalizeGenetics(egg.genetics);
+    state={...base(),bits,generation:state.generation+1,dex,eggs,family:family.slice(-12),genetics,daily,log:[`Génération ${state.generation+1} : l’œuf de ${names[genetics.parent]} et ${names[genetics.partner]} attend son éclosion !`]};
+    fight=null;closeBattle();save();render();notify('🥚 Nouvel œuf : appuie sur le bouton central !');
+  }
+  function renderGenealogy(){
+    const gene=state.genetics;
+    $('geneBadge').textContent=gene?`✦ ADN : ${gene.affinity.toUpperCase()} · ${talents[gene.talent].name}`:'◈ PREMIÈRE LIGNÉE';
+    $('currentDna').textContent=gene?`${gene.affinity.toUpperCase()} · ${talents[gene.talent].name}${gene.mutation?' · ✧ MUTATION':''}`:'LIGNÉE ORIGINELLE';
+    $('currentTalent').textContent=gene?`${talents[gene.talent].detail} ${gene.mutation?'Une mutation secrète pourrait s’exprimer à la forme Ultime (5 victoires).':''}`:'Ton premier compagnon crée la souche de ton arbre familial.';
+    const select=$('partnerSelect'),selected=select.value;
+    const partners=availablePartners();select.replaceChildren();
+    for(const mate of partners){const option=document.createElement('option');option.value=mate.id;option.textContent=mate.label;select.appendChild(option)}
+    if(partners.some(p=>p.id===selected))select.value=selected;
+    const can=state.stage>=2&&!state.sleeping&&state.health>=40&&state.wins>=2&&state.eggs.length<3&&state.bits>=40;
+    $('breedBtn').disabled=!can;$('partnerSelect').disabled=state.stage<2;
+    $('eggCount').textContent=`${state.eggs.length} / 3 ŒUFS`;
+    $('breedStatus').textContent=state.stage<2?'Atteins le stade Rookie pour débloquer la reproduction.':state.wins<2?'Remporte deux combats avec cette génération.':state.bits<40?'Économise 40 Bits pour créer un œuf.':state.eggs.length>=3?'Incubateur rempli : active l’un des œufs pour libérer une place.':state.health<40||state.sleeping?'Réveille ou soigne ton compagnon.':'Prêt ! Le partenaire détermine une partie de l’héritage. Chaque œuf coûte 40 Bits.';
+    const list=$('eggList');list.replaceChildren();
+    if(!state.eggs.length){const empty=document.createElement('div');empty.className='empty-nest';empty.textContent='Aucun œuf en attente. Ton incubateur pourra contenir jusqu’à trois descendants.';list.appendChild(empty)}
+    state.eggs.forEach(egg=>{
+      const b=document.createElement('button');b.type='button';b.className='egg-card'+(egg.genetics.mutation?' rare':'');b.setAttribute('aria-label',`Activer l’œuf ${egg.genetics.affinity}, ${talents[egg.genetics.talent].name}`);
+      const ico=document.createElement('span');ico.className='egg-icon';ico.textContent=egg.genetics.mutation?'✧🥚':'🥚';
+      const title=document.createElement('b');title.textContent=`AFFINITÉ ${egg.genetics.affinity.toUpperCase()}`;
+      const note=document.createElement('small');note.textContent=`${talents[egg.genetics.talent].name} · ${egg.genetics.mutation?'★ RARE':'STANDARD'} · ISSUE GEN ${Math.max(1,egg.generation-1)}`;
+      b.append(ico,title,note);b.addEventListener('click',()=>activateEgg(egg.id));list.appendChild(b);
+    });
+    const tree=$('familyTree');tree.replaceChildren();
+    if(!state.family.length && state.stage===0){const empty=document.createElement('div');empty.className='empty-nest';empty.textContent='Ton histoire familiale commence avec le premier œuf.';tree.appendChild(empty)}
+    for(const m of [...state.family].reverse().slice(0,6)){
+      const row=document.createElement('div');row.className='family-member';const label=document.createElement('b');label.textContent=`GEN ${String(m.generation).padStart(2,'0')} · ${names[m.form]}`;const details=document.createElement('span');details.textContent=`LV.${m.level||1} · ${m.wins||0} victoires${Array.isArray(m.parents)&&m.parents.length===2&&m.parents.every(id=>Object.hasOwn(names,id))?' · '+m.parents.map(id=>names[id]).join(' × '):''}`;row.append(label,details);tree.appendChild(row);
+    }
+    if(state.stage>0){const row=document.createElement('div');row.className='family-member current';const label=document.createElement('b');label.textContent=`GEN ${String(state.generation).padStart(2,'0')} · ${names[state.form]}`;const details=document.createElement('span');details.textContent=state.genetics?`★ EN COURS · ${names[state.genetics.parent]} × ${names[state.genetics.partner]}`:'★ EN COURS';row.append(label,details);tree.prepend(row)}
+  }
   function newGame(){
-    if(!confirm('Créer un nouvel œuf ? La progression actuelle sera remplacée.'))return;
+    if(!confirm('Nouvelle génération sans héritage ? Le compagnon actuel sera archivé. Les œufs en incubateur, le bestiaire et les Bits seront conservés.'))return;
     const generation=(state.generation||1)+1;
-    state={...base(),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};fight=null;closeBattle();save();render();notify('🥚 Une nouvelle aventure commence !');
+    const old=state;const family=[...state.family];if(old.stage>0)family.push({generation:old.generation,form:old.form,wins:old.wins,level:old.level,trait:old.genetics?.talent||null,parents:old.genetics?[old.genetics.parent,old.genetics.partner]:[]});
+    state={...base(),bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};fight=null;closeBattle();save();render();notify('🥚 Une nouvelle aventure commence !');
   }
   function drawPixelCreature(canvas,form,t,options={}){
     const ctx=canvas.getContext('2d');
@@ -162,10 +506,10 @@
     const dark='#2f4b39',mid='#66835a',light='#92ab76',pale='#dcebc0';
     const scale=Math.max(2,Math.floor(Math.min(cw/31,ch/30)));
     const isEgg=form==='egg';
-    const jump=options.still?0:Math.round(Math.sin(t/450)*1.2);
+    const jump=options.still?0:Math.round(Math.sin(t/520)*1.4)+(options.pose==='attack'?-2:0);
     const blink=!isEgg && Math.floor(t/3600)%7===6;
     const spriteW=24, spriteH=24;
-    const startX=Math.floor((cw-spriteW*scale)/2),startY=Math.floor((ch-spriteH*scale)/2)+(options.still?0:jump*scale);
+    const startX=Math.floor((cw-spriteW*scale)/2)+(options.pose==='attack'?2*scale:0),startY=Math.floor((ch-spriteH*scale)/2)+(options.still?0:jump*scale);
     const pix=(x,y,w=1,h=1,color=dark)=>{ctx.fillStyle=color;ctx.fillRect(startX+x*scale,startY+y*scale,w*scale,h*scale)};
     const row=(y,x,w,color=dark)=>pix(x,y,w,1,color);
     const eye=(x,y)=>{if(blink)pix(x,y,2,1,dark);else {pix(x,y,2,2,dark);pix(x,y,1,1,pale)}};
@@ -177,14 +521,44 @@
       [[8,7],[14,7],[6,12],[15,15],[9,17],[12,10]].forEach(([x,y])=>pix(x,y,2,2,mid));
       [[4,12],[6,13],[8,11],[10,13],[12,11],[14,13],[16,11],[18,12]].forEach(([x,y])=>pix(x,y,2,1,dark));
       pix(9,5,4,1,pale);pix(8,6,2,1,pale);
+    }else if(form==='lumia'){
+      // Halo guardian: winged, floating and crowned; independent silhouette.
+      pix(10,0,5,2,pale);pix(8,2,9,2,dark);pix(10,3,5,2,light);
+      pix(3,8,5,3,dark);pix(1,6,4,3,dark);pix(0,4,3,3,mid);pix(3,12,5,4,dark);pix(1,14,4,4,mid);
+      pix(17,8,5,3,dark);pix(20,6,4,3,dark);pix(22,4,2,3,mid);pix(17,12,5,4,dark);pix(20,14,4,4,mid);
+      pix(8,6,9,14,dark);pix(9,7,7,12,mid);pix(10,6,5,2,pale);pix(10,18,5,3,dark);
+      pix(7,20,4,2,dark);pix(15,20,4,2,dark);eye(9,11);eye(15,11);pix(12,15,2,1,dark);
+      pix(3,8,2,1,pale);pix(19,8,2,1,pale);pix(11,3,3,1,pale);
+    }else if(form==='prism'){
+      // Créature cristalline : corps en losange, prismes et rayons.
+      pix(11,0,3,4,dark);pix(8,3,9,4,dark);pix(5,7,15,7,dark);pix(4,14,17,4,dark);pix(7,18,11,4,dark);
+      pix(9,5,7,4,light);pix(6,9,13,6,mid);pix(7,15,11,3,light);pix(10,18,5,3,mid);
+      pix(2,8,3,6,dark);pix(20,8,3,6,dark);pix(0,11,2,4,mid);pix(22,10,2,4,mid);
+      pix(8,20,3,3,dark);pix(15,20,3,3,dark);pix(10,12,2,2,pale);pix(15,12,2,2,pale);pix(12,15,2,2,dark);
+      pix(12,2,1,3,pale);pix(4,3,2,2,pale);pix(19,4,2,2,pale);
+    }else if(form==='auror'){
+      // Renard des aurores : longs bois en éclairs et queue d'étoiles.
+      pix(6,5,4,9,dark);pix(5,2,3,6,dark);pix(4,0,2,4,light);pix(15,4,4,10,dark);pix(18,2,3,7,dark);pix(20,0,2,4,light);
+      pix(5,12,15,8,dark);pix(7,13,11,6,mid);pix(9,15,7,3,light);pix(4,17,6,4,dark);pix(16,17,6,4,dark);
+      pix(1,12,5,3,dark);pix(0,9,3,4,dark);pix(1,7,3,3,mid);pix(20,12,4,3,dark);pix(21,9,3,4,mid);
+      pix(8,13,2,2,pale);pix(16,13,2,2,pale);pix(12,17,2,1,dark);pix(8,20,3,3,dark);pix(15,20,3,3,dark);
+      pix(10,4,3,3,light);pix(12,0,2,3,pale);
+    }else if(form==='nebula'){
+      // Astral jellyfish: stellar crest, tentacles, satellite stars.
+      pix(9,2,6,2,dark);pix(7,4,10,3,dark);pix(5,7,14,3,dark);pix(4,10,16,6,dark);pix(5,16,14,3,dark);
+      pix(7,5,10,3,mid);pix(6,9,12,6,mid);pix(7,15,10,2,light);
+      pix(7,18,3,4,dark);pix(11,17,3,6,dark);pix(16,18,3,4,dark);pix(12,22,2,2,light);
+      eye(8,11);eye(15,11);pix(11,15,4,1,dark);
+      [[2,3],[20,2],[1,12],[22,13],[3,20],[21,20],[11,0]].forEach(([x,y])=>pix(x,y,2,2,pale));
+      pix(13,4,2,1,pale);
     }else if(form==='baby'){
       // Friendly bouncing blob.
       row(7,9,6);row(8,7,10);row(9,6,12);row(10,5,14);row(11,4,16);pix(3,12,18,6);row(18,4,16);row(19,5,14);row(20,7,10);row(21,9,6);
       for(let y=9;y<=19;y++){const bounds=y<12?[6,18]:y<18?[4,20]:[6,18];row(y,bounds[0],bounds[1]-bounds[0],mid)}
       pix(7,10,5,1,light);pix(7,11,3,1,light);eye(8,13);eye(15,13);pix(12,16,2,1,dark);pix(6,18,3,1,light);
     }else{
-      const formBase=form.endsWith('2')?form.slice(0,-1):form;
-      const evolved=form.endsWith('2');
+      const formBase=form.endsWith('2')?form.slice(0,-1):form==='lumia'?'volt':form==='nebula'?'aqua':form;
+      const evolved=form.endsWith('2')||isRare(form);
       if(formBase==='ember'){
         // Dino with a snout, back spikes and a tail.
         pix(2,15,4,2,dark);pix(4,14,5,3,dark);pix(5,12,4,2,dark);pix(7,17,6,3,dark);
@@ -201,6 +575,22 @@
         pix(8,18,10,3,dark);pix(7,20,5,2,dark);pix(15,20,5,2,dark);pix(9,16,7,3,light);
         eye(9,13);eye(15,13);pix(12,16,2,1,dark);pix(8,11,3,1,light);
         if(evolved){pix(1,11,5,2,dark);pix(0,9,4,2,dark);pix(20,11,4,2,dark);pix(20,9,4,2,dark);pix(4,6,3,3,mid);pix(18,4,4,3,mid);pix(11,0,2,3,dark)}
+      }else if(formBase==='aqua'){
+        // Sea guardian: fins, flippers and a wavy tail.
+        pix(5,10,13,10,dark);pix(6,11,11,8,mid);pix(9,8,5,4,dark);pix(10,9,4,3,light);
+        pix(15,9,7,7,dark);pix(16,10,6,5,mid);pix(18,13,5,2,dark);
+        pix(3,14,5,3,dark);pix(1,12,4,3,dark);pix(2,17,4,3,dark);
+        pix(7,19,6,3,dark);pix(15,19,6,3,dark);pix(11,16,7,2,light);
+        pix(8,6,3,4,dark);pix(8,7,2,2,light);pix(12,7,4,3,dark);pix(13,8,2,1,light);
+        eye(16,12);pix(20,16,2,1,pale);
+        if(evolved){pix(3,4,5,2,dark);pix(4,6,3,2,mid);pix(2,21,5,2,dark);pix(20,5,3,4,dark);pix(19,3,3,3,light);}
+      }else if(formBase==='shade'){
+        // Night creature with hood, crescent horns and cloak.
+        pix(6,5,5,9,dark);pix(8,3,3,3,dark);pix(14,4,5,10,dark);pix(17,2,2,4,dark);
+        pix(4,11,16,11,dark);pix(6,12,12,9,mid);pix(8,9,10,7,dark);pix(9,10,8,6,mid);
+        pix(2,16,5,6,dark);pix(19,15,4,6,dark);pix(6,21,4,2,dark);pix(16,21,4,2,dark);
+        pix(9,13,2,2,pale);pix(16,13,2,2,pale);pix(12,17,3,1,dark);
+        if(evolved){pix(1,8,6,3,dark);pix(0,5,4,3,dark);pix(19,9,5,3,dark);pix(20,6,4,3,dark);pix(10,1,4,3,dark)}
       }else{
         // Voltage fox with antennae and jagged tail.
         pix(6,6,5,8,dark);pix(7,4,2,4,dark);pix(9,7,6,5,dark);pix(14,5,5,9,dark);pix(16,3,2,4,dark);
@@ -210,6 +600,9 @@
         if(evolved){pix(2,4,3,3,dark);pix(4,3,3,2,dark);pix(18,4,4,2,dark);pix(20,2,2,3,dark);pix(0,18,5,2,dark);pix(3,20,3,2,dark);pix(20,18,4,2,dark)}
       }
     }
+    // Extra halos for the two secret forms.
+    if(form==='lumia'){[[6,3],[8,2],[10,1],[12,1],[14,2],[16,3],[4,6],[18,5]].forEach(([x,y])=>pix(x,y,2,1,pale));pix(9,0,6,1,dark)}
+    if(form==='nebula'){[[1,4],[22,3],[2,8],[21,9],[1,16],[22,17],[5,1],[18,1]].forEach(([x,y])=>pix(x,y,1,1,pale))}
     if(options.ill) {ctx.fillStyle=dark;ctx.fillRect(startX+23*scale,startY+3*scale,2*scale,2*scale)}
     if(options.still)return;
   }
@@ -229,7 +622,7 @@
     drawPixelCreature(canvas,state.form,t,{scene:true,ill:state.health<20});
     // Optional signs of daily life.
     for(let i=0;i<state.poops;i++){const x=10+i*18;ctx.fillStyle='#3e593f';ctx.fillRect(x,h-50,8,5);ctx.fillRect(x+2,h-56,5,6);ctx.fillRect(x+3,h-60,3,4)}
-    if(actionFx.until>t){ctx.fillStyle='#405f3d';ctx.font='bold 18px monospace';const label=actionFx.type==='feed'?'♥':actionFx.type==='train'?'✦':actionFx.type==='clean'?'✧':actionFx.type==='evolve'?'★ ★':'♪';ctx.fillText(label,155,74-(Math.sin(t/160)*4));}
+    if(actionFx.until>Date.now()){ctx.fillStyle='#405f3d';ctx.font='bold 18px monospace';const label=actionFx.type==='feed'?'♥':actionFx.type==='train'?'✦':actionFx.type==='clean'?'✧':actionFx.type==='evolve'?'★ ★':'♪';ctx.fillText(label,155,74-(Math.sin(t/160)*4));}
     if(state.health<20){ctx.fillStyle='#405a3d';ctx.font='bold 12px monospace';ctx.fillText('!',151,80)}
   }
   // Draws a sprite over a complete LCD scene; the sprite helper clears its canvas,
@@ -245,74 +638,207 @@
     ctx.fillStyle='#acc697';ctx.fillRect(14,91,23,4);ctx.fillRect(19,85,14,6);ctx.fillRect(191,106,34,4);ctx.fillRect(198,99,20,7);
     ctx.fillStyle='#718f67';ctx.fillRect(18,43,5,5);ctx.fillRect(23,43,5,5);ctx.fillRect(19,48,8,4);ctx.fillRect(212,52,5,5);ctx.fillRect(218,57,5,5);
     drawPixelCreature(spriteLayer,state.form,t,{ill:state.health<20});ctx.drawImage(spriteLayer,0,-1);
+    // A handful of slowly moving monochrome particles gives the old LCD room some life.
+    if(state.stage>0 && !state.sleeping){const beat=Math.floor(t/260);ctx.fillStyle='#7b9d6d';for(let i=0;i<4;i++){const x=32+((beat*2+i*61)%178),y=53+((i*31+Math.floor(beat/3))%73);ctx.fillRect(x,y,2,3)}}
+    if(state.sleeping){ctx.fillStyle='#476948';ctx.font='bold 14px monospace';ctx.fillText('z z',162,82-Math.sin(t/330)*7)}
     ctx.fillStyle='#395641';for(let i=0;i<state.poops;i++){const x=15+i*20;ctx.fillRect(x,h-54,13,6);ctx.fillRect(x+3,h-61,8,7);ctx.fillRect(x+5,h-65,4,4)}
-    if(actionFx.until>t){ctx.fillStyle='#3b563d';ctx.font='bold 21px monospace';ctx.fillText(actionFx.type==='evolve'?'✦ ✦':actionFx.type==='feed'?'♥':actionFx.type==='play'?'♪':actionFx.type==='train'?'✦':'✧',173,84-Math.sin(t/130)*7)}
+    if(actionFx.until>Date.now()){ctx.fillStyle='#3b563d';ctx.font='bold 21px monospace';ctx.fillText(actionFx.type==='evolve'?'✦ ✦':actionFx.type==='feed'?'♥':actionFx.type==='play'?'♪':actionFx.type==='train'?'✦':'✧',173,84-Math.sin(t/130)*7)}
+    if(actionFx.type==='evolve'&&actionFx.until>Date.now()){
+      const elapsed=(3200-(actionFx.until-Date.now()))/70;
+      for(let i=0;i<18;i++){const angle=i*Math.PI*2/18+elapsed*.07;const radius=27+(elapsed%35)*1.3;const x=120+Math.cos(angle)*radius,y=92+Math.sin(angle)*radius*.6;ctx.fillStyle=i%2?'#415c3f':'#718a62';ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,6,6)}
+    }
     if(state.health<25&&state.stage>0){ctx.font='bold 18px monospace';ctx.fillStyle='#3b563d';ctx.fillText('!',165,110)}
     requestAnimationFrame(paint);
   }
   const metrics=[['fullness','SATIÉTÉ'],['energy','ÉNERGIE'],['joy','MORAL'],['hygiene','HYGIÈNE'],['health','SANTÉ']];
+  function renderDaily(){
+    const missions=dailyTasks(),done=missions.filter(m=>m.count>=m.goal).length;
+    $('dailyStatus').textContent=`${done} / 3`;$('dailyList').innerHTML=missions.map(m=>`<div class="mission"><div><strong>${m.count>=m.goal?'✓ ':'◻ '}${m.name}</strong><small>${m.note}</small></div><span>${Math.min(m.count,m.goal)} / ${m.goal}</span></div>`).join('');
+    $('dailyHint').textContent=state.daily.claimed?'RÉCOMPENSE OBTENUE':done===3?'BRAVO, À RÉCUPÉRER':'ENCORE '+(3-done)+' MISSION(S) À TERMINER';
+    $('claimDaily').disabled=done<3||state.daily.claimed;$('claimDaily').textContent=state.daily.claimed?'✓ OBTENU':'+25 BITS ◈';
+  }
+  function renderDex(){
+    const target=$('dexGrid');const count=order.filter(id=>state.dex[id]).length;
+    $('dexCount').textContent=`${count} / ${order.length}`;
+    if(!target.children.length){
+      target.innerHTML=order.map(id=>`<div class="dex-item" id="dex-${id}"><canvas id="sprite-${id}" width="88" height="88" aria-hidden="true"></canvas><strong id="label-${id}"></strong><small id="kind-${id}"></small></div>`).join('');
+      for(const id of order)drawPixelCreature($('sprite-'+id),id,0,{still:true});
+    }
+    for(const id of order){const seen=!!state.dex[id],el=$('dex-'+id);el.classList.toggle('locked',!seen);el.classList.toggle('new',id===state.form);$('label-'+id).textContent=seen?names[id]:'???';$('kind-'+id).textContent=seen?(isRare(id)?'★ SECRET':(id.endsWith('2')?'ULTIME':id==='egg'?'ŒUF':id==='baby'?'BÉBÉ':id==='lumia'||id==='nebula'?'SECRET':'ROOKIE')):'NON DÉCOUVERT';}
+  }
   function render(){
+    if(state.daily.day!==today())state.daily=blankDaily();
+    $('elementBadge').textContent=(symbols[types[state.form]]||'◈')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
+    $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
+    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').textContent=sig[0];$('sigMove').textContent=sig[1];$('sigTrait').textContent=sig[2];
+    renderDaily();renderDex();renderGenealogy();
     $('creatureName').textContent=names[state.form];$('phaseLabel').textContent=['À ÉCLORE','BÉBÉ','ROOKIE','ULTIME'][state.stage];$('creatureDesc').textContent=desc[state.form];
     $('lcdTitle').textContent=state.stage===0?'NEW LIFE':names[state.form];$('lcdStage').textContent=['EGG','BABY','ROOKIE','ULTIMATE'][state.stage]+' / '+String(state.generation).padStart(2,'0');
     $('age').textContent=timeString(state.age);$('lcdTime').textContent=timeString(state.age);$('bits').textContent=state.bits;$('wins').textContent=state.wins;$('gen').textContent=String(state.generation).padStart(2,'0');$('lcdInfo').textContent='GEN '+String(state.generation).padStart(2,'0');
     const well=state.stage===0?'EN ATTENTE':state.health<25?'DANGER':state.health<55?'FRAGILE':state.sleeping?'ENDORMI':state.health>=80?'EN FORME':'À SURVEILLER';$('wellnessTag').textContent=well;
     $('statList').innerHTML=metrics.map(([key,label])=>{const val=Math.round(state[key]);return `<div class="stat-row"><span class="stat-label">${label}</span><div class="bar" role="progressbar" aria-label="${label}" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="100"><div class="fill ${val<28?'low':val<51?'medium':''}" style="width:${val}%"></div></div><span class="stat-value">${val}%</span></div>`}).join('');
     const ev=evoConfig();$('evoTarget').textContent=ev.target;$('evoRequirement').textContent=ev.detail;$('evoPercent').textContent=Math.round(ev.fraction*100)+' %';$('evoBar').style.width=Math.round(ev.fraction*100)+'%';
-    $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Conseil : entraîne-le pour une voie ardente, joue pour une voie végétale, ou équilibre les deux pour une voie électrique.':state.stage===2?'Le temps est venu de gagner des combats, tout en continuant à prendre soin de lui.':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
+    $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Entraîner : Flamme · Jouer : Nature · Nettoyer : Eau · Équilibrer : Foudre · Combattre et entraîner : Ombre.':state.stage===2?'Pour une évolution secrète, vise 5 à 7 victoires et un niveau élevé avant ton 24e soin !':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
     $('lcdMood').textContent=state.stage===0?'♥ PRÊT':state.sleeping?'☾ ZZZ':state.health<25?'! SOS':state.joy<30?'☹ TRISTE':'♥ CONTENT';
     $('displayNote').textContent=state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
     document.querySelectorAll('[data-action]').forEach(btn=>{const a=btn.dataset.action;btn.disabled=state.stage===0 || (state.sleeping&&a!=='sleep') || (state.health<=0&&a!=='sleep'&&a!=='heal')});
-    $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;
+    $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();
   }
   const escapeHtml = str=>String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // V0.4 / Tour par tour et talents héréditaires.
+  const foes=[
+    {name:'BUGOX',type:'nature',nature:'Rôdeur forestier',temper:'farouche'},
+    {name:'GLITCHOU',type:'flamme',nature:'Fauve des braises',temper:'impulsif'},
+    {name:'AQUABUG',type:'eau',nature:'Fantôme des abysses',temper:'prudent'},
+    {name:'VOLTIX',type:'foudre',nature:'Éclaireur électrique',temper:'rapide'},
+    {name:'OMBROX',type:'ombre',nature:'Spectre des données',temper:'rusé'}
+  ];
+  const multipliers={flamme:{nature:1.35,eau:.8},nature:{eau:1.35,flamme:.8},eau:{flamme:1.35,nature:.8},foudre:{eau:1.35,nature:.9},ombre:{lumière:1.35},lumière:{ombre:1.35}};
+  const effectiveness=(a,b)=>(multipliers[a]||{})[b]||1;
+  const intents={attack:{icon:'⚔',label:'FRAPPE RAPIDE',detail:'Une attaque classique arrive. Tu peux parer ou riposter.'},heavy:{icon:'‼',label:'COUP PUISSANT',detail:'Gros dégâts annoncés : la parade est conseillée.'},charge:{icon:'◈',label:'CONCENTRATION',detail:'L’ennemi reprend son souffle : une ouverture pour attaquer !'},guard:{icon:'▣',label:'GARDE RENFORCÉE',detail:'Les frappes normales sont réduites, mais les pouvoirs traversent sa défense.'}};
+  function chooseIntent(previous=''){
+    const pool=['attack','attack','attack','heavy','charge','guard'];
+    if(previous==='charge')return 'heavy';
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    return pick==='heavy'&&previous==='heavy'?'attack':pick;
+  }
+  const battleHistory=msg=>{if(!fight)return;fight.history.unshift(msg);fight.history=fight.history.slice(0,3)};
+  const battleFx=(side,element)=>{
+    const field=$('battleField');field.classList.remove('fx-own','fx-enemy','hit-own','hit-enemy');void field.offsetWidth;
+    field.classList.add(side==='own'?'fx-enemy':'fx-own');
+    const burst=$('pixelBurst');burst.replaceChildren();
+    const x=side==='own'?27:73;
+    const colors={flamme:'#b1603f',nature:'#537643',eau:'#458c92',foudre:'#d1a344',ombre:'#555067',lumière:'#e9da89',neutre:'#5e7767'};
+    for(let i=0;i<14;i++){const sq=document.createElement('i'),a=i*Math.PI*2/14;
+      sq.style.cssText=`--x:${x+(Math.cos(a)*3)}%;--y:${47+Math.sin(a)*5}%;--dx:${Math.round(Math.cos(a)*37)}px;--dy:${Math.round(Math.sin(a)*32)}px;--rot:${i*32}deg;background:${colors[element]||'#5e7767'};animation-delay:${i%3*25}ms`;
+      burst.appendChild(sq);
+    }
+    setTimeout(()=>{if(field)field.classList.remove('fx-own','fx-enemy')},390);
+  };
   function startBattle(){
     if(state.stage===0){notify('Fais éclore ton œuf !');return}
     if(state.sleeping){notify('Réveille ton compagnon avant de combattre.');return}
     if(state.energy<10||state.health<=5){notify('Ton compagnon a besoin de repos ou de soins.');return}
-    const enemyNames=['GLITCHOU','BUGOX','PIXIPIC','MÉGABUG'];const tier=state.stage===1?0:state.stage===2?1:2;
-    const maxHp=state.stage===1?33:state.stage===2?55:81;
-    fight={enemyName:enemyNames[Math.floor(Math.random()*enemyNames.length)],enemyMax:maxHp,enemyHp:maxHp,ownMax:100,ownHp:Math.max(1,Math.round(state.health)),tier,defending:false,done:false,won:false,turn:0,busy:false};
-    $('battleHeading').textContent='UN MONSTRE SAUVAGE !';$('fightMessage').textContent=`${fight.enemyName} te défie ! Choisis une action.`;$('battleOverlay').classList.add('visible');updateFight();
+    const hard=$('arenaMode').value==='hard';
+    if(hard&&(state.level<3||state.stage<2)){notify('Mode Élite : niveau 3 et forme Rookie nécessaires.');return}
+    const foe=foes[Math.floor(Math.random()*foes.length)],tier=state.stage===1?0:state.stage===2?1:2;
+    const maxHp=(state.stage===1?32:state.stage===2?62:95)+(hard?40:0);
+    fight={enemyName:foe.name+(hard?' ★':''),enemyType:foe.type,enemyMax:maxHp,enemyHp:maxHp,ownMax:100,ownHp:Math.max(1,Math.round(state.health)),tier,hard,done:false,won:false,turn:0,busy:false,focus:0,intent:chooseIntent(),history:[`${foe.nature} : ${foe.name} s’approche !`]};
+    $('battleField').dataset.biome=foe.type;$('pixelBurst').replaceChildren();
+    $('battleHeading').textContent=hard?'DUEL ÉLITE !':'UN MONSTRE SAUVAGE !';$('fightMessage').textContent=`${foe.name} te défie ! Observe son prochain mouvement.`;
+    $('battleOverlay').classList.add('visible');updateFight();
   }
   function updateFight(){if(!fight)return;
     $('yourFightName').textContent=names[state.form];$('enemyFightName').textContent=fight.enemyName;
+    $('yourTypeLabel').textContent=`${symbols[types[state.form]]} ${types[state.form].toUpperCase()}`;
+    $('enemyTypeLabel').textContent=`${symbols[fight.enemyType]} ${fight.enemyType.toUpperCase()}`;
     $('ownHpText').textContent=`${fight.ownHp}/${fight.ownMax} PV`;$('enemyHpText').textContent=`${fight.enemyHp}/${fight.enemyMax} PV`;
     $('ownHpBar').style.width=CLAMP(fight.ownHp/fight.ownMax*100)+'%';$('enemyHpBar').style.width=CLAMP(fight.enemyHp/fight.enemyMax*100)+'%';
-    for(let id of ['attackBtn','defendBtn','specialBtn'])$(id).disabled=fight.done||fight.busy;
+    for(const id of ['attackBtn','defendBtn','focusBtn','specialBtn'])$(id).disabled=fight.done||fight.busy;
     $('specialBtn').disabled=fight.done||fight.busy||state.energy<10;
-    $('battleNote').textContent=fight.done?'Combat terminé · Ferme la fenêtre ou repars':`Spécial : 10 énergie • Tour ${fight.turn+1}`;
-    drawPixelCreature($('fighterOwn'),state.form,Date.now(),{still:true});drawEnemy($('fighterEnemy'),fight.tier);
+    $('specialLabel').textContent=(signature[types[state.form]]||signature.neutre)[1];
+    $('battleNote').textContent=fight.done?'Combat terminé · Tu peux fermer la fenêtre':`Pouvoir : 10 énergie • Tour ${fight.turn+1} • Niveau ${state.level}`;
+    $('focusMeter').textContent=`${fight.focus} / 3`;$('energyMeter').textContent=Math.round(state.energy)+' / 100';
+    const intent=intents[fight.intent]||intents.attack;
+    $('intentIcon').textContent=fight.done?(fight.won?'★':'☾'):intent.icon;
+    $('intentTitle').textContent=fight.done?'COMBAT TERMINÉ':'INTENTION : '+intent.label;
+    $('intentDetail').textContent=fight.done?'Tu peux quitter l’arène.':intent.detail;
+    $('battleLog').replaceChildren();for(const entry of fight.history){const div=document.createElement('div');div.textContent=entry;$('battleLog').appendChild(div)}
+    drawPixelCreature($('fighterOwn'),state.form,Date.now(),{still:true});drawEnemy($('fighterEnemy'),fight.tier,fight.enemyType,Date.now());
   }
-  function drawEnemy(canvas,tier){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,88,88);const p=(x,y,w,h,c='#2f4b39')=>{ctx.fillStyle=c;ctx.fillRect(x*4,y*4,w*4,h*4)};const shade='#72936a';p(5,8,13,10);p(6,9,11,8,shade);p(4,6,4,4);p(15,5,4,5);p(3,16,5,3);p(14,16,5,3);p(8,17,7,3);p(8,11,2,3);p(14,11,2,3);p(11,15,2,1);if(tier>0){p(9,4,4,4);p(5,3,3,4);p(17,3,3,4)}if(tier>1){p(1,11,4,2);p(18,11,4,2);p(10,1,4,3)}}
+  // Five completely separate enemy silhouettes, drawn on an old four-tone LCD.
+  function drawEnemy(canvas,tier,element,t=0){
+    const ctx=canvas.getContext('2d'),S=4;
+    ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=false;
+    const ink='#294a3a',mid='#648a69',lit='#9dbb8c',shine='#eaf1be';
+    const p=(x,y,w=1,h=1,c=ink)=>{ctx.fillStyle=c;ctx.fillRect(x*S,y*S,w*S,h*S)};
+    const wobble=Math.floor(t/420)%2;
+    if(element==='nature'){
+      // Horned beetle, long antennae and mandibles.
+      p(5,12,14,8);p(7,10,10,10,mid);p(7,7,10,5);p(4,5,4,5);p(16,5,4,5);p(3,3,3,4);p(18,2,3,5);p(1,12,5,2);p(19,13,3,2);p(3,18,4,4);p(17,18,4,4);p(10,9,4,10,lit);p(8,12,2,2,ink);p(15,12,2,2,ink);
+      if(tier>0){p(0,8,4,3);p(19,8,3,3);p(9,2,5,4)}
+    }else if(element==='flamme'){
+      // Fox with a blazing mane and a tail that moves between frames.
+      p(5,11,14,9);p(8,8,9,12,mid);p(4,5,4,9);p(2,3,4,8);p(15,5,5,9);p(18,3,4,8);p(7,18,4,4);p(15,18,4,4);p(1,16+wobble,5,3);p(0,13+wobble,3,5);p(7,13,3,2,ink);p(15,13,3,2,ink);p(11,17,2,2,shine);p(12,8,3,3,lit);
+      if(tier>0){p(4,1,3,5);p(18,1,3,5);p(9,2,5,5)}
+    }else if(element==='eau'){
+      // Deep-sea serpent with fins and a curled tail.
+      p(5,12,16,6);p(7,10,12,9,mid);p(14,7,6,8);p(16,5,4,4);p(18,9,4,5);p(2,12,5,3);p(0,10,3,5);p(3,16,4,4);p(10,19,4,3);p(17,19,5,3);p(7,7,4,4);p(9,5,3,3);p(16,11,2,2,ink);p(20,15,2,1,shine);p(6,15,7,2,lit);
+      if(tier>0){p(2,5,3,6);p(0,3,4,3);p(19,2,3,5)}
+    }else if(element==='foudre'){
+      // Angular bird with jagged feather-spikes and lightning crest.
+      p(6,10,13,10);p(8,11,10,8,mid);p(2,11,5,3);p(0,8,4,4);p(1,15,5,3);p(18,11,5,4);p(19,8,3,4);p(8,5,4,7);p(11,2,4,7);p(15,0,3,6);p(8,19,4,4);p(15,19,4,4);p(8,13,2,2,ink);p(15,13,2,2,ink);p(10,17,5,2,lit);
+      if(tier>0){p(0,4,4,2);p(20,4,3,2);p(3,3,3,5)}
+    }else{
+      // Phantom: massive hood, twin glowing eyes and levitating hands.
+      p(5,7,14,14);p(7,8,10,12,mid);p(4,5,4,8);p(2,2,4,6);p(16,5,4,8);p(19,1,3,7);p(1,13,5,4);p(0,17,4,3);p(19,14,4,4);p(20,18,3,3);p(6,20,5,3);p(14,20,5,3);p(8,12,3,2,shine);p(15,12,3,2,shine);p(11,16,3,2,ink);
+      if(tier>0){p(10,2,5,5);p(0,8,3,4);p(21,8,3,4)}
+    }
+    if(tier>1){p(10,0,4,2,ink);p(1,21,4,2,ink);p(20,21,3,2,ink)}
+  }
   function battleMove(move){if(!fight||fight.done||fight.busy)return;
-    if(move==='special'&&state.energy<10){notify('Pas assez d’énergie.');return}
-    const currentFight=fight;fight.busy=true;fight.turn++;
-    const atk=state.stage===1?10:state.stage===2?17:25;const bonus=Math.min(12,Math.floor(state.train*.7));let msg='';
-    if(move==='attack'){const dmg=atk+bonus+Math.floor(Math.random()*8);fight.enemyHp=Math.max(0,fight.enemyHp-dmg);msg=`${names[state.form]} attaque : -${dmg} PV !`}
-    if(move==='defend'){fight.defending=true;state.energy=CLAMP(state.energy+4);msg=`${names[state.form]} se protège et reprend 4 énergie.`}
-    if(move==='special'){const dmg=Math.floor(atk*1.55)+bonus+Math.floor(Math.random()*8);fight.enemyHp=Math.max(0,fight.enemyHp-dmg);state.energy=CLAMP(state.energy-10);msg=`✦ ATTAQUE SPÉCIALE ! -${dmg} PV !`}
-    $('fightMessage').textContent=msg;
+    if(move==='special'&&state.energy<10){notify('Il faut 10 énergie pour le pouvoir.');return}
+    const match=fight;fight.busy=true;fight.turn++;
+    const atk=state.stage===1?10:state.stage===2?17:24;
+    const bonus=Math.min(13,Math.floor(state.train*.65)+Math.floor((state.level-1)*1.3));
+    const incoming=fight.intent;let msg='',defending=move==='defend';
+    if(move==='attack'||move==='special'){
+      const eff=effectiveness(types[state.form],fight.enemyType),critical=Math.random()<.08+Math.min(.10,state.level*.007);
+      const baseDmg=atk+bonus+Math.floor(Math.random()*6);
+      const guardFactor=incoming==='guard'?(move==='special'?.95:.34):1;
+      const factor=move==='special'?(1.45+.22*fight.focus):1;
+      const dmg=Math.max(1,Math.round(baseDmg*eff*factor*guardFactor*(critical?1.45:1)*(state.genetics?.talent==='force'?1.12:1)*(move==='special'&&state.genetics?.talent==='esprit'?1.2:1)));
+      fight.enemyHp=Math.max(0,fight.enemyHp-dmg);
+      if(move==='special'){state.energy=CLAMP(state.energy-10);fight.focus=0}
+      else fight.focus=Math.min(3,fight.focus+1);
+      battleFx('enemy',types[state.form]);
+      const attackName=move==='special'?(signature[types[state.form]]||signature.neutre)[1]:'FRAPPE PIXEL';
+      const effLabel=eff>1?' • SUPER EFFICACE':eff<1?' • Résistance ennemie':'';
+      msg=`${attackName} : -${dmg} PV${critical?' • CRITIQUE':''}${effLabel}${guardFactor<.5?' • Bloqué par la garde':''}`;
+    }else if(move==='defend'){
+      state.energy=CLAMP(state.energy+4);msg=`${names[state.form]} se met en garde. +4 énergie.`;
+    }else if(move==='focus'){
+      const gain=Math.min(100-state.energy,12);state.energy=CLAMP(state.energy+12);fight.focus=Math.min(3,fight.focus+1);
+      msg=`Concentration : +${Math.round(gain)} énergie, impulsion ${fight.focus}/3.`;
+    }
+    battleHistory(`Tour ${fight.turn} · ${msg}`);$('fightMessage').textContent=msg;
     if(fight.enemyHp<=0){finishFight(true);return}
     updateFight();
     setTimeout(()=>{
-      if(!fight||fight!==currentFight||fight.done)return;
-      let enemyDmg=5+fight.tier*4+Math.floor(Math.random()*7);
-      if(fight.defending)enemyDmg=Math.max(1,Math.floor(enemyDmg/3));
-      fight.defending=false;fight.ownHp=Math.max(0,fight.ownHp-enemyDmg);state.health=fight.ownHp;$('fightMessage').textContent=msg+` ${fight.enemyName} riposte : -${enemyDmg} PV.`;
-      if(fight.ownHp<=0){finishFight(false)}else{fight.busy=false;updateFight();save();render()}
-    },650);
+      if(fight!==match||fight.done)return;
+      let retaliation='';
+      if(incoming==='charge')retaliation=`${fight.enemyName} se concentre : sa prochaine frappe sera lourde !`;
+      else if(incoming==='guard')retaliation=`${fight.enemyName} s'est protégé et ne riposte pas.`;
+      else{
+        const eff=effectiveness(fight.enemyType,types[state.form]);
+        let dmg=Math.round((incoming==='heavy'?11:5)+fight.tier*3+(fight.hard?5:0)+Math.random()*5);
+        dmg=Math.max(1,Math.round(dmg*eff));
+        if(defending){dmg=Math.max(1,Math.floor(dmg/(incoming==='heavy'?5:3)));fight.focus=Math.min(3,fight.focus+1)}
+        if(state.genetics?.talent==='garde')dmg=Math.max(1,Math.round(dmg*.85));
+        fight.ownHp=Math.max(0,fight.ownHp-dmg);state.health=fight.ownHp;
+        battleFx('own',fight.enemyType);
+        retaliation=`${fight.enemyName} : -${dmg} PV${defending?' • parade réussie (+1 impulsion)':''}${eff>1?' • efficace':''}`;
+      }
+      battleHistory(retaliation);$('fightMessage').textContent=retaliation;
+      if(fight.ownHp<=0){finishFight(false);return}
+      fight.intent=chooseIntent(incoming);fight.busy=false;updateFight();save();render();
+    },570);
   }
   function finishFight(won){if(!fight)return;fight.done=true;fight.won=won;
-    if(won){const reward=12+fight.tier*8;state.bits+=reward;state.wins++;state.health=fight.ownHp;state.joy=CLAMP(state.joy+12);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. Ton compagnon gagne en expérience !`;notify('🏆 Victoire dans l’arène !');evolve()}
-    else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';notify('💔 Défaite : pense à le soigner !')}
+    if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=fight.ownHp;state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('🏆 Victoire dans l’arène !');evolve()}
+    else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';battleHistory('☾ Défaite : soigne ton compagnon.');notify('💔 Défaite : pense à le soigner !')}
     $('battleHeading').textContent=won?'★ VICTOIRE !':'COMBAT TERMINÉ';fight.busy=false;updateFight();save();render();
   }
-  function closeBattle(){$('battleOverlay').classList.remove('visible');fight=null}
+  function closeBattle(){if(fight&&fight.busy)return;$('battleOverlay').classList.remove('visible');fight=null}
   document.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',()=>action(el.dataset.action)));
   $('middleBtn').addEventListener('click',()=>state.stage===0?hatch():notify(`${names[state.form]} te regarde avec affection ♥`));$('leftBtn').addEventListener('click',()=>action('feed'));$('rightBtn').addEventListener('click',()=>action('play'));
-  $('battleStart').addEventListener('click',startBattle);$('attackBtn').addEventListener('click',()=>battleMove('attack'));$('defendBtn').addEventListener('click',()=>battleMove('defend'));$('specialBtn').addEventListener('click',()=>battleMove('special'));
+  $('battleStart').addEventListener('click',startBattle);$('attackBtn').addEventListener('click',()=>battleMove('attack'));$('defendBtn').addEventListener('click',()=>battleMove('defend'));$('specialBtn').addEventListener('click',()=>battleMove('special'));$('focusBtn').addEventListener('click',()=>battleMove('focus'));
+  $('claimDaily').addEventListener('click',claimDaily);$('breedBtn').addEventListener('click',breed);
+  $('exportBtn').addEventListener('click',exportSave);
+  $('importBtn').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{const restored=restoreSave(await file.text());if(!confirm('Restaurer cette sauvegarde ? La partie actuelle sera remplacée.'))return;closeBattle();state=restored;save();render();notify('✓ Sauvegarde restaurée !')}catch(err){notify('Fichier de sauvegarde incompatible.')}});
   $('battleClose').addEventListener('click',closeBattle);$('leaveBattle').addEventListener('click',closeBattle);
   $('helpBtn').addEventListener('click',()=>$('helpOverlay').classList.add('visible'));$('helpClose').addEventListener('click',()=>$('helpOverlay').classList.remove('visible'));$('resetBtn').addEventListener('click',newGame);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('helpOverlay').classList.remove('visible');closeBattle()}});
@@ -326,7 +852,73 @@
   },3000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden){const now=Date.now();const dt=Math.min(15*60,Math.max(0,(now-prev)/1000));prev=now;if(state.stage>0&&!fight){state.age+=dt;degrade(dt)}render();save()}});
   window.addEventListener('pagehide',save);
-  render();save();requestAnimationFrame(paint);
+
+  // V0.5: embed the existing, save-compatible game modules and battle dialogs INSIDE the LCD.
+  const screen=$('lcdScreen');
+  const app=$('lcdApp');
+  const dashboard=document.querySelector('.right');
+  const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
+  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal'];
+  const headings={home:'MON COMPAGNON',stats:'♥ ÉTAT DU MONSTRE',care:'🍖 PRENDRE SOIN',arena:'⚔ ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'🥚 LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',menu:'▦ MENU PRINCIPAL'};
+  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','menu'];
+  let activeScreen='home';
+  app.appendChild(dashboard);
+  // Move existing dialogs inside the handheld; original game handlers stay intact.
+  screen.append($('battleOverlay'),$('helpOverlay'),$('toast'));
+  function showScreen(name){
+    if(!orderedScreens.includes(name))return;
+    if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
+    activeScreen=name;screen.dataset.screen=name;
+    for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.5 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    app.scrollTop=0;$('lcdMenu').scrollTop=0;
+    document.querySelectorAll('[data-view]').forEach(el=>{
+      const current=el.dataset.view===name;
+      el.classList.toggle('active',current);el.setAttribute('aria-pressed',String(current));
+    });
+    $('lcdTitle').textContent=name==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[name].replace(/^[^A-ZÀ-Ÿ]+/u,'');
+  }
+  document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>showScreen(el.dataset.view)));
+  $('menuHelp').addEventListener('click',()=>$('helpOverlay').classList.add('visible'));
+  $('hatchHome').addEventListener('click',()=>{if(state.stage===0)hatch();else showScreen('care')});
+  function syncConsole(){
+    $('homeName').textContent=names[state.form];
+    $('homeLevel').textContent=`LV.${state.level} • GÉN.${String(state.generation).padStart(2,'0')}`;
+    $('homeHealth').textContent=`♥ SANTÉ ${Math.round(state.health)}%`;
+    $('homeBits').textContent=`◈ ${state.bits} BITS`;
+    $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
+    $('hatchHome').style.display=state.stage===0?'':'none';
+    $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
+    $('lcdViewHeading').lastElementChild.textContent=`V0.5 / GEN ${String(state.generation).padStart(2,'0')}`;
+  }
+  // Keep original rendering/data logic intact; mirror its state into the console header.
+  showScreen('home');
+  const consoleTicker=setInterval(syncConsole,900);
+  syncConsole();
+  // The physical three-button controls now operate the LCD menus.
+  $('leftBtn').replaceWith($('leftBtn').cloneNode(true));
+  $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
+  $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
+  const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
+  $('leftBtn').addEventListener('click',()=>navigate(-1));
+  $('rightBtn').addEventListener('click',()=>navigate(1));
+  $('middleBtn').addEventListener('click',()=>{
+    if(activeScreen==='home'){if(state.stage===0)hatch();else showScreen('care')}
+    else if(activeScreen==='menu')showScreen('stats');
+    else if(activeScreen==='arena')startBattle();
+    else if(activeScreen==='care'){action('feed')}
+    else if(activeScreen==='journal')$('helpOverlay').classList.add('visible');
+    else showScreen('menu');
+  });
+  document.addEventListener('keydown',e=>{
+    if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
+    if(!e.altKey&&!e.ctrlKey&&!e.metaKey&&['ArrowLeft','ArrowRight'].includes(e.key)){
+      if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
+      e.preventDefault();navigate(e.key==='ArrowLeft'?-1:1);
+    }
+  });
+
+  render();syncConsole();save();requestAnimationFrame(paint);
 })();
 </script>
 </body>
