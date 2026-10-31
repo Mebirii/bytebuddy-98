@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-  <title>ByteBuddy '98 — V0.6 • Scènes animées</title>
+  <title>ByteBuddy '98 — V0.6.1 • Animations automatiques</title>
   <style>
     :root{--bg:#101d29;--bg2:#192c39;--ink:#f1f1e8;--muted:#9fb5bf;--accent:#ffe07b;--mint:#80e0c4;--panel:#1c2d3b;--line:#35515c;--screen:#c5d9a2;--screen-dark:#344a34;--screen-mid:#64815a;--red:#ff8b84;--gold:#f9ca69}
     *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;min-height:100vh;background:radial-gradient(ellipse at 20% 0%,#2b4c55 0%,transparent 43%),radial-gradient(ellipse at 90% 80%,#233c57 0%,transparent 48%),#101d29;overflow-x:hidden}
@@ -235,7 +235,7 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● ANIMATION EDITION / 0.6</div>
+    <div class="edition">● ANIMATION EDITION / 0.6.1</div>
   </header>
   <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.6</strong> — scènes de repas et entraînement animées · élevage vivant · 16 formes · arène tactique</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
@@ -422,6 +422,8 @@
   }
   function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');actionFx={type:'evolve',until:Date.now()+2200};save();render()}
   function action(type){
+    // Prevent multiple care actions from starting during an LCD scene.
+    if(activitySceneState)return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
       state.sleeping=!state.sleeping;log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();return;
@@ -431,19 +433,19 @@
     if(type==='heal'){
       if(state.health>=100){notify('Il est déjà en pleine forme !');return}
       if(state.bits<10){notify('Il faut 10 Bits pour acheter un soin.');return}
-      state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);log('Un remède pixel lui redonne de la santé.');notify('💊 +45 PV !');awardXP(2);
+      state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);log('Un remède pixel lui redonne de la santé.');awardXP(2);
     }else if(type==='feed'){
-      state.fullness=CLAMP(state.fullness+30);state.joy=CLAMP(state.joy+3);state.hygiene=CLAMP(state.hygiene-3);log(`${names[state.form]} a bien mangé !`);notify('🍖 Miam ! +30 satiété');state.care++;progressDaily('feed');awardXP(2);
+      state.fullness=CLAMP(state.fullness+30);state.joy=CLAMP(state.joy+3);state.hygiene=CLAMP(state.hygiene-3);log(`${names[state.form]} a bien mangé !`);state.care++;progressDaily('feed');awardXP(2);
     }else if(type==='play'){
       if(state.energy<8){notify('Il est trop fatigué pour jouer.');return}
-      state.joy=CLAMP(state.joy+27);state.energy=CLAMP(state.energy-8);state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=2;progressDaily('play');awardXP(3);log(`${names[state.form]} s'est amusé avec toi. +2 Bits`);notify('🎾 Super partie ! +2 Bits');
+      state.joy=CLAMP(state.joy+27);state.energy=CLAMP(state.energy-8);state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=2;progressDaily('play');awardXP(3);log(`${names[state.form]} s'est amusé avec toi. +2 Bits`);
     }else if(type==='train'){
       if(state.energy<15 || state.fullness<8){notify('Nourris-le et laisse-le se reposer avant de l’entraîner.');return}
-      state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);state.joy=CLAMP(state.joy-3);state.train++;state.care++;state.bits+=4;awardXP(5);log('Entraînement terminé. Il gagne en puissance ! +4 Bits');notify('🥊 +1 entraînement · +4 Bits');
+      state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);state.joy=CLAMP(state.joy-3);state.train++;state.care++;state.bits+=4;awardXP(5);log('Entraînement terminé. Il gagne en puissance ! +4 Bits');
     }else if(type==='clean'){
-      state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');notify('🫧 Tout propre ! +35 hygiène');
+      state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');
     }else{return}
-    const actorForm=state.form;actionFx={type,until:Date.now()+850};evolve();save();render();startActivityScene(type,actorForm);
+    const actorForm=state.form;actionFx={type,until:Date.now()+850};startActivityScene(type,actorForm);evolve();save();render();
   }
   function availablePartners(){
     const unique=new Map(travelers.map(p=>[p.id,p]));
@@ -888,11 +890,11 @@
   const activityCanvas=$('activityCanvas'),activityCtx=activityCanvas.getContext('2d');
   const activitySprite=document.createElement('canvas');activitySprite.width=100;activitySprite.height=100;
   const activitySpecs={
-    feed:{title:'🍖 REPAS',messages:['UN PETIT CREUX...','MIAM, MIAM !','REPAS TERMINÉ !'],result:'+30 SATIÉTÉ',duration:3400},
-    train:{title:'🥊 ENTRAÎNEMENT',messages:['ÉCHAUFFEMENT','1 · 2 · 3... FRAPPE !','PLUS FORT !'],result:'+1 ENTRAÎNEMENT · +4 BITS',duration:4000},
-    play:{title:'🎾 JEU',messages:['ON JOUE ?','ATTRAPE LA BALLE !','SUPER PARTIE !'],result:'+27 MORAL · +2 BITS',duration:3200},
-    clean:{title:'🫧 DOUCHE',messages:['PRÉPARATION','SPLASH !','TOUT PROPRE !'],result:'+35 HYGIÈNE',duration:3200},
-    heal:{title:'💊 SOINS',messages:['PETIT REMÈDE...','LES FORCES REVIENNENT','BON RÉTABLISSEMENT !'],result:'+45 PV',duration:3100}
+    feed:{title:'🍖 REPAS',messages:['UN PETIT CREUX...','MIAM, MIAM !','REPAS TERMINÉ !'],result:'+30 SATIÉTÉ',duration:5400},
+    train:{title:'🥊 ENTRAÎNEMENT',messages:['ÉCHAUFFEMENT','1 · 2 · 3... FRAPPE !','PLUS FORT !'],result:'+1 ENTRAÎNEMENT · +4 BITS',duration:5700},
+    play:{title:'🎾 JEU',messages:['ON JOUE ?','ATTRAPE LA BALLE !','SUPER PARTIE !'],result:'+27 MORAL · +2 BITS',duration:4400},
+    clean:{title:'🫧 DOUCHE',messages:['PRÉPARATION','SPLASH !','TOUT PROPRE !'],result:'+35 HYGIÈNE',duration:4400},
+    heal:{title:'💊 SOINS',messages:['PETIT REMÈDE...','LES FORCES REVIENNENT','BON RÉTABLISSEMENT !'],result:'+45 PV',duration:4200}
   };
   let activitySceneState=null;
   const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -901,12 +903,14 @@
     activitySceneState={type,form:actorForm||state.form,start:performance.now(),duration:reducedMotion?.matches?1600:spec.duration};
     $('activityTitle').textContent=spec.title;$('activityStep').textContent='00%';$('activityMessage').textContent=spec.messages[0];$('activityProgress').style.width='0%';
     $('activityScene').classList.add('active');$('activityScene').setAttribute('aria-live','off');
+    drawActivityScene(activitySceneState.start); // Draw the first frame synchronously.
     // The action's effects have already been saved by the original V0.5 logic.
   }
   function finishActivityScene(){
     if(!activitySceneState)return;
     const result=activitySpecs[activitySceneState.type]?.result;
     activitySceneState=null;$('activityScene').classList.remove('active');
+    showScreen('home'); // Return to the creature after its scene.
     if(result)notify('✓ '+result);
   }
   $('activitySkip').addEventListener('click',finishActivityScene);
@@ -971,7 +975,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.6 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.6.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -990,7 +994,7 @@
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.6 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.6.1 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // Keep original rendering/data logic intact; mirror its state into the console header.
   showScreen('home');
