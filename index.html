@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.12.1 • VS en ligne bêta</title>
+    <title>ByteBuddy '98 — V0.13 • Comptes de dresseurs</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -276,9 +276,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● P2P VERSUS EDITION / 0.12.1</div>
+    <div class="edition">● TRAINER ID EDITION / 0.13</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.12</strong> — salons privés VS à distance · lien d'invitation · choix secrets</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.13</strong> — profils dresseurs · comptes email · sauvegardes cloud préparées</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -397,7 +397,7 @@
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.12 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.13 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
@@ -413,6 +413,9 @@
 <script src="./vs-ui-v011.js?v=011"></script>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script src="./vs-online-v012.js?v=0121"></script>
+<script src="./trainer-config.js?v=013"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="./trainer-v013.js?v=013"></script>
 <script>
 (() => {
   'use strict';
@@ -424,8 +427,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI;
-  if(!V10||!V10UI||!V11UI||!V12UI)throw Error('Modules de jeu ou versus indisponibles');
+  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13;
+  if(!V10||!V10UI||!V11UI||!V12UI||!TrainerV13)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
@@ -1073,9 +1076,9 @@
   const app=$('lcdApp');
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
-  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs'];
-  const headings={home:'MON COMPAGNON',stats:'+ ÉTAT DU MONSTRE',care:'FAIM PRENDRE SOIN',arena:'X ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'OEUF LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',vs:'VS DRESSEURS',menu:'▦ MENU PRINCIPAL'};
-  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','menu'];
+  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer'];
+  const headings={home:'MON COMPAGNON',stats:'+ ÉTAT DU MONSTRE',care:'FAIM PRENDRE SOIN',arena:'X ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'OEUF LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',vs:'VS DRESSEURS',trainer:'ID MON DRESSEUR',menu:'▦ MENU PRINCIPAL'};
+  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer','menu'];
   let activeScreen='home';
   app.appendChild(dashboard);
   // Move existing dialogs inside the handheld; original game handlers stay intact.
@@ -1308,7 +1311,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.12.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.13 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1328,7 +1331,7 @@
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.12.1 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.13 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1488,6 +1491,16 @@
   V10UI.setup({state:()=>state,feed:v10Feed});
   V11UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true})});
   V12UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true})});
+  TrainerV13.setup({
+    snapshot:()=>{save();return JSON.parse(JSON.stringify(state));},
+    validate:data=>restoreSave(JSON.stringify(data)),
+    restore:data=>{
+      const validated=restoreSave(JSON.stringify(data));
+      // The account module creates a local recovery backup before calling restore().
+      localStorage.setItem(KEY,JSON.stringify(validated));
+      window.location.reload();
+    }
+  });
   render();syncConsole();save();requestAnimationFrame(paint);
 })();
 </script>
