@@ -435,6 +435,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
 <script src="./trainer-v013.js?v=013"></script>
 <script src="./onboarding-v016.js?v=0161"></script>
+<script src="./play-v017.js?v=017"></script>
 <script>
 (() => {
   'use strict';
@@ -446,8 +447,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro;
-  if(!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17;
+  if(!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
@@ -558,7 +559,7 @@
   function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render();if(IntroV16.isActive())IntroV16.onHatch();else openNaming(true)}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
-    if(activitySceneState||miniState||V10UI.isFoodOpen()||namingOpen)return;
+    if(activitySceneState||miniState||V10UI.isFoodOpen()||namingOpen||PlayV17.active()||IntroV16.isShown())return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
       state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'REVEIL Ton compagnon est réveillé !');save();render();playSound('sleep');return;
@@ -566,15 +567,16 @@
     if(state.sleeping){notify('Il dort. Réveille-le avant de jouer !');return}
     if(state.health<=0 && type!=='heal'){notify('Ton compagnon est épuisé. Il lui faut des soins !');return}
     if(type==='feed'){V10UI.openFood();return;}
+    if(type==='play'){
+      if(state.energy<8){notify('Il est trop fatigué pour jouer.');return;}
+      if(!PlayV17.open())notify('Impossible de commencer cette partie.');return;
+    }
     if(type==='heal'){
       if(state.health>=100){notify('Il est déjà en pleine forme !');return}
       if(state.bits<10){notify('Il faut 10 Bits pour acheter un soin.');return}
       state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);log('Un remède pixel lui redonne de la santé.');awardXP(2);
     }else if(type==='feed'){
       state.fullness=CLAMP(state.fullness+30);state.joy=CLAMP(state.joy+3);state.hygiene=CLAMP(state.hygiene-3);log(`${names[state.form]} a bien mangé !`);state.care++;progressDaily('feed');awardXP(2);
-    }else if(type==='play'){
-      if(state.energy<8){notify('Il est trop fatigué pour jouer.');return}
-      state.joy=CLAMP(state.joy+27);state.energy=CLAMP(state.energy-8);state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=2;progressDaily('play');awardXP(3);log(`${names[state.form]} s'est amusé avec toi. +2 Bits`);
     }else if(type==='train'){
       if(state.energy<15 || state.fullness<8){notify('Nourris-le et laisse-le se reposer avant de l’entraîner.');return}
       openTrainingMini();return;
@@ -1354,7 +1356,7 @@
   },true);
 
   function showScreen(name){
-    if(!orderedScreens.includes(name)||activitySceneState||miniState||V10UI.isFoodOpen()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
+    if(!orderedScreens.includes(name)||activitySceneState||miniState||PlayV17.active()||V10UI.isFoodOpen()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
@@ -1391,10 +1393,11 @@
   $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
   $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
   const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
-  $('leftBtn').addEventListener('click',()=>(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
-  $('rightBtn').addEventListener('click',()=>(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
+  $('leftBtn').addEventListener('click',()=>PlayV17.active()?PlayV17.hardware('left'):(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
+  $('rightBtn').addEventListener('click',()=>PlayV17.active()?PlayV17.hardware('right'):(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
   $('middleBtn').addEventListener('click',()=>{
-    if(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
+    if(PlayV17.active()){PlayV17.hardware('middle');return;}
+    if(PlayV17.active()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
     if(V10UI.isFoodOpen()){V10UI.closeFood();return;}
     if(miniState){miniHardware('middle');return;}
     if(activitySceneState){finishActivityScene();return;}
@@ -1406,7 +1409,7 @@
     else showScreen('menu');
   });
   document.addEventListener('keydown',e=>{
-    if(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
+    if(PlayV17.active()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
     if(V10UI.isFoodOpen()){if(e.key==='Escape'){e.preventDefault();V10UI.closeFood();}return;}
     if(activitySceneState){if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();finishActivityScene();}return;}
     if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
@@ -1552,6 +1555,23 @@
     state:()=>state,save,render,hatch,showScreen,
     draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true}),
     accountHandle:()=>TrainerV13.status().handle||''
+  });
+  PlayV17.setup({
+    state:()=>state,
+    canPlay:()=>state.stage>0&&!state.sleeping&&state.health>0&&state.energy>=8&&!fight&&!miniState&&!activitySceneState,
+    draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true}),
+    sound:playSound,
+    finish:({score,total,stars,avoids,hits})=>{
+      const points=Math.max(0,Math.min(total,Math.floor(score)));
+      const joy=8+Math.round(points*1.6),bits=2+points,xp=3+points;
+      state.joy=CLAMP(state.joy+joy);state.energy=CLAMP(state.energy-8);
+      state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=bits;
+      progressDaily('play');awardXP(xp);lifeReact(points>=7?'play':'tired');
+      log((state.petName||names[state.form])+' a joué : '+points+'/'+total+
+        ' points, '+stars+' étoiles, '+avoids+' bugs évités, '+hits+' chocs. +'+bits+' Bits.');
+      evolve();save();render();
+      notify('PIXEL CATCH : '+points+'/'+total+' · +'+bits+' BITS !');
+    }
   });
   render();syncConsole();save();requestAnimationFrame(paint);
 })();
