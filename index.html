@@ -1105,7 +1105,7 @@
         dmg=Math.max(1,Math.round(dmg*eff*V10.fighter(state).defense));
         if(defending){dmg=Math.max(1,Math.floor(dmg/(incoming==='heavy'?5:3)));fight.focus=Math.min(3,fight.focus+1)}
         if(state.genetics?.talent==='garde')dmg=Math.max(1,Math.round(dmg*.85));
-        const dodgeChance=Math.min(.22,Math.max(0,(state.attributes.vitesse-10)*.0025));
+        const dodgeChance=Math.min(.26,Math.max(0,(V10.fighter(state).priority-10)*.0025)+(V10.fighter(state).trait==='vitesse'?.06:0));
         if(Math.random()<dodgeChance)dmg=0;
         fight.ownHp=Math.max(0,fight.ownHp-dmg);state.health=Math.round(100*fight.ownHp/fight.ownMax);
         battleFx('own',fight.enemyType);
