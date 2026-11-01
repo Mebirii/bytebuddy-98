@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.15 • Défis QR Code</title>
+    <title>ByteBuddy '98 — V0.15.1 • Défis QR Code</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -283,7 +283,7 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● QR CHALLENGE EDITION / 0.15</div>
+    <div class="edition">● QR CHALLENGE EDITION / 0.15.1</div>
   </header>
   <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.15</strong> — duels par QR code · scan caméra · invitations instantanées</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
@@ -430,7 +430,7 @@
 <script src="./vs-online-v012.js?v=015"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-<script src="./qr-v015.js?v=015"></script>
+<script src="./qr-v015.js?v=0151"></script>
 <script src="./trainer-config.js?v=014"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
 <script src="./trainer-v013.js?v=013"></script>
@@ -1349,7 +1349,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.15 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.15.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1369,7 +1369,7 @@
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.15 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.15.1 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
