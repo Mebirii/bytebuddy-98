@@ -94,9 +94,9 @@ function botChoice(room){
  const p=room.players[1],opp=room.players[0];
  if(p.energy<14 && p.energy<p.maxEnergy-9)return "focus";
  if(p.hp/p.maxHp<.35 && opp.focus>=1)return "guard";
- if(p.energy>=14 && (p.focus>=1 || opp.guard) && roll(room)<.62)return "special";
- if(p.energy<p.maxEnergy-16 && roll(room)<.2)return "focus";
- return roll(room)<.18?"guard":"attack";
+ if(p.energy>=14 && (p.focus>=1 || opp.guard) && room.round%3!==0)return "special";
+ if(p.energy<p.maxEnergy-16 && room.round%5===0)return "focus";
+ return room.round%6===0?"guard":"attack";
 }
 function replay(room){
  return {ruleset:"v011",seed:room.seed,players:room.players.map(p=>({
