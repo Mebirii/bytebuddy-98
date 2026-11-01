@@ -47,3 +47,20 @@ Fichiers :
 - `progression-v010.js` : profils et statistiques de combattants.
 
 Le navigateur charge PeerJS 1.5.5 depuis un CDN versionné. Le serveur PeerJS Cloud est utilisé pour le *signaling*; les données de partie passent ensuite par le canal P2P lorsqu'il est disponible.
+
+## V0.15.1 — Défis par QR code
+
+- Hôte : **MENU → DUELS → CRÉER UN SALON**. Dès que le service PeerJS confirme la création du salon, un QR code monochrome apparaît directement dans l'écran LCD.
+- Invité avec l'appareil photo du téléphone : scanne le QR. Le lien ne contient que le code du salon et la version du client ; il ouvre le jeu, affiche le menu DUELS et tente de rejoindre directement le salon si la créature est née et éveillée.
+- Invité depuis l'application installée : **MENU → DUELS → SCANNER UN QR CODE** pour utiliser la caméra intégrée au jeu et rejoindre sans recopier de code.
+- En cas de refus de la caméra, de navigateur incompatible ou de bibliothèque QR indisponible : utiliser **COPIER LE LIEN** ou saisir le code manuellement.
+- Les QR sont **dessinés localement** par une bibliothèque JavaScript versionnée : aucune image ni code de salon n'est envoyé à une API de génération de QR externe.
+- La caméra n'est allumée qu'après action explicite du joueur et se coupe à la fermeture du lecteur, au changement d'onglet ou après lecture correcte.
+- Les invitations restent des **liens de salons privés temporaires**. Ne pas afficher publiquement une invitation si l'on ne souhaite pas que quelqu'un puisse rejoindre la partie.
+- Compatibilité : la bibliothèque jsQR fournit un fallback aux navigateurs sans BarcodeDetector. Sur iPhone, utiliser Safari ou la PWA pour demander l'accès à la caméra.
+
+### Validation
+
+Tests réalisés avec deux navigateurs simulés : création de salon, rendu de QR, lecture de code et de lien, ouverture de l'invitation directe, échange de coups, résolution synchronisée, refus d'un QR venant d'un autre domaine.
+
+**À tester sur deux appareils réels** : lecture optique du QR, permission caméra iOS/Android et éventuels blocages de connexion WebRTC sur Wi-Fi / réseaux mobiles.
