@@ -101,7 +101,7 @@
       localStorage.setItem(ENABLED,"yes");
       window.ByteBuddyCloudPushEnabled = true;
       lastSynced=Date.now();
-      refresh("✓ Alertes push activées sur cet appareil !");
+      refresh("Alertes push activées sur cet appareil !");
     } catch(err) {
       localStorage.removeItem(ENABLED);
       window.ByteBuddyCloudPushEnabled = false;
@@ -140,7 +140,7 @@
     test.disabled=true;
     try {
       await request("test",{...credentials});
-      refresh("✓ Notification de test envoyée à ton appareil.");
+      refresh("Notification de test envoyée à ton appareil.");
     }catch(e){refresh("Envoi de test impossible : "+(e?.message||"erreur"));}
     finally {test.disabled=false;}
   });
