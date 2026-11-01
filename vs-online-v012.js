@@ -9,7 +9,7 @@ $("v10VsPanel").appendChild(pane);
 const overlay=document.createElement("section");overlay.className="bb-online-stage";overlay.id="onlineStage";
 overlay.setAttribute("aria-label","Arène de duel à distance");overlay.innerHTML="\n<div class=\"bb-online-top\"><b id=\"onlineRound\">SALON EN LIGNE</b><button type=\"button\" id=\"onlineExit\">QUITTER</button></div>\n<div class=\"bb-online-fighters\">\n <div class=\"bb-online-fighter\"><b id=\"onlineName0\">HÔTE</b><canvas id=\"onlineSprite0\" width=\"88\" height=\"88\"></canvas><div class=\"bb-online-hp\"><span id=\"onlineHP0\"></span></div><small id=\"onlineVitals0\">PV --</small></div>\n <b style=\"text-align:center\">VS</b>\n <div class=\"bb-online-fighter\"><b id=\"onlineName1\">INVITÉ</b><canvas id=\"onlineSprite1\" width=\"88\" height=\"88\"></canvas><div class=\"bb-online-hp\"><span id=\"onlineHP1\"></span></div><small id=\"onlineVitals1\">PV --</small></div>\n</div>\n<div class=\"bb-online-body\"><strong id=\"onlineHeading\">EN ATTENTE</strong><p id=\"onlineMessage\">Invite un autre joueur.</p>\n <button type=\"button\" id=\"onlineShare\" hidden>COPIER L'INVITATION</button>\n <div class=\"bb-online-moves\" id=\"onlineMoves\" hidden><button type=\"button\" data-online-move=\"attack\">FRAPPER</button><button type=\"button\" data-online-move=\"guard\">PARER</button><button type=\"button\" data-online-move=\"focus\">CANALISER</button><button type=\"button\" data-online-move=\"special\">POUVOIR</button></div>\n <button type=\"button\" id=\"onlineContinue\" class=\"bb-online-go\" hidden>CONTINUER</button>\n</div>\n<div class=\"bb-online-foot\" id=\"onlineFoot\">AMICAL · PAS DE CLASSEMENT</div>";
 $("lcdScreen").appendChild(overlay);
-let api=null, peer=null, conn=null, role=null, room=null, code="", phase="idle", myChoice=false, seen=[false,false], resultLines=[], intentional=false, timeoutId=null;
+let api=null, peer=null, conn=null, role=null, room=null, code="", phase="idle", myChoice=false, seen=[false,false], resultLines=[], intentional=false, timeoutId=null, roomReady=false;
 const status=m=>$("onlineStatus").textContent=m;
 const index=()=>role==="host"?0:1;
 const roomNames={baby:"BIBI",ember:"EMBERIX",verd:"VERDIX",volt:"ZAPPIX",aqua:"AQUARI",shade:"OMBRO",ember2:"INFERIX",verd2:"FLORION",volt2:"VOLTAR",aqua2:"MARÉON",shade2:"NOCTURON",lumia:"LUMIAR",nebula:"NÉBULIX",prism:"PRISMOR",auror:"AURORIX"};
@@ -27,7 +27,7 @@ function parseCode(raw){
  return s;
 }
 function inviteLink(){
- const u=new URL(location.href);u.searchParams.set("vs",code);u.searchParams.set("v","012");return u.toString();
+ const u=new URL(location.href);u.searchParams.set("vs",code);u.searchParams.set("v","015");return u.toString();
 }
 function send(kind,data={}){
  if(!conn?.open)return false;
@@ -68,6 +68,7 @@ function render(){
   overlay.querySelectorAll("[data-online-move]").forEach(b=>{b.disabled=b.dataset.onlineMove==="special"&&player.energy<14;});
  }
  $("onlineFoot").textContent="J"+(index()+1)+" · "+(role==="host"?"HÔTE":"INVITÉ")+" · AMICAL";
+ window.ByteBuddyQR?.update();
 }
 function snapshotData(nextPhase,lines=[]){
  return {game:safeState(room),phase:nextPhase,
@@ -92,13 +93,13 @@ function chooseGuest(move){
  else status("Connexion interrompue. Action non envoyée.");
 }
 function close(notify=true,message="Salon fermé."){
- intentional=true;if(notify)send("leave");
+ intentional=true;roomReady=false;if(notify)send("leave");
  clearTimeout(timeoutId);
  const oldConn=conn,oldPeer=peer;
  conn=null;peer=null;role=null;room=null;phase="idle";myChoice=false;seen=[false,false];resultLines=[];code="";
  try{oldConn?.close();}catch(_){}
  try{oldPeer?.destroy();}catch(_){}
- overlay.classList.remove("active");status(message);intentional=false;
+ overlay.classList.remove("active");status(message);intentional=false;window.ByteBuddyQR?.stop();window.ByteBuddyQR?.update();
 }
 function onMessage(msg){
  if(!msg||msg.protocol!==protocol||typeof msg.kind!=="string")return;
@@ -150,10 +151,10 @@ function eligible(){
 }
 function create(){
  if(!eligible())return;
- role="host";code=newCode();phase="waiting";$("onlineCode").value=code;render();status("Création du salon...");
+ roomReady=false;role="host";code=newCode();phase="waiting";$("onlineCode").value=code;render();status("Création du salon...");
  try{
   peer=new window.Peer(code,{debug:0});
-  peer.on("open",id=>{if(role!=="host")return;code=id;$("onlineCode").value=id;render();status("Salon créé : "+id+". Copie l'invitation.");});
+  peer.on("open",id=>{if(role!=="host")return;code=id;roomReady=true;$("onlineCode").value=id;render();status("Salon créé : "+id+". Scanne le QR ou copie l'invitation.");});
   peer.on("connection",c=>{if(role==="host"&&!conn)attach(c);else c.close();});
   peer.on("error",e=>{if(role==="host")close(false,"Salon inaccessible : "+(e?.message||"erreur"));});
  }catch(e){close(false,"Création impossible : "+e.message);}
@@ -192,7 +193,7 @@ $("onlineShare").addEventListener("click",async()=>{
 });
 $("onlineCopy").addEventListener("click",async()=>{
  if(!code){status("Crée un salon pour obtenir un lien.");return;}
- const url=new URL(location.href);url.searchParams.set("vs",code);url.searchParams.set("v","012");
+ const url=new URL(location.href);url.searchParams.set("vs",code);url.searchParams.set("v","015");
  try{await navigator.clipboard.writeText(url.toString());status("Lien d'invitation copié.");}
  catch(_){status("Partage le code : "+code);}
 });
@@ -211,7 +212,25 @@ document.addEventListener("keydown",e=>{
 },true);
 try{
  const supplied=new URL(location.href).searchParams.get("vs");
- if(supplied){$("onlineCode").value=parseCode(supplied);status("Invitation reçue. Ouvre DUELS et appuie sur REJOINDRE.");}
+ if(supplied){$("onlineCode").value=parseCode(supplied);status("Invitation QR reçue. Ouverture du salon...");}
 }catch(_){}
-window.ByteBuddyV12UI={setup(x){api=x;},active:()=>!!role,stop:close};
+const scannedInvitation=(()=>{try{const raw=new URL(location.href).searchParams.get("vs");return raw?parseCode(raw):null;}catch(_){return null;}})();
+window.ByteBuddyV12UI={
+ setup(x){
+   api=x;
+   if(scannedInvitation){
+     $("onlineCode").value=scannedInvitation;
+     x.openDuel?.();
+     if(x.state()?.stage>0 && !x.state()?.sleeping && !role)join();
+     else status("Invitation reçue. Fais éclore ou réveille ta créature, puis sélectionne REJOINDRE.");
+   }
+ },
+ active:()=>!!role,stop:close,
+ getInvite:()=>role==="host"&&roomReady&&!room?inviteLink():null,
+ joinInvite:value=>{
+   if(role){status("Quitte ton salon avant de rejoindre une nouvelle invitation.");return false;}
+   try{$("onlineCode").value=parseCode(value);}catch(e){status(e.message);return false;}
+   join();return !!role;
+ }
+};
 })();
