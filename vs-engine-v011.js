@@ -15,7 +15,7 @@ function roll(room){let x=room.rng|0;x^=x<<13;x^=x>>>17;x^=x<<5;room.rng=x>>>0;r
 function normalize(s){
  const V=window.ByteBuddyV10;
  if(!V)throw Error("Statistiques du jeu indisponibles");
- const v=V.validateSnapshot(structuredClone(s));
+ const v=V.validateSnapshot(s);
  const stats={...v.attributes},combat=V.fighter({attributes:stats});
  return {form:v.form,type:TYPES[v.form]||"neutre",level:v.level,stage:v.stage,stats,
    maxHp:combat.maxPV,hp:combat.maxPV,maxEnergy:Math.min(100,48+Math.round(stats.endurance*.55)),
