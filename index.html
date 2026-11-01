@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.17.2 • Pixel Catch et interface unifiée</title>
+    <title>ByteBuddy '98 — V0.18 • Huit nouvelles créatures</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -300,9 +300,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">PIXEL EDITION / 0.17.2</div>
+    <div class="edition">BESTIARY EXPANSION / 0.18</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.17.2</strong> — JOUER devient interactif · styles pixel art unifiés · récompenses au score</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.18</strong> — 24 entrées au bestiaire · 8 nouvelles créatures · 4 talents de combat</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -412,7 +412,7 @@
         <div class="nest-heading"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> INCUBATEUR — CHOISIS UN ŒUF POUR LA PROCHAINE GÉNÉRATION</div><div id="eggList" class="egg-list"></div>
         <div class="nest-heading"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> ARBRE GÉNÉALOGIQUE</div><div id="familyTree" class="family-tree"></div>
       </section>
-      <section class="panel"><div class="panel-header"><h2>07 / BESTIAIRE PIXEL</h2><span class="section-number" id="dexCount">0 / 16</span></div><p class="section-desc">Les formes découvertes restent dans le bestiaire, même après une nouvelle génération. Les silhouettes cachent des secrets…</p><div id="dexGrid" class="dex-grid"></div></section>
+      <section class="panel"><div class="panel-header"><h2>07 / BESTIAIRE PIXEL</h2><span class="section-number" id="dexCount">0 / 24</span></div><p class="section-desc">Les formes découvertes restent dans le bestiaire, même après une nouvelle génération. Les silhouettes cachent des secrets…</p><div id="dexGrid" class="dex-grid"></div></section>
       <section class="panel"><div class="panel-header"><h2>08 / CARNET DE BORD</h2><span class="section-number">DERNIERS ÉVÉNEMENTS</span></div><ul class="journal" id="journal" aria-live="polite"></ul><div class="footer-actions"><button class="tiny-btn" type="button" id="helpBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> COMMENT JOUER</button><button class="tiny-btn" type="button" id="exportBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> SAUVEGARDE</button><button class="tiny-btn" type="button" id="importBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-home"/></svg> RESTAURER</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="tiny-btn" type="button" id="resetBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> NOUVELLE PARTIE</button></div></section>
       <section class="panel" id="settingsPanel">
         <div class="panel-header"><h2>09 / SON & ALERTES</h2><span class="section-number">PRÉFÉRENCES</span></div>
@@ -429,7 +429,7 @@
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.17.2 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.18 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
@@ -439,9 +439,10 @@
   </div>
 </div>
 <div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button" aria-label="Fermer l'aide"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg></button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, joue, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> le bébé grandit après 20 minutes, 12 soins, 2 aliments différents et un entraînement réussi. La forme ultime demande ensuite 24 soins et 3 victoires. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Jouer / Pixel Catch :</strong> déplace ta créature à gauche ou à droite pour attraper les étoiles et éviter les bugs. Utilise OK pour le bouclier. Termine les 12 objets pour gagner des Bits, du moral et de l’XP selon ton score ; abandonner ne rapporte rien.</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme &gt; Nature &gt; Eau &gt; Flamme ; Foudre &gt; Eau ; Lumière / Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (OK). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>Élevage :</strong> Découvre les 16 entrées du bestiaire, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
-<script src="./progression-v010.js?v=010"></script>
+<script src="./bestiary-v018.js?v=018"></script>
+<script src="./progression-v010.js?v=018"></script>
 <script src="./ui-v010.js?v=0172"></script>
-<script src="./vs-engine-v011.js?v=011"></script>
+<script src="./vs-engine-v011.js?v=018"></script>
 <script src="./vs-ui-v011.js?v=011"></script>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script src="./vs-online-v012.js?v=015"></script>
@@ -464,19 +465,19 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17;
-  if(!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const BestiaryV18=window.ByteBuddyBestiaryV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17;
+  if(!BestiaryV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
-  const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
-  const order=['egg','baby','ember','verd','volt','aqua','shade','ember2','verd2','volt2','aqua2','shade2','lumia','nebula','prism','auror'];
-  const types={prism:'lumière',auror:'foudre',egg:'mystère',baby:'neutre',ember:'flamme',ember2:'flamme',verd:'nature',verd2:'nature',volt:'foudre',volt2:'foudre',aqua:'eau',aqua2:'eau',shade:'ombre',shade2:'ombre',lumia:'lumière',nebula:'lumière'};
+  const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.name]))};
+  const order=['egg','baby','ember','verd','volt','aqua','shade','cindr','bramble','tide','surge','ember2','verd2','volt2','aqua2','shade2','cindr2','bramble2','tide2','surge2','lumia','nebula','prism','auror'];
+  const types={prism:'lumière',auror:'foudre',egg:'mystère',baby:'neutre',ember:'flamme',ember2:'flamme',verd:'nature',verd2:'nature',volt:'foudre',volt2:'foudre',aqua:'eau',aqua2:'eau',shade:'ombre',shade2:'ombre',lumia:'lumière',nebula:'lumière',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.type]))};
   const signature={mystère:['egg','ÉVEIL MYSTÈRE','Un destin encore inconnu.'],neutre:['heart','BULLE AMICALE','Un petit cœur plein de courage.'],flamme:['flame','FLAMME VIVE','Attaque renforcée contre la Nature.'],nature:['leaf','RACINES VIVES','Attaque renforcée contre l’Eau.'],eau:['wave','VAGUE AZUR','Attaque renforcée contre la Flamme.'],foudre:['bolt','ÉCLAIR FULGURANT','Attaque renforcée contre l’Eau.'],ombre:['shadow','GRIFFE NOCTURNE','Attaque renforcée contre la Lumière.'],lumière:['light','ÉCLAT STELLAIRE','Attaque renforcée contre l’Ombre.']};
   const symbols={mystère:'egg',neutre:'heart',flamme:'flame',nature:'leaf',foudre:'bolt',eau:'wave',ombre:'shadow',lumière:'light'};
   const isRare=id=>['lumia','nebula','prism','auror'].includes(id);
   const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
   const blankDaily=()=>({day:today(),feed:0,play:0,win:0,claimed:false});
-  const desc = {prism:'Né d’une mutation prismatique, ce gardien reflète l’énergie de plusieurs générations.',auror:'Une créature des aurores numériques dont l’ADN résonne avec les anciens mondes.',egg:"Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.",baby:"Une petite boule de pixels pleine d'énergie. Tout reste à construire !",ember:"Un petit dragon intrépide. Il adore les défis et les entraînements.",verd:"Un gardien des forêts, doux et joueur. L'affection le rend plus fort.",volt:"Une créature électrique, vive et équilibrée. Toujours prête à découvrir.",ember2:"Sa force brûlante révèle des années de courage et d'entraînement.",verd2:"Son énergie végétale protège maintenant tous ses compagnons.",volt2:"Le maître des étincelles est devenu une légende de l'arène !",aqua:"Un gardien aquatique qui aime un environnement impeccablement entretenu.",shade:"Un rôdeur des ombres, né des défis et de la discipline.",aqua2:"Il commande les marées et protège les rivières numériques.",shade2:"Dans la nuit, ses ailes de pixels ne font aucun bruit.",lumia:"Une rare légende de lumière, révélée par des soins exemplaires.",nebula:"Une créature stellaire apparue au terme de grands défis."};
+  const desc = {prism:'Né d’une mutation prismatique, ce gardien reflète l’énergie de plusieurs générations.',auror:'Une créature des aurores numériques dont l’ADN résonne avec les anciens mondes.',egg:"Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.",baby:"Une petite boule de pixels pleine d'énergie. Tout reste à construire !",ember:"Un petit dragon intrépide. Il adore les défis et les entraînements.",verd:"Un gardien des forêts, doux et joueur. L'affection le rend plus fort.",volt:"Une créature électrique, vive et équilibrée. Toujours prête à découvrir.",ember2:"Sa force brûlante révèle des années de courage et d'entraînement.",verd2:"Son énergie végétale protège maintenant tous ses compagnons.",volt2:"Le maître des étincelles est devenu une légende de l'arène !",aqua:"Un gardien aquatique qui aime un environnement impeccablement entretenu.",shade:"Un rôdeur des ombres, né des défis et de la discipline.",aqua2:"Il commande les marées et protège les rivières numériques.",shade2:"Dans la nuit, ses ailes de pixels ne font aucun bruit.",lumia:"Une rare légende de lumière, révélée par des soins exemplaires.",nebula:"Une créature stellaire apparue au terme de grands défis.",...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.detail]))};
   const base = () => ({version:4,petName:'',trainerName:'',starterEgg:null,onboarding:null,genetics:null,eggs:[],family:[],form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,mistakes:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,bond:0,lifeAutoSleep:false,level:1,xp:0,record:{},dex:{egg:true},daily:blankDaily(),log:['Un mystérieux œuf vient d’apparaître…']});
   let state,firstInstall=false;
   let namingOpen=false;
@@ -690,6 +691,11 @@
     const row=(y,x,w,color=dark)=>pix(x,y,w,1,color);
     const eye=(x,y)=>{if(blink)pix(x,y,2,1,dark);else {pix(x,y,2,2,dark);pix(x,y,1,1,pale)}};
     const outlineBox=(x,y,w,h)=>{pix(x,y,w,h,dark);pix(x+1,y+1,w-2,h-2,mid)};
+    // The new 24x24 sprites share the same fixed four-tone LCD palette and scaling.
+    if(BestiaryV18.draw(form,pix,eye,{dark,mid,light,pale})){
+      if(options.ill)pix(23,3,2,2,dark);
+      return;
+    }
     if(isEgg){
       // An old LCD-style egg with a zigzag stripe.
       [ [2,9,6],[3,7,10],[4,6,12],[5,5,14],[6,4,16],[7,4,16],[8,3,18],[9,3,18],[10,3,18],[11,3,18],[12,3,18],[13,3,18],[14,3,18],[15,4,16],[16,4,16],[17,5,14],[18,6,12],[19,7,10],[20,9,6] ].forEach(([y,x,w])=>row(y,x,w,dark));
@@ -949,7 +955,7 @@
     if(state.daily.day!==today())state.daily=blankDaily();
     $('elementBadge').innerHTML=pixelIcon(symbols[types[state.form]]||'egg')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
-    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=sig[1];$('sigTrait').textContent=sig[2];
+    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
     renderDaily();renderDex();renderGenealogy();
     $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=['À ÉCLORE','BÉBÉ','ROOKIE','ULTIME'][state.stage];$('creatureDesc').textContent=desc[state.form];
     $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=['EGG','BABY','ROOKIE','ULTIMATE'][state.stage]+' / '+String(state.generation).padStart(2,'0');
@@ -957,7 +963,7 @@
     const well=state.stage===0?'EN ATTENTE':state.health<25?'DANGER':state.health<55?'FRAGILE':state.sleeping?'ENDORMI':state.health>=80?'EN FORME':'À SURVEILLER';$('wellnessTag').textContent=well;
     $('statList').innerHTML=metrics.map(([key,label])=>{const val=Math.round(state[key]);return `<div class="stat-row"><span class="stat-label">${label}</span><div class="bar" role="progressbar" aria-label="${label}" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="100"><div class="fill ${val<28?'low':val<51?'medium':''}" style="width:${val}%"></div></div><span class="stat-value">${val}%</span></div>`}).join('');
     const ev=evoConfig();$('evoTarget').textContent=ev.target;$('evoRequirement').textContent=ev.detail;$('evoPercent').textContent=Math.round(ev.fraction*100)+' %';$('evoBar').style.width=Math.round(ev.fraction*100)+'%';
-    $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Entraîner : Flamme · Jouer : Nature · Nettoyer : Eau · Équilibrer : Foudre · Combattre et entraîner : Ombre.':state.stage===2?'Pour une évolution secrète, vise 5 à 7 victoires et un niveau élevé avant ton 24e soin !':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
+    $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Nouvelles branches : FORCE + PRÉCISION + VIANDE (Flamme), DÉFENSE + LÉGUMES (Nature), ESPRIT + POISSON (Eau), VITESSE + ENDURANCE (Foudre).':state.stage===2?'Pour une évolution secrète, vise 5 à 7 victoires et un niveau élevé avant ton 24e soin !':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
     $('lcdMood').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':'heart')+' '+(state.stage===0?'PRÊT':state.sleeping?'ZZZ':state.health<25?'SOS':state.joy<30?'TRISTE':'CONTENT');
@@ -1377,7 +1383,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.17.2 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.18 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1397,7 +1403,7 @@
     $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.17.2 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.18 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
