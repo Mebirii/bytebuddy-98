@@ -68,9 +68,9 @@ function finished(){
  const good=g.score>=7;
  $("bbPlayTitle").textContent=g.score>=11?"PIXEL MASTER !":good?"BRAVO !":"BIEN JOUÉ !";
  $("bbPlayDetails").textContent="SCORE "+g.score+"/"+total+" - ÉTOILES "+g.stars+" - BUGS "+g.hits;
- $("bbPlayAgain").hidden=api.state().energy<16;
- $("bbPlayResults").classList.add("show");
  api.finish({score:g.score,total,stars:g.stars,avoids:g.avoids,hits:g.hits});
+ $("bbPlayAgain").hidden=!api.canPlay();
+ $("bbPlayResults").classList.add("show");
 }
 function resolve(){
  const g=game;if(!g||!g.item)return;
