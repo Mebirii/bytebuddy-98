@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-  <title>ByteBuddy '98 — V0.7 • Sons & Alertes</title>
+  <title>ByteBuddy '98 — V0.7.1 • Préparation Web Push</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -343,7 +343,10 @@
         <div class="bb-setting"><strong>🔔 ALERTES DU MONSTRE</strong><button type="button" id="enableNotifications" class="primary">ACTIVER</button></div>
         <p id="notificationStatus" class="bb-setting-help" aria-live="polite">Les alertes sont désactivées.</p>
         <button type="button" class="tiny-btn" id="testNotification">🔔 ENVOYER UNE NOTIFICATION TEST</button>
-        <p class="bb-setting-help">Alertes faim, santé, fatigue et hygiène quand le jeu reste ouvert en arrière-plan. Pour les recevoir même avec le jeu fermé, il faudra un service push distant. Sur iPhone, ajoute ByteBuddy à l’écran d’accueil depuis Safari.</p>
+        <p class="bb-setting-help">Les alertes locales fonctionnent quand le jeu reste ouvert. Sur iPhone, installe ByteBuddy sur l’écran d’accueil pour les notifications push.</p>
+        <div class="bb-setting"><strong>📲 PUSH — MÊME JEU FERMÉ</strong><button type="button" id="enableCloudPush" class="primary" disabled>SERVEUR EN PRÉPARATION</button></div>
+        <p id="cloudPushStatus" class="bb-setting-help" aria-live="polite">Un serveur dédié est nécessaire pour les notifications quand le jeu est fermé.</p>
+        <button type="button" class="tiny-btn" id="testCloudPush" disabled>📲 TESTER LA NOTIFICATION PUSH</button>
       </section>
     </section>
   </section>
@@ -1122,7 +1125,7 @@
   }
   const lastAlerts={};let lastOverallAlert=0;
   async function checkPetAlerts(){
-    if(!avPrefs.notifications||!document.hidden||state.stage===0||state.sleeping)return;
+    if(window.ByteBuddyCloudPushEnabled||!avPrefs.notifications||!document.hidden||state.stage===0||state.sleeping)return;
     const issues=[
       {key:'health',when:state.health<27,title:'ByteBuddy a besoin de soins !',body:'La santé de ta créature est faible. Viens la soigner.'},
       {key:'fullness',when:state.fullness<27,title:'Ton ByteBuddy a faim !',body:'Son ventre gargouille. Viens lui donner à manger !'},
@@ -1159,5 +1162,7 @@
   render();syncConsole();save();requestAnimationFrame(paint);
 })();
 </script>
+<script src="./push-config.js?v=08"></script>
+<script src="./push-client.js?v=08"></script>
 </body>
 </html>
