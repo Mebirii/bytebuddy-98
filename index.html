@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.19 • Exploration GPS</title>
+    <title>ByteBuddy '98 — V0.19.1 • Exploration GPS</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -300,9 +300,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">WILD EXPLORATION / 0.19</div>
+    <div class="edition">WILD EXPLORATION / 0.19.1</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.19</strong> — exploration GPS volontaire · coffres · objets bonus · œufs</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.19.1</strong> — exploration GPS volontaire · coffres · objets bonus · œufs</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -429,7 +429,7 @@
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.19 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.19.1 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
@@ -455,7 +455,7 @@
 <script src="./trainer-v013.js?v=0172"></script>
 <script src="./onboarding-v016.js?v=0161"></script>
 <script src="./play-v017.js?v=0172"></script>
-<script src="./explore-v019.js?v=019"></script>
+<script src="./explore-v019.js?v=0191"></script>
 <script>
 (() => {
   'use strict';
@@ -635,6 +635,7 @@
     const i=state.eggs.findIndex(e=>String(e.id)===String(id));if(i<0)return;
     const egg=state.eggs[i];
     if(!confirm(`Faire éclore cet œuf à la génération ${state.generation+1} ? Ton compagnon actuel rejoindra l’arbre généalogique et sa progression individuelle sera clôturée. Les autres œufs et ton bestiaire seront conservés.`))return;
+    ExploreV19.stop('EXPLORATION EN PAUSE : NOUVEL ŒUF.');
     const family=[...state.family];
     if(state.stage>0)family.push({generation:state.generation,form:state.form,wins:state.wins,level:state.level,trait:state.genetics?.talent||null,parents:state.genetics?[state.genetics.parent,state.genetics.partner]:[]});
     const eggs=state.eggs.filter((_,idx)=>idx!==i);
@@ -673,6 +674,7 @@
   }
   function newGame(){
     if(!confirm('Nouvelle génération sans héritage ? Le compagnon actuel sera archivé. Les œufs en incubateur, le bestiaire et les Bits seront conservés.'))return;
+    ExploreV19.stop('EXPLORATION EN PAUSE : NOUVELLE GÉNÉRATION.');
     const generation=(state.generation||1)+1;
     const old=state;const family=[...state.family];if(old.stage>0)family.push({generation:old.generation,form:old.form,wins:old.wins,level:old.level,trait:old.genetics?.talent||null,parents:old.genetics?[old.genetics.parent,old.genetics.partner]:[]});
     state={...base(),trainerName:old.trainerName,exploration:old.exploration,onboarding:{step:'done'},bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};V10.initialize(state);fight=null;closeBattle();save();render();notify('OEUF Une nouvelle aventure commence !');
@@ -1386,7 +1388,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.19 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.19.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1406,7 +1408,7 @@
     $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.19 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.19.1 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
