@@ -798,7 +798,7 @@
     drawPixelCreature(canvas,state.form,t,{scene:true,ill:state.health<20});
     // Optional signs of daily life.
     for(let i=0;i<state.poops;i++){const x=10+i*18;ctx.fillStyle='#3e593f';ctx.fillRect(x,h-50,8,5);ctx.fillRect(x+2,h-56,5,6);ctx.fillRect(x+3,h-60,3,4)}
-    if(actionFx.until>Date.now()){ctx.fillStyle='#405f3d';ctx.font='bold 18px monospace';const label=actionFx.type==='feed'?'+':actionFx.type==='train'?'✦':actionFx.type==='clean'?'✧':actionFx.type==='evolve'?'★ ★':'♪';ctx.fillText(label,155,74-(Math.sin(t/160)*4));}
+    if(actionFx.until>Date.now()){ctx.fillStyle='#405f3d';const yy=74-Math.sin(t/160)*4;ctx.fillRect(152,yy-11,6,23);ctx.fillRect(144,yy-3,22,6);}
     if(state.health<20){ctx.fillStyle='#405a3d';ctx.font='bold 12px monospace';ctx.fillText('!',151,80)}
   }
   // Draws a sprite over a complete LCD scene; the sprite helper clears its canvas,
@@ -901,7 +901,7 @@
     if(state.stage>0 && !state.sleeping){const beat=Math.floor(t/260);ctx.fillStyle='#7b9d6d';for(let i=0;i<4;i++){const x=32+((beat*2+i*61)%178),y=53+((i*31+Math.floor(beat/3))%73);ctx.fillRect(x,y,2,3)}}
     if(state.sleeping){ctx.fillStyle='#476948';ctx.font='bold 14px monospace';ctx.fillText('z z',162,82-Math.sin(t/330)*7)}
     ctx.fillStyle='#395641';for(let i=0;i<state.poops;i++){const x=15+i*20;ctx.fillRect(x,h-54,13,6);ctx.fillRect(x+3,h-61,8,7);ctx.fillRect(x+5,h-65,4,4)}
-    if(actionFx.until>Date.now()){ctx.fillStyle='#3b563d';ctx.font='bold 21px monospace';ctx.fillText(actionFx.type==='evolve'?'✦ ✦':actionFx.type==='feed'?'+':actionFx.type==='play'?'♪':actionFx.type==='train'?'✦':'✧',173,84-Math.sin(t/130)*7)}
+    if(actionFx.until>Date.now()){ctx.fillStyle='#3b563d';const yy=84-Math.sin(t/130)*7;ctx.fillRect(170,yy-13,6,25);ctx.fillRect(161,yy-3,24,6);}
     if(actionFx.type==='evolve'&&actionFx.until>Date.now()){
       const elapsed=(3200-(actionFx.until-Date.now()))/70;
       for(let i=0;i<18;i++){const angle=i*Math.PI*2/18+elapsed*.07;const radius=27+(elapsed%35)*1.3;const x=120+Math.cos(angle)*radius,y=92+Math.sin(angle)*radius*.6;ctx.fillStyle=i%2?'#415c3f':'#718a62';ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,6,6)}
@@ -1206,7 +1206,7 @@
       const munch=p>.12&&p<.87&&Math.floor(t/220)%2===0;
       c.drawImage(activitySprite,0,0,100,100,37+(munch?9:0),74+(munch?5:0),126,126);
       if(munch){activityRect(146,133,9,4,dark);activityRect(152,132,4,4,light)}
-      for(let i=0;i<3;i++){const s=(elapsed/550+i*.4)%1;activityText(['+','✦','+'][i],114+i*21,70-s*25,12)}
+      for(let i=0;i<3;i++){const s=(elapsed/550+i*.4)%1;activityRect(112+i*21,62-s*25,5,12,dark);activityRect(109+i*21,66-s*25,11,4,dark)}
       activityText('BON APPÉTIT !',120,28,12);
     }else if(a.type==='train'){
       // Punching bag reacts to each impact; the creature lunges towards it.
@@ -1215,14 +1215,14 @@
       activityRect(195,44,5,27,dark);activityRect(188+sway,70,24,12,dark);activityRect(183+sway,82,34,74,dark);activityRect(187+sway,87,26,62,mid);activityRect(191+sway,151,18,5,dark);activityRect(195+sway,156,5,27,dark);
       activityRect(183+sway,109,34,3,light);activityRect(183+sway,128,34,3,light);
       c.drawImage(activitySprite,0,0,100,100,22+(strike?20:0),81-(strike?6:Math.round(bounce*6)),131,131);
-      if(strike){activityText('✦',175,108,23);activityText('!',167,127,17);for(let i=0;i<4;i++)activityRect(164+i*4,118-i*5,5,3,dark)}
+      if(strike){activityRect(172,88,6,30,dark);activityRect(162,99,26,6,dark);activityText('!',167,127,17);for(let i=0;i<4;i++)activityRect(164+i*4,118-i*5,5,3,dark)}
       if(p<.30){activityText('PRÊT ?',120,29,13)}else{activityText('ALLEZ !',120,29,13)}
       activityRect(10,199,Math.round(p*218),5,dark);
     }else if(a.type==='play'){
       c.drawImage(activitySprite,0,0,100,100,41,77-Math.round(bounce*10),130,130);
       const bx=178+Math.sin(t/380)*27,by=167-Math.abs(Math.sin(t/260))*56;
       activityRect(bx-13,by-12,26,24,dark);activityRect(bx-9,by-9,18,18,light);activityRect(bx-2,by-12,4,24,dark);
-      activityText('♪',172,76-Math.sin(t/300)*8,21);activityText('ATTRAPE !',120,27,13);
+      activityRect(171,64-Math.sin(t/300)*8,5,17,dark);activityRect(164,75-Math.sin(t/300)*8,10,8,dark);activityText('ATTRAPE !',120,27,13);
     }else if(a.type==='clean'){
       c.drawImage(activitySprite,0,0,100,100,53,81,134,134);
       activityRect(67,28,112,6,dark);activityRect(112,29,8,16,dark);activityRect(105,42,25,5,mid);
