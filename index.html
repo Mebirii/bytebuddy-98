@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.10 • Élevage & Stats</title>
+    <title>ByteBuddy '98 — V0.11 • Arène des dresseurs</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -276,9 +276,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● TAMER EDITION / 0.10</div>
+    <div class="edition">● VERSUS EDITION / 0.11</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.10</strong> — 6 statistiques · nutrition ciblée · croissance bébé · fiche VS</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.11</strong> — duels tactiques VS CPU · VS deux joueurs · statistiques et évolution</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -397,7 +397,7 @@
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.10 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.11 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
@@ -409,6 +409,8 @@
 <div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button">✕</button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, amuse, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> 7 soins pour devenir Rookie puis 24 soins et 3 victoires pour devenir Ultime. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme → Nature → Eau → Flamme ; Foudre → Eau ; Lumière <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-dodge"/></svg> Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (●). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>V0.5 :</strong> Débloque les 16 formes, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
 <script src="./progression-v010.js?v=010"></script>
 <script src="./ui-v010.js?v=010"></script>
+<script src="./vs-engine-v011.js?v=011"></script>
+<script src="./vs-ui-v011.js?v=011"></script>
 <script>
 (() => {
   'use strict';
@@ -420,8 +422,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI;
-  if(!V10||!V10UI)throw Error('Composants V0.10 manquants');
+  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI;
+  if(!V10||!V10UI||!V11UI)throw Error('Composants d’élevage et d’arène manquants');
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
@@ -1300,11 +1302,11 @@
   },true);
 
   function showScreen(name){
-    if(!orderedScreens.includes(name)||activitySceneState||miniState||V10UI.isFoodOpen())return;
+    if(!orderedScreens.includes(name)||activitySceneState||miniState||V10UI.isFoodOpen()||V11UI.isActive())return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.10 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.11 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1324,7 +1326,7 @@
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.10 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.11 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1337,9 +1339,10 @@
   $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
   $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
   const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
-  $('leftBtn').addEventListener('click',()=>V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
-  $('rightBtn').addEventListener('click',()=>V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
+  $('leftBtn').addEventListener('click',()=>V11UI.isActive()?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
+  $('rightBtn').addEventListener('click',()=>V11UI.isActive()?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
   $('middleBtn').addEventListener('click',()=>{
+    if(V11UI.isActive())return;
     if(V10UI.isFoodOpen()){V10UI.closeFood();return;}
     if(miniState){miniHardware('middle');return;}
     if(activitySceneState){finishActivityScene();return;}
@@ -1351,6 +1354,7 @@
     else showScreen('menu');
   });
   document.addEventListener('keydown',e=>{
+    if(V11UI.isActive())return;
     if(V10UI.isFoodOpen()){if(e.key==='Escape'){e.preventDefault();V10UI.closeFood();}return;}
     if(activitySceneState){if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();finishActivityScene();}return;}
     if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
@@ -1480,6 +1484,7 @@
     evolve();save();render();
   }
   V10UI.setup({state:()=>state,feed:v10Feed});
+  V11UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true})});
   render();syncConsole();save();requestAnimationFrame(paint);
 })();
 </script>
