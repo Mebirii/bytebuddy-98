@@ -641,8 +641,8 @@
   }
   function renderGenealogy(){
     const gene=state.genetics;
-    $('geneBadge').textContent=gene?`✦ ADN : ${gene.affinity.toUpperCase()} · ${talents[gene.talent].name}`:'◈ PREMIÈRE LIGNÉE';
-    $('currentDna').textContent=gene?`${gene.affinity.toUpperCase()} · ${talents[gene.talent].name}${gene.mutation?' · ✧ MUTATION':''}`:'LIGNÉE ORIGINELLE';
+    $('geneBadge').innerHTML=pixelIcon('star')+' '+(gene?'ADN : '+gene.affinity.toUpperCase()+' · '+talents[gene.talent].name:'PREMIÈRE LIGNÉE');
+    $('currentDna').textContent=gene?`${gene.affinity.toUpperCase()} · ${talents[gene.talent].name}${gene.mutation?' · MUTATION':''}`:'LIGNÉE ORIGINELLE';
     $('currentTalent').textContent=gene?`${talents[gene.talent].detail} ${gene.mutation?'Une mutation secrète pourrait s’exprimer à la forme Ultime (5 victoires).':''}`:'Ton premier compagnon crée la souche de ton arbre familial.';
     const select=$('partnerSelect'),selected=select.value;
     const partners=availablePartners();select.replaceChildren();
@@ -658,7 +658,7 @@
       const b=document.createElement('button');b.type='button';b.className='egg-card'+(egg.genetics.mutation?' rare':'');b.setAttribute('aria-label',`Activer l’œuf ${egg.genetics.affinity}, ${talents[egg.genetics.talent].name}`);
       const ico=document.createElement('span');ico.className='egg-icon';ico.innerHTML=(egg.genetics.mutation?pixelIcon('star'):'')+pixelIcon('egg');
       const title=document.createElement('b');title.textContent=`AFFINITÉ ${egg.genetics.affinity.toUpperCase()}`;
-      const note=document.createElement('small');note.textContent=`${talents[egg.genetics.talent].name} · ${egg.genetics.mutation?'★ RARE':'STANDARD'} · ISSUE GEN ${Math.max(1,egg.generation-1)}`;
+      const note=document.createElement('small');note.textContent=`${talents[egg.genetics.talent].name} · ${egg.genetics.mutation?'RARE':'STANDARD'} · ISSUE GEN ${Math.max(1,egg.generation-1)}`;
       b.append(ico,title,note);b.addEventListener('click',()=>activateEgg(egg.id));list.appendChild(b);
     });
     const tree=$('familyTree');tree.replaceChildren();
@@ -666,7 +666,7 @@
     for(const m of [...state.family].reverse().slice(0,6)){
       const row=document.createElement('div');row.className='family-member';const label=document.createElement('b');label.textContent=`GEN ${String(m.generation).padStart(2,'0')} · ${names[m.form]}`;const details=document.createElement('span');details.textContent=`LV.${m.level||1} · ${m.wins||0} victoires${Array.isArray(m.parents)&&m.parents.length===2&&m.parents.every(id=>Object.hasOwn(names,id))?' · '+m.parents.map(id=>names[id]).join(' × '):''}`;row.append(label,details);tree.appendChild(row);
     }
-    if(state.stage>0){const row=document.createElement('div');row.className='family-member current';const label=document.createElement('b');label.textContent=`GEN ${String(state.generation).padStart(2,'0')} · ${names[state.form]}`;const details=document.createElement('span');details.textContent=state.genetics?`★ EN COURS · ${names[state.genetics.parent]} × ${names[state.genetics.partner]}`:'★ EN COURS';row.append(label,details);tree.prepend(row)}
+    if(state.stage>0){const row=document.createElement('div');row.className='family-member current';const label=document.createElement('b');label.textContent=`GEN ${String(state.generation).padStart(2,'0')} · ${state.petName||names[state.form]}`;const details=document.createElement('span');details.textContent=state.genetics?`EN COURS · ${names[state.genetics.parent]} / ${names[state.genetics.partner]}`:'EN COURS';row.append(label,details);tree.prepend(row)}
   }
   function newGame(){
     if(!confirm('Nouvelle génération sans héritage ? Le compagnon actuel sera archivé. Les œufs en incubateur, le bestiaire et les Bits seront conservés.'))return;
@@ -826,8 +826,8 @@
     return 'calm';
   }
   function lifeMoodLabel(){
-    const labels={egg:'◈ EN ATTENTE',sleep:'☾ ENDORMI',sick:'✚ MALADE',hungry:'FAIM AFFAMÉ',tired:'Zz FATIGUÉ',dirty:'◌ SALE',sad:'♡ TRISTE',happy:'+ HEUREUX',calm:'✦ '+lifePersonality()};
-    return labels[lifeFeeling()]||'✦ CURIEUX';
+    const labels={egg:'EN ATTENTE',sleep:'ENDORMI',sick:'MALADE',hungry:'AFFAMÉ',tired:'FATIGUÉ',dirty:'SALE',sad:'TRISTE',happy:'HEUREUX',calm:lifePersonality()};
+    return labels[lifeFeeling()]||'CURIEUX';
   }
   function lifeReact(type){lifeState.reaction=type;lifeState.until=performance.now()+2500;}
   function petCompanion(){
@@ -912,9 +912,9 @@
   const metrics=[['fullness','SATIÉTÉ'],['energy','ÉNERGIE'],['joy','MORAL'],['hygiene','HYGIÈNE'],['health','SANTÉ']];
   function renderDaily(){
     const missions=dailyTasks(),done=missions.filter(m=>m.count>=m.goal).length;
-    $('dailyStatus').textContent=`${done} / 3`;$('dailyList').innerHTML=missions.map(m=>`<div class="mission"><div><strong>${m.count>=m.goal?'✓ ':'[] '}${m.name}</strong><small>${m.note}</small></div><span>${Math.min(m.count,m.goal)} / ${m.goal}</span></div>`).join('');
+    $('dailyStatus').textContent=`${done} / 3`;$('dailyList').innerHTML=missions.map(m=>`<div class="mission"><div><strong>${m.count>=m.goal?pixelIcon('trophy')+' ':pixelIcon('clock')+' '}${m.name}</strong><small>${m.note}</small></div><span>${Math.min(m.count,m.goal)} / ${m.goal}</span></div>`).join('');
     $('dailyHint').textContent=state.daily.claimed?'RÉCOMPENSE OBTENUE':done===3?'BRAVO, À RÉCUPÉRER':'ENCORE '+(3-done)+' MISSION(S) À TERMINER';
-    $('claimDaily').disabled=done<3||state.daily.claimed;$('claimDaily').textContent=state.daily.claimed?'✓ OBTENU':'+25 BITS ◈';
+    $('claimDaily').disabled=done<3||state.daily.claimed;$('claimDaily').innerHTML=pixelIcon(state.daily.claimed?'trophy':'star')+(state.daily.claimed?' OBTENU':' +25 BITS');
   }
   function renderDex(){
     const target=$('dexGrid');const count=order.filter(id=>state.dex[id]).length;
@@ -947,9 +947,9 @@
   function render(){
     V10UI.render(state);
     if(state.daily.day!==today())state.daily=blankDaily();
-    $('elementBadge').textContent=(symbols[types[state.form]]||'◈')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
+    $('elementBadge').innerHTML=pixelIcon(symbols[types[state.form]]||'egg')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
-    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').textContent=sig[0];$('sigMove').textContent=sig[1];$('sigTrait').textContent=sig[2];
+    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=sig[1];$('sigTrait').textContent=sig[2];
     renderDaily();renderDex();renderGenealogy();
     $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=['À ÉCLORE','BÉBÉ','ROOKIE','ULTIME'][state.stage];$('creatureDesc').textContent=desc[state.form];
     $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=['EGG','BABY','ROOKIE','ULTIMATE'][state.stage]+' / '+String(state.generation).padStart(2,'0');
@@ -960,7 +960,7 @@
     $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Entraîner : Flamme · Jouer : Nature · Nettoyer : Eau · Équilibrer : Foudre · Combattre et entraîner : Ombre.':state.stage===2?'Pour une évolution secrète, vise 5 à 7 victoires et un niveau élevé avant ton 24e soin !':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
-    $('lcdMood').textContent=state.stage===0?'+ PRÊT':state.sleeping?'☾ ZZZ':state.health<25?'! SOS':state.joy<30?'TRISTE TRISTE':'+ CONTENT';
+    $('lcdMood').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':'heart')+' '+(state.stage===0?'PRÊT':state.sleeping?'ZZZ':state.health<25?'SOS':state.joy<30?'TRISTE':'CONTENT');
     $('displayNote').textContent=state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
     document.querySelectorAll('[data-action]').forEach(btn=>{const a=btn.dataset.action;btn.disabled=state.stage===0 || (state.sleeping&&a!=='sleep') || (state.health<=0&&a!=='sleep'&&a!=='heal')});
     $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();
@@ -1012,8 +1012,8 @@
   }
   function updateFight(){if(!fight)return;
     $('yourFightName').textContent=names[state.form];$('enemyFightName').textContent=fight.enemyName;
-    $('yourTypeLabel').textContent=`${symbols[types[state.form]]} ${types[state.form].toUpperCase()}`;
-    $('enemyTypeLabel').textContent=`${symbols[fight.enemyType]} ${fight.enemyType.toUpperCase()}`;
+    $('yourTypeLabel').innerHTML=pixelIcon(symbols[types[state.form]]||'egg')+' '+types[state.form].toUpperCase();
+    $('enemyTypeLabel').innerHTML=pixelIcon(symbols[fight.enemyType]||'egg')+' '+fight.enemyType.toUpperCase();
     $('ownHpText').textContent=`${fight.ownHp}/${fight.ownMax} PV`;$('enemyHpText').textContent=`${fight.enemyHp}/${fight.enemyMax} PV`;
     $('ownHpBar').style.width=CLAMP(fight.ownHp/fight.ownMax*100)+'%';$('enemyHpBar').style.width=CLAMP(fight.enemyHp/fight.enemyMax*100)+'%';
     for(const id of ['attackBtn','defendBtn','focusBtn','specialBtn'])$(id).disabled=fight.done||fight.busy;
@@ -1113,7 +1113,7 @@
     playSound(won?'victory':'defeat');
     if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=Math.round(100*fight.ownHp/fight.ownMax);state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('RECORD Victoire dans l’arène !');evolve()}
     else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';battleHistory('☾ Défaite : soigne ton compagnon.');notify('KO Défaite : pense à le soigner !')}
-    $('battleHeading').textContent=won?'★ VICTOIRE !':'COMBAT TERMINÉ';fight.busy=false;updateFight();save();render();
+    $('battleHeading').innerHTML=pixelIcon(won?'trophy':'battle')+' '+(won?'VICTOIRE !':'COMBAT TERMINÉ');fight.busy=false;updateFight();save();render();
   }
   function closeBattle(){if(fight&&fight.busy)return;$('battleOverlay').classList.remove('visible');fight=null}
   document.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',()=>action(el.dataset.action)));
@@ -1143,7 +1143,7 @@
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
   const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer'];
-  const headings={home:'MON COMPAGNON',stats:'+ ÉTAT DU MONSTRE',care:'FAIM PRENDRE SOIN',arena:'X ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'OEUF LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',vs:'VS DRESSEURS',trainer:'ID MON DRESSEUR',menu:'▦ MENU PRINCIPAL'};
+  const headings={home:'MON COMPAGNON',stats:'ÉTAT DU MONSTRE',care:'PRENDRE SOIN',arena:'ARÈNE TACTIQUE',evolution:'ÉVOLUTION',missions:'MISSIONS DU JOUR',lab:'LABORATOIRE',dex:'BESTIAIRE',journal:'JOURNAL & OPTIONS',settings:'SON & ALERTES',vs:'VS DRESSEURS',trainer:'MON DRESSEUR',menu:'MENU PRINCIPAL'};
   const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer','menu'];
   let activeScreen='home';
   app.appendChild(dashboard);
@@ -1174,7 +1174,7 @@
     const result=activitySpecs[activitySceneState.type]?.result;
     activitySceneState=null;$('activityScene').classList.remove('active');
     showScreen('home'); // Return to the creature after its scene.
-    if(result)notify('✓ '+result);
+    if(result)notify(result);
   }
   $('activitySkip').addEventListener('click',finishActivityScene);
   const dark='#344e39',mid='#68835c',light='#92ad79',pale='#dceac0';
@@ -1302,7 +1302,7 @@
     awardXP(xp);lifeReact(success?'train':'tired');
     log(V10.TRAINING[a.mode].name+' : '+a.score+'/'+max+' • '+gain.main+' +'+gain.gain+' • +'+bits+' Bits');
     evolve();save();render();
-    $('miniResult').hidden=false;$('miniVerdict').textContent=perfect?'★ PARFAIT !':success?'✓ BIEN JOUÉ !':'ENCORE UN EFFORT !';
+    $('miniResult').hidden=false;$('miniVerdict').innerHTML=pixelIcon(perfect?'star':success?'trophy':'train')+' '+(perfect?'PARFAIT !':success?'BIEN JOUÉ !':'ENCORE UN EFFORT !');
     $('miniScore').textContent='SCORE '+a.score+' / '+max;
     $('miniReward').textContent='+'+bits+' BITS • +'+xp+' XP • '+V10.labels[gain.main]+' +'+gain.gain+(success?' • VALIDÉ':'');
     $('miniInfo').textContent='ÉPREUVE TERMINÉE';
@@ -1377,7 +1377,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.16.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.17 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1391,13 +1391,13 @@
   function syncConsole(){
     $('homeName').textContent=state.petName||names[state.form];
     $('homeLevel').textContent=`LV.${state.level} • GÉN.${String(state.generation).padStart(2,'0')}`;
-    $('homeHealth').textContent=`+ SANTÉ ${Math.round(state.health)}%`;
-    $('homeBits').textContent=`◈ ${state.bits} BITS`;
+    $('homeHealth').innerHTML=pixelIcon('heart')+' SANTÉ '+Math.round(state.health)+'%';
+    $('homeBits').innerHTML=pixelIcon('star')+' '+state.bits+' BITS';
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
-    $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
+    $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.16.1 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.17 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
