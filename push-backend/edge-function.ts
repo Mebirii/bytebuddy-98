@@ -1,5 +1,5 @@
 // ByteBuddy Push API — deploy to a DEDICATED Supabase project.
-// Required Edge Function secrets: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, PUSH_CRON_SECRET.
+// Server VAPID keys and cron token are generated once and stored in a service-role-only RLS table.
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are supplied by the Supabase runtime.
 // verify_jwt=false: public operations use per-installation credentials; cron uses a private secret.
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
@@ -7,15 +7,43 @@ import webpush from "npm:web-push@3.6.7";
 
 const SITE = "https://mebirii.github.io";
 const SITE_PATH = "https://mebirii.github.io/bytebuddy-98/";
-const vapidPublic = Deno.env.get("VAPID_PUBLIC_KEY") || "";
-const vapidPrivate = Deno.env.get("VAPID_PRIVATE_KEY") || "";
-const cronSecret = Deno.env.get("PUSH_CRON_SECRET") || "";
+let vapidPublic = "";
+let vapidPrivate = "";
+let cronSecret = "";
 const db = createClient(
   Deno.env.get("SUPABASE_URL") || "",
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "",
   { auth: { persistSession: false, autoRefreshToken: false } }
 );
-if (vapidPublic && vapidPrivate) webpush.setVapidDetails(SITE_PATH, vapidPublic, vapidPrivate);
+
+let configRequest: Promise<void> | null = null;
+async function loadSettings(): Promise<void> {
+  if(vapidPublic && vapidPrivate && cronSecret)return;
+  if(configRequest)return configRequest;
+  configRequest=(async()=>{
+    const {data:first,error:readError}=await db.from("bytebuddy_push_settings")
+      .select("vapid_public,vapid_private,cron_token").eq("id",true).maybeSingle();
+    if(readError)throw readError;
+    if(!first){
+      const keys=webpush.generateVAPIDKeys();
+      const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);
+      const token=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+      const {error}=await db.from("bytebuddy_push_settings").insert({
+        id:true,vapid_public:keys.publicKey,vapid_private:keys.privateKey,cron_token:token
+      });
+      if(error && error.code!=="23505")throw error;
+    }
+    const {data:settings,error}=await db.from("bytebuddy_push_settings")
+      .select("vapid_public,vapid_private,cron_token").eq("id",true).single();
+    if(error||!settings)throw error||Error("Push settings unavailable");
+    vapidPublic=settings.vapid_public;
+    vapidPrivate=settings.vapid_private;
+    cronSecret=settings.cron_token;
+    webpush.setVapidDetails(SITE_PATH,vapidPublic,vapidPrivate);
+  })().catch(e=>{configRequest=null;throw e});
+  return configRequest;
+}
+
 
 function response(req: Request, data: unknown, status=200): Response {
   const origin = req.headers.get("origin");
@@ -101,12 +129,13 @@ function estimate(snapshot:any, minutes:number) {
     sleeping:!!snapshot.sleeping
   };
 }
-function chooseAlert(p:any): {title:string,body:string} | null {
+function chooseAlert(p:any,petName:string): {title:string,body:string} | null {
+  const name=petName.replace(/[^\p{L}\p{N} _'-]/gu,'').slice(0,24)||'Ton compagnon';
   if (p.stage===0 || p.sleeping) return null;
-  if (p.health<=24) return {title:"ByteBuddy a besoin de soins",body:"Ton compagnon est affaibli. Viens prendre soin de lui !"};
-  if (p.fullness<=22) return {title:"ByteBuddy a faim",body:"Sa satiété est basse. Un bon repas lui ferait plaisir !"};
-  if (p.hygiene<=20) return {title:"Petite toilette nécessaire",body:"Ton compagnon a besoin d'un nettoyage."};
-  if (p.energy<=16) return {title:"ByteBuddy est fatigué",body:"Il aimerait faire une sieste."};
+  if (p.health<=24) return {title:name+" a besoin de soins",body:"Son état de santé est faible. Viens prendre soin de lui !"};
+  if (p.fullness<=22) return {title:name+" a faim",body:"Sa satiété est basse. Un bon repas lui ferait plaisir !"};
+  if (p.hygiene<=20) return {title:name+" a besoin d'un bain",body:"Un petit nettoyage lui ferait du bien."};
+  if (p.energy<=16) return {title:name+" est fatigué",body:"Il aimerait faire une sieste."};
   return null;
 }
 async function dispatch(subscription:any,title:string,body:string):Promise<number> {
@@ -131,7 +160,7 @@ async function tick() {
     const since=row.last_sent_at? (now.getTime()-Date.parse(row.last_sent_at))/60000:Infinity;
     const quiet=localHour(now)>=22||localHour(now)<8;
     const due = minutes>=0 && minutes<=24*60 && since>=240 && count<3 && !quiet;
-    const event=due?chooseAlert(estimate(row.snapshot,Math.min(minutes,240))):null;
+    const event=due?chooseAlert(estimate(row.snapshot,Math.min(minutes,240)),String(row.snapshot?.name||'Ton compagnon')):null;
     let next=30,patch:any={updated_at:nowIso,daily_date:today,daily_count:count};
     if (quiet) next=60;
     if (minutes>24*60) next=24*60;
@@ -157,6 +186,7 @@ Deno.serve(async (req:Request) => {
   if(req.method==="OPTIONS") return req.headers.get("origin")===SITE
     ? response(req,{ok:true}):response(req,{error:"origin denied"},403);
   try {
+    await loadSettings();
     if(path==="public-key" && req.method==="GET") {
       return response(req,{ready:!!(vapidPublic&&vapidPrivate),publicKey:vapidPublic});
     }
