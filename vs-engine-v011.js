@@ -100,7 +100,7 @@ function botChoice(room){
 }
 function replay(room){
  return {ruleset:"v011",seed:room.seed,players:room.players.map(p=>({
-  form:p.form,level:p.level,stage:p.stage,attributes:{...p.stats}
+  kind:'bytebuddy-vs-preview',ruleset:'v010',form:p.form,level:p.level,stage:p.stage,attributes:{...p.stats}
  })),rounds:room.history.map(h=>({actions:h.actions})),winner:room.winner};
 }
 function verifyReplay(rep){
