@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.9 • Mini-jeux</title>
+    <title>ByteBuddy '98 — V0.9.1 • Pixel Art UI</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,13 +258,25 @@
     #gameCanvas{cursor:pointer;touch-action:manipulation}
     .lcd-pet-meta .living-mood{color:#2a603f;background:#dbeab9;border:1px solid #a4b88d;border-radius:4px;padding:2px 5px}
     @media(prefers-reduced-motion:reduce){#gameCanvas{transition:none}}
-  </style>
+  
+    /* ByteBuddy 0.9.1: monochrome 12x12 pixel artwork instead of system emoji glyphs */
+    .pixel-sprite{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+    .px-icon{width:1.2em;height:1.2em;display:inline-block;flex-shrink:0;fill:currentColor;vertical-align:-.17em;shape-rendering:crispEdges;image-rendering:pixelated}
+    .lcd-menu-grid button>.px-icon{width:30px;height:30px}
+    .lcd-dock button>.px-icon{width:21px;height:21px}
+    .action-icon>.px-icon{width:1em;height:1em;vertical-align:top}
+    .egg-icon>.px-icon{width:30px;height:30px}
+    .lcd-quick>.px-icon{width:13px;height:13px}
+    #intentIcon>.px-icon{width:25px;height:25px}
+    @media(max-width:510px){.lcd-menu-grid button>.px-icon{width:26px;height:26px}.lcd-dock button>.px-icon{width:19px;height:19px}}
+</style>
 </head>
 <body>
+<svg class="pixel-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs><symbol id="px-heart" viewBox="0 0 12 12"><rect x="1" y="1" width="2" height="1"/><rect x="6" y="1" width="2" height="1"/><rect x="0" y="2" width="4" height="1"/><rect x="5" y="2" width="4" height="1"/><rect x="0" y="3" width="9" height="1"/><rect x="0" y="4" width="9" height="1"/><rect x="1" y="5" width="7" height="1"/><rect x="2" y="6" width="5" height="1"/><rect x="3" y="7" width="3" height="1"/><rect x="4" y="8" width="1" height="1"/></symbol><symbol id="px-food" viewBox="0 0 12 12"><rect x="4" y="1" width="2" height="1"/><rect x="3" y="2" width="4" height="1"/><rect x="2" y="3" width="6" height="1"/><rect x="1" y="4" width="8" height="1"/><rect x="1" y="5" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="7" y="5" width="2" height="1"/><rect x="1" y="6" width="8" height="1"/><rect x="1" y="7" width="8" height="1"/><rect x="2" y="8" width="6" height="1"/><rect x="3" y="9" width="4" height="1"/></symbol><symbol id="px-play" viewBox="0 0 12 12"><rect x="3" y="1" width="6" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="8" y="2" width="2" height="1"/><rect x="1" y="3" width="2" height="1"/><rect x="5" y="3" width="2" height="1"/><rect x="9" y="3" width="2" height="1"/><rect x="0" y="4" width="2" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="2" height="1"/><rect x="0" y="5" width="2" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="0" y="6" width="2" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="2" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="5" y="7" width="2" height="1"/><rect x="9" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/><rect x="3" y="9" width="6" height="1"/></symbol><symbol id="px-train" viewBox="0 0 12 12"><rect x="0" y="1" width="2" height="1"/><rect x="10" y="1" width="2" height="1"/><rect x="0" y="2" width="3" height="1"/><rect x="9" y="2" width="3" height="1"/><rect x="0" y="3" width="3" height="1"/><rect x="9" y="3" width="3" height="1"/><rect x="1" y="4" width="10" height="1"/><rect x="2" y="5" width="8" height="1"/><rect x="2" y="6" width="8" height="1"/><rect x="1" y="7" width="10" height="1"/><rect x="0" y="8" width="3" height="1"/><rect x="9" y="8" width="3" height="1"/><rect x="0" y="9" width="3" height="1"/><rect x="9" y="9" width="3" height="1"/><rect x="0" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/></symbol><symbol id="px-clean" viewBox="0 0 12 12"><rect x="4" y="1" width="2" height="1"/><rect x="3" y="2" width="4" height="1"/><rect x="2" y="3" width="6" height="1"/><rect x="1" y="4" width="8" height="1"/><rect x="1" y="5" width="8" height="1"/><rect x="1" y="6" width="8" height="1"/><rect x="2" y="7" width="6" height="1"/><rect x="3" y="8" width="4" height="1"/><rect x="4" y="9" width="2" height="1"/></symbol><symbol id="px-sleep" viewBox="0 0 12 12"><rect x="5" y="1" width="5" height="1"/><rect x="3" y="2" width="6" height="1"/><rect x="2" y="3" width="5" height="1"/><rect x="1" y="4" width="5" height="1"/><rect x="1" y="5" width="5" height="1"/><rect x="1" y="6" width="5" height="1"/><rect x="2" y="7" width="6" height="1"/><rect x="3" y="8" width="7" height="1"/><rect x="5" y="9" width="5" height="1"/></symbol><symbol id="px-heal" viewBox="0 0 12 12"><rect x="3" y="1" width="6" height="1"/><rect x="3" y="2" width="6" height="1"/><rect x="2" y="3" width="8" height="1"/><rect x="2" y="4" width="2" height="1"/><rect x="8" y="4" width="2" height="1"/><rect x="2" y="5" width="2" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/><rect x="2" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1"/><rect x="8" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="2" y="8" width="8" height="1"/><rect x="3" y="9" width="6" height="1"/></symbol><symbol id="px-egg" viewBox="0 0 12 12"><rect x="4" y="1" width="4" height="1"/><rect x="3" y="2" width="6" height="1"/><rect x="2" y="3" width="8" height="1"/><rect x="2" y="4" width="8" height="1"/><rect x="2" y="5" width="8" height="1"/><rect x="2" y="6" width="8" height="1"/><rect x="3" y="7" width="6" height="1"/><rect x="4" y="8" width="4" height="1"/></symbol><symbol id="px-battle" viewBox="0 0 12 12"><rect x="0" y="1" width="2" height="1"/><rect x="10" y="1" width="2" height="1"/><rect x="1" y="2" width="2" height="1"/><rect x="9" y="2" width="2" height="1"/><rect x="2" y="3" width="2" height="1"/><rect x="8" y="3" width="2" height="1"/><rect x="3" y="4" width="2" height="1"/><rect x="7" y="4" width="2" height="1"/><rect x="4" y="5" width="4" height="1"/><rect x="4" y="6" width="4" height="1"/><rect x="3" y="7" width="2" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="9" y="9" width="2" height="1"/><rect x="0" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/></symbol><symbol id="px-target" viewBox="0 0 12 12"><rect x="3" y="1" width="6" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="8" y="2" width="2" height="1"/><rect x="1" y="3" width="2" height="1"/><rect x="4" y="3" width="4" height="1"/><rect x="9" y="3" width="2" height="1"/><rect x="0" y="4" width="2" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="2" height="1"/><rect x="0" y="5" width="2" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="0" y="6" width="2" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="2" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="4" y="7" width="4" height="1"/><rect x="9" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/><rect x="3" y="9" width="6" height="1"/></symbol><symbol id="px-dodge" viewBox="0 0 12 12"><rect x="3" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="8" y="2" width="2" height="1"/><rect x="1" y="3" width="3" height="1"/><rect x="8" y="3" width="3" height="1"/><rect x="0" y="4" width="11" height="1"/><rect x="0" y="5" width="11" height="1"/><rect x="1" y="6" width="3" height="1"/><rect x="8" y="6" width="3" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/></symbol><symbol id="px-bell" viewBox="0 0 12 12"><rect x="4" y="1" width="2" height="1"/><rect x="3" y="2" width="4" height="1"/><rect x="2" y="3" width="6" height="1"/><rect x="2" y="4" width="6" height="1"/><rect x="2" y="5" width="6" height="1"/><rect x="1" y="6" width="8" height="1"/><rect x="1" y="7" width="8" height="1"/><rect x="0" y="8" width="10" height="1"/><rect x="4" y="9" width="2" height="1"/></symbol><symbol id="px-phone" viewBox="0 0 12 12"><rect x="2" y="1" width="8" height="1"/><rect x="2" y="2" width="8" height="1"/><rect x="2" y="3" width="2" height="1"/><rect x="8" y="3" width="2" height="1"/><rect x="2" y="4" width="2" height="1"/><rect x="8" y="4" width="2" height="1"/><rect x="2" y="5" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/><rect x="2" y="6" width="2" height="1"/><rect x="8" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="2" y="8" width="8" height="1"/><rect x="5" y="9" width="2" height="1"/></symbol><symbol id="px-sound" viewBox="0 0 12 12"><rect x="2" y="1" width="2" height="1"/><rect x="0" y="2" width="4" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="0" y="3" width="6" height="1"/><rect x="7" y="3" width="2" height="1"/><rect x="0" y="4" width="6" height="1"/><rect x="7" y="4" width="2" height="1"/><rect x="0" y="5" width="6" height="1"/><rect x="7" y="5" width="2" height="1"/><rect x="0" y="6" width="6" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="0" y="7" width="4" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="2" y="8" width="2" height="1"/></symbol><symbol id="px-muted" viewBox="0 0 12 12"><rect x="2" y="1" width="2" height="1"/><rect x="8" y="1" width="2" height="1"/><rect x="0" y="2" width="4" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="0" y="3" width="6" height="1"/><rect x="7" y="3" width="2" height="1"/><rect x="0" y="4" width="6" height="1"/><rect x="0" y="5" width="6" height="1"/><rect x="7" y="5" width="2" height="1"/><rect x="0" y="6" width="6" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="0" y="7" width="4" height="1"/><rect x="7" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/></symbol><symbol id="px-sun" viewBox="0 0 12 12"><rect x="4" y="1" width="2" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="4" y="2" width="2" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="2" y="4" width="6" height="1"/><rect x="0" y="5" width="10" height="1"/><rect x="2" y="6" width="6" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="4" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="2" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="4" y="9" width="2" height="1"/></symbol><symbol id="px-star" viewBox="0 0 12 12"><rect x="5" y="1" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="3" y="3" width="5" height="1"/><rect x="0" y="4" width="11" height="1"/><rect x="2" y="5" width="7" height="1"/><rect x="3" y="6" width="5" height="1"/><rect x="2" y="7" width="3" height="1"/><rect x="6" y="7" width="3" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="7" y="8" width="2" height="1"/></symbol><symbol id="px-trophy" viewBox="0 0 12 12"><rect x="2" y="1" width="8" height="1"/><rect x="1" y="2" width="10" height="1"/><rect x="0" y="3" width="2" height="1"/><rect x="3" y="3" width="6" height="1"/><rect x="10" y="3" width="2" height="1"/><rect x="0" y="4" width="2" height="1"/><rect x="3" y="4" width="6" height="1"/><rect x="10" y="4" width="2" height="1"/><rect x="0" y="5" width="2" height="1"/><rect x="3" y="5" width="6" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="1" y="6" width="10" height="1"/><rect x="2" y="7" width="8" height="1"/><rect x="4" y="8" width="4" height="1"/><rect x="3" y="9" width="6" height="1"/><rect x="2" y="10" width="8" height="1"/></symbol><symbol id="px-left" viewBox="0 0 12 12"><rect x="4" y="1" width="2" height="1"/><rect x="3" y="2" width="3" height="1"/><rect x="2" y="3" width="4" height="1"/><rect x="1" y="4" width="5" height="1"/><rect x="0" y="5" width="6" height="1"/><rect x="1" y="6" width="5" height="1"/><rect x="2" y="7" width="4" height="1"/><rect x="3" y="8" width="3" height="1"/><rect x="4" y="9" width="2" height="1"/></symbol><symbol id="px-right" viewBox="0 0 12 12"><rect x="6" y="1" width="2" height="1"/><rect x="6" y="2" width="3" height="1"/><rect x="6" y="3" width="4" height="1"/><rect x="6" y="4" width="5" height="1"/><rect x="6" y="5" width="6" height="1"/><rect x="6" y="6" width="5" height="1"/><rect x="6" y="7" width="4" height="1"/><rect x="6" y="8" width="3" height="1"/><rect x="6" y="9" width="2" height="1"/></symbol><symbol id="px-clock" viewBox="0 0 12 12"><rect x="3" y="1" width="6" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="8" y="2" width="2" height="1"/><rect x="1" y="3" width="2" height="1"/><rect x="9" y="3" width="2" height="1"/><rect x="1" y="4" width="2" height="1"/><rect x="5" y="4" width="2" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="1" y="5" width="2" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="9" y="5" width="2" height="1"/><rect x="1" y="6" width="2" height="1"/><rect x="5" y="6" width="4" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="9" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/><rect x="3" y="9" width="6" height="1"/></symbol><symbol id="px-menu" viewBox="0 0 12 12"><rect x="0" y="1" width="2" height="1"/><rect x="4" y="1" width="2" height="1"/><rect x="8" y="1" width="2" height="1"/><rect x="0" y="2" width="2" height="1"/><rect x="4" y="2" width="2" height="1"/><rect x="8" y="2" width="2" height="1"/><rect x="0" y="4" width="2" height="1"/><rect x="4" y="4" width="2" height="1"/><rect x="8" y="4" width="2" height="1"/><rect x="0" y="5" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/><rect x="0" y="7" width="2" height="1"/><rect x="4" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="0" y="8" width="2" height="1"/><rect x="4" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/></symbol><symbol id="px-home" viewBox="0 0 12 12"><rect x="5" y="1" width="2" height="1"/><rect x="3" y="2" width="6" height="1"/><rect x="1" y="3" width="10" height="1"/><rect x="0" y="4" width="12" height="1"/><rect x="2" y="5" width="8" height="1"/><rect x="2" y="6" width="2" height="1"/><rect x="8" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="8" y="8" width="2" height="1"/></symbol><symbol id="px-alert" viewBox="0 0 12 12"><rect x="5" y="1" width="2" height="1"/><rect x="5" y="2" width="2" height="1"/><rect x="5" y="3" width="2" height="1"/><rect x="5" y="4" width="2" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="5" y="7" width="2" height="1"/><rect x="5" y="8" width="2" height="1"/></symbol><symbol id="px-guard" viewBox="0 0 12 12"><rect x="0" y="1" width="12" height="1"/><rect x="0" y="2" width="2" height="1"/><rect x="10" y="2" width="2" height="1"/><rect x="0" y="3" width="2" height="1"/><rect x="3" y="3" width="6" height="1"/><rect x="10" y="3" width="2" height="1"/><rect x="0" y="4" width="2" height="1"/><rect x="3" y="4" width="6" height="1"/><rect x="10" y="4" width="2" height="1"/><rect x="0" y="5" width="2" height="1"/><rect x="3" y="5" width="6" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="0" y="6" width="2" height="1"/><rect x="3" y="6" width="6" height="1"/><rect x="10" y="6" width="2" height="1"/><rect x="0" y="7" width="2" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="0" y="8" width="12" height="1"/></symbol></defs></svg>
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● MINIGAME EDITION / 0.9</div>
+    <div class="edition">● PIXEL ICON EDITION / 0.9.1</div>
   </header>
   <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.9</strong> — mini-jeux Précision & Esquive · records · élevage vivant · 16 formes</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
@@ -274,32 +286,32 @@
         <div class="device-id">DIGITAL <span>MONSTER</span> UNIT</div>
         <div class="screen-bezel">
           <div class="screen-head"><span>◧ PIXEL LCD</span><b id="lcdStage">EGG / 01</b><span>◉ ACTIVE</span></div>
-          <div class="screen" id="lcdScreen"><div class="lcd-hud"><span id="lcdTitle">BYTEBUDDY</span><span id="lcdTime">00:00</span></div><canvas id="gameCanvas" width="240" height="190" role="img" aria-label="Monstre pixelisé sur écran LCD"></canvas><div class="sleep-filter"></div><div class="sleeping-indicator">Z z</div><div class="lcd-footer"><span id="lcdMood">♥ PRÊT</span><span id="lcdInfo">GEN 01</span></div>
+          <div class="screen" id="lcdScreen"><div class="lcd-hud"><span id="lcdTitle">BYTEBUDDY</span><span id="lcdTime">00:00</span></div><canvas id="gameCanvas" width="240" height="190" role="img" aria-label="Monstre pixelisé sur écran LCD"></canvas><div class="sleep-filter"></div><div class="sleeping-indicator">Z z</div><div class="lcd-footer"><span id="lcdMood"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg> PRÊT</span><span id="lcdInfo">GEN 01</span></div>
             <section class="lcd-home-info" id="lcdHomeInfo" aria-label="Compagnon virtuel">
               <div class="lcd-pet-line"><strong id="homeName">ŒUF MYSTÈRE</strong><span id="homeLevel">NIVEAU 1</span></div>
-              <div class="lcd-pet-meta"><span id="homeHealth">♥ SANTÉ 100%</span><span id="homeBits">◈ 20 BITS</span><span id="homeEvolution">ÉCLOSION</span><span class="living-mood" id="homeFeeling">◈ EN ATTENTE</span></div>
+              <div class="lcd-pet-meta"><span id="homeHealth"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg> SANTÉ 100%</span><span id="homeBits">◈ 20 BITS</span><span id="homeEvolution">ÉCLOSION</span><span class="living-mood" id="homeFeeling">◈ EN ATTENTE</span></div>
               <div class="lcd-quick-actions">
                 <button type="button" id="hatchHome" class="lcd-hatch">✦ FAIRE ÉCLORE</button>
-                <button type="button" data-action="feed" class="lcd-quick">🍖 NOURRIR</button>
-                <button type="button" data-action="play" class="lcd-quick">🎾 JOUER</button>
+                <button type="button" data-action="feed" class="lcd-quick"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-food"/></svg> NOURRIR</button>
+                <button type="button" data-action="play" class="lcd-quick"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-play"/></svg> JOUER</button>
               </div>
             </section>
             <section class="activity-scene" id="activityScene" aria-label="Animation de la créature" aria-live="off">
               <div class="activity-title"><span id="activityTitle">ACTIVITÉ</span><small id="activityStep">PRÉPARATION</small></div>
               <canvas id="activityCanvas" width="240" height="230" aria-label="Scène animée pixel art"></canvas>
-              <div class="activity-bottom"><span id="activityMessage" class="activity-message">C'EST PARTI !</span><div class="activity-progress" aria-hidden="true"><div id="activityProgress"></div></div><button id="activitySkip" type="button" class="activity-skip" aria-label="Terminer l'animation">PASSER ↪</button></div>
+              <div class="activity-bottom"><span id="activityMessage" class="activity-message">C'EST PARTI !</span><div class="activity-progress" aria-hidden="true"><div id="activityProgress"></div></div><button id="activitySkip" type="button" class="activity-skip" aria-label="Terminer l'animation">PASSER <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg></button></div>
             </section>
 
             <section class="mini-game" id="miniGame" aria-label="Entraînements interactifs">
-              <div class="mini-head"><strong id="miniHeading">🥊 ENTRAÎNEMENT</strong><small id="miniInfo">CHOISIS TON ÉPREUVE</small></div>
+              <div class="mini-head"><strong id="miniHeading"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-train"/></svg> ENTRAÎNEMENT</strong><small id="miniInfo">CHOISIS TON ÉPREUVE</small></div>
               <button type="button" id="miniExit" class="mini-exit">✕ QUITTER</button>
               <div class="mini-panel" id="miniSelection">
                 <p>JOUER DIRECTEMENT DANS L'ÉCRAN LCD<br><span id="miniRecords"></span></p>
-                <button type="button" id="miniPrecision">🎯 PRÉCISION — FRAPPER AU BON MOMENT</button>
-                <button type="button" id="miniDodge">↔ ESQUIVE — ÉVITER LES OBSTACLES</button>
+                <button type="button" id="miniPrecision"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-target"/></svg> PRÉCISION — FRAPPER AU BON MOMENT</button>
+                <button type="button" id="miniDodge"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-dodge"/></svg> ESQUIVE — ÉVITER LES OBSTACLES</button>
               </div>
               <canvas class="mini-scene-canvas" id="miniCanvas" width="240" height="180"></canvas>
-              <div class="mini-foot" id="miniFoot"><button type="button" id="miniLeft">◀</button><button type="button" id="miniStrike">● FRAPPER</button><button type="button" id="miniRight">▶</button></div>
+              <div class="mini-foot" id="miniFoot"><button type="button" id="miniLeft"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg></button><button type="button" id="miniStrike">● FRAPPER</button><button type="button" id="miniRight"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg></button></div>
               <div class="mini-panel" id="miniResult" hidden>
                 <h3 id="miniVerdict">BRAVO !</h3><p id="miniScore">SCORE</p><p id="miniReward">RÉCOMPENSES</p>
                 <button type="button" id="miniReturn">✓ TERMINER</button>
@@ -310,34 +322,34 @@
             <section id="lcdMenu" class="lcd-menu" aria-label="Menu du jeu">
               <div class="lcd-menu-top"><b>MENU PRINCIPAL</b><span>CHOISIS UN MODE</span></div>
               <div class="lcd-menu-grid">
-                <button type="button" data-view="stats"><span>♥</span>ÉTAT</button>
-                <button type="button" data-view="care"><span>🍖</span>SOINS</button>
-                <button type="button" data-view="arena"><span>⚔</span>COMBAT</button>
+                <button type="button" data-view="stats"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>ÉTAT</button>
+                <button type="button" data-view="care"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-food"/></svg></span>SOINS</button>
+                <button type="button" data-view="arena"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>COMBAT</button>
                 <button type="button" data-view="evolution"><span>✦</span>ÉVOLUTION</button>
                 <button type="button" data-view="missions"><span>☷</span>MISSIONS</button>
-                <button type="button" data-view="lab"><span>🥚</span>LABO</button>
+                <button type="button" data-view="lab"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>LABO</button>
                 <button type="button" data-view="dex"><span>▦</span>BESTIAIRE</button>
                 <button type="button" data-view="journal"><span>▤</span>JOURNAL</button>
                 <button type="button" data-view="settings"><span>♫</span>SON / ALERTES</button><button type="button" id="menuHelp"><span>?</span>AIDE</button>
               </div>
-              <div class="lcd-menu-tip">◀ ▶ NAVIGUER • ● VALIDER</div>
+              <div class="lcd-menu-tip"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg> NAVIGUER • ● VALIDER</div>
             </section>
             <nav class="lcd-dock" aria-label="Navigation du jeu">
               <button type="button" data-view="home" class="active" aria-pressed="true"><span>⌂</span>MONSTRE</button>
-              <button type="button" data-view="care" aria-pressed="false"><span>♥</span>SOINS</button>
-              <button type="button" data-view="arena" aria-pressed="false"><span>⚔</span>ARÈNE</button>
-              <button type="button" data-view="lab" aria-pressed="false"><span>🥚</span>LABO</button>
+              <button type="button" data-view="care" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>SOINS</button>
+              <button type="button" data-view="arena" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>ARÈNE</button>
+              <button type="button" data-view="lab" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>LABO</button>
               <button type="button" data-view="menu" aria-pressed="false"><span>▦</span>MENU</button>
             </nav>
           </div>
           <div class="display-note" id="displayNote">IL ATTEND UNE PETITE ÉTINCELLE…</div>
         </div>
         <div class="device-controls" aria-label="Commandes de l'appareil">
-          <button type="button" class="pad" id="leftBtn" aria-label="Écran précédent">◀</button>
+          <button type="button" class="pad" id="leftBtn" aria-label="Écran précédent"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg></button>
           <button type="button" class="pad" id="middleBtn" aria-label="Valider">●</button>
-          <button type="button" class="pad" id="rightBtn" aria-label="Écran suivant">▶</button>
+          <button type="button" class="pad" id="rightBtn" aria-label="Écran suivant"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg></button>
         </div>
-        <div class="pad-label">◀ PRÉCÉDENT &nbsp; / &nbsp; ● OK &nbsp; / &nbsp; ▶ SUIVANT</div>
+        <div class="pad-label"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> PRÉCÉDENT &nbsp; / &nbsp; ● OK &nbsp; / &nbsp; <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg> SUIVANT</div>
         <div class="device-bottom"><div class="speaker" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="device-sticker">BATTERY FREE • 1998 VIBES</div></div>
       </div>
       <p class="aside-note">Toutes les fonctions se trouvent dans le LCD. Utilise le menu à l’écran ou les trois boutons de la console. Sauvegarde automatique dans ce navigateur.</p>
@@ -347,23 +359,23 @@
       <div class="name-wrap"><h1 class="creature-name" id="creatureName">ŒUF MYSTÈRE</h1><span class="phase" id="phaseLabel">À ÉCLORE</span></div>
       <p class="description" id="creatureDesc">Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.</p>
       <div class="pill-row"><span class="type-pill" id="elementBadge">◈ MYSTÈRE</span><span class="type-pill" id="levelBadge">LV. 1 · 0 XP</span><span class="type-pill" id="disciplineBadge">SOINS : 0</span><span class="type-pill" id="geneBadge">◈ PREMIÈRE LIGNÉE</span></div>
-      <div class="creature-signature"><span class="signature-symbol" id="sigSymbol">◈</span><div><b id="sigMove">POUVOIR MYSTÈRE</b><div id="sigTrait">Un destin à découvrir.</div></div></div><div class="currency"><span>◈ BITS <b id="bits">20</b></span><span>✦ VICTOIRES <b id="wins">0</b></span><span>⌛ ÂGE <b id="age">00:00</b></span><span>⟳ GÉN. <b id="gen">01</b></span></div>
+      <div class="creature-signature"><span class="signature-symbol" id="sigSymbol">◈</span><div><b id="sigMove">POUVOIR MYSTÈRE</b><div id="sigTrait">Un destin à découvrir.</div></div></div><div class="currency"><span>◈ BITS <b id="bits">20</b></span><span>✦ VICTOIRES <b id="wins">0</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> ÂGE <b id="age">00:00</b></span><span>⟳ GÉN. <b id="gen">01</b></span></div>
       <section class="panel"><div class="panel-header"><h2>01 / ÉTAT DE TON COMPAGNON</h2><span class="section-number" id="wellnessTag">EN ATTENTE</span></div><div class="stats" id="statList"></div></section>
       <section class="panel"><div class="panel-header"><h2>02 / PRENDS SOIN DE LUI</h2><span class="section-number">6 ACTIONS</span></div><div class="actions">
-        <button type="button" class="action" data-action="feed"><span class="action-icon">🍖</span><strong>NOURRIR</strong><small>+ satiété</small></button>
-        <button type="button" class="action" data-action="play"><span class="action-icon">🎾</span><strong>JOUER</strong><small>+ moral</small></button>
-        <button type="button" class="action" data-action="train"><span class="action-icon">🥊</span><strong>ENTRAÎNER</strong><small>+ puissance</small></button>
-        <button type="button" class="action" data-action="clean"><span class="action-icon">🫧</span><strong>NETTOYER</strong><small>+ hygiène</small></button>
-        <button type="button" class="action" data-action="sleep"><span class="action-icon">🌙</span><strong id="sleepText">DORMIR</strong><small>+ énergie</small></button>
-        <button type="button" class="action special" data-action="heal"><span class="action-icon">💊</span><strong>SOIGNER</strong><small>10 Bits</small></button>
+        <button type="button" class="action" data-action="feed"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-food"/></svg></span><strong>NOURRIR</strong><small>+ satiété</small></button>
+        <button type="button" class="action" data-action="play"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-play"/></svg></span><strong>JOUER</strong><small>+ moral</small></button>
+        <button type="button" class="action" data-action="train"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-train"/></svg></span><strong>ENTRAÎNER</strong><small>+ puissance</small></button>
+        <button type="button" class="action" data-action="clean"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clean"/></svg></span><strong>NETTOYER</strong><small>+ hygiène</small></button>
+        <button type="button" class="action" data-action="sleep"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-sleep"/></svg></span><strong id="sleepText">DORMIR</strong><small>+ énergie</small></button>
+        <button type="button" class="action special" data-action="heal"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heal"/></svg></span><strong>SOIGNER</strong><small>10 Bits</small></button>
       </div></section>
-      <section class="panel"><div class="arena"><div><h2>03 / ARÈNE PIXEL</h2><p>4 actions tactiques, intentions ennemies et pouvoirs élémentaires.</p><label class="stack-row" style="margin-top:9px"><span class="mono-label" style="font-size:9px">DÉFI</span><select class="mode-select" id="arenaMode" aria-label="Difficulté du combat"><option value="normal">STANDARD</option><option value="hard">ÉLITE (LV.3)</option></select></label></div><button type="button" class="primary" id="battleStart">⚔ COMBATTRE</button></div><div class="arena-legend">▲ Flamme → Nature → Eau → Flamme &nbsp;·&nbsp; ϟ Foudre → Eau &nbsp;·&nbsp; ✧ Lumière ↔ Ombre</div></section>
+      <section class="panel"><div class="arena"><div><h2>03 / ARÈNE PIXEL</h2><p>4 actions tactiques, intentions ennemies et pouvoirs élémentaires.</p><label class="stack-row" style="margin-top:9px"><span class="mono-label" style="font-size:9px">DÉFI</span><select class="mode-select" id="arenaMode" aria-label="Difficulté du combat"><option value="normal">STANDARD</option><option value="hard">ÉLITE (LV.3)</option></select></label></div><button type="button" class="primary" id="battleStart"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg> COMBATTRE</button></div><div class="arena-legend">▲ Flamme → Nature → Eau → Flamme &nbsp;·&nbsp; ϟ Foudre → Eau &nbsp;·&nbsp; ✧ Lumière <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-dodge"/></svg> Ombre</div></section>
       <section class="panel"><div class="panel-header"><h2>04 / PROCHAINE ÉVOLUTION</h2><span class="section-number" id="evoPercent">0 %</span></div><div class="progress-area"><span id="evoTarget">Éclosion</span><span id="evoRequirement">Prêt maintenant</span></div><div class="progress-track"><div id="evoBar"></div></div><div class="evo-hint" id="evoHint">Son destin dépendra de l'attention et de l'entraînement que tu lui donnes.</div></section>
       <section class="panel"><div class="panel-header"><h2>05 / MISSIONS DU JOUR</h2><span class="section-number" id="dailyStatus">0 / 3</span></div><p class="section-desc">Accomplis les trois missions pour gagner 25 Bits. Nouveau défi chaque jour, selon l'horloge de ton appareil.</p><div id="dailyList"></div><div class="stack-row" style="margin-top:12px"><span class="mono-label" id="dailyHint">SOIGNE TON AMI</span><button class="primary" type="button" id="claimDaily" disabled>+25 BITS ◈</button></div></section>
       <section class="panel breeding-panel" id="breedingPanel"><div class="panel-header"><h2>06 / LABORATOIRE DES GÉNÉRATIONS</h2><span class="section-number" id="eggCount">0 / 3 ŒUFS</span></div>
         <p class="section-desc">À partir de la forme Rookie et de 2 victoires, associe ton compagnon à un partenaire numérique. Chaque œuf hérite d’une affinité et d’un talent, avec une chance de mutation rare. Le parent reste jouable jusqu'à l’activation de l’œuf.</p>
         <div class="genetic-summary"><span>✦ ADN DU COMPAGNON</span><b id="currentDna">LIGNÉE ORIGINELLE</b><small id="currentTalent">Les générations suivantes pourront transmettre des talents.</small></div>
-        <div class="breed-controls"><label for="partnerSelect">PARTENAIRE NUMÉRIQUE</label><select id="partnerSelect" class="mode-select" aria-label="Choisir un partenaire de reproduction"></select><button type="button" class="primary" id="breedBtn">🥚 CRÉER UN ŒUF · 40 BITS</button></div>
+        <div class="breed-controls"><label for="partnerSelect">PARTENAIRE NUMÉRIQUE</label><select id="partnerSelect" class="mode-select" aria-label="Choisir un partenaire de reproduction"></select><button type="button" class="primary" id="breedBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> CRÉER UN ŒUF · 40 BITS</button></div>
         <div class="lab-status" id="breedStatus">Fais évoluer ton compagnon pour accéder au laboratoire.</div>
         <div class="nest-heading">◈ INCUBATEUR — CHOISIS UN ŒUF POUR LA PROCHAINE GÉNÉRATION</div><div id="eggList" class="egg-list"></div>
         <div class="nest-heading">⟡ ARBRE GÉNÉALOGIQUE</div><div id="familyTree" class="family-tree"></div>
@@ -372,40 +384,47 @@
       <section class="panel"><div class="panel-header"><h2>08 / CARNET DE BORD</h2><span class="section-number">DERNIERS ÉVÉNEMENTS</span></div><ul class="journal" id="journal" aria-live="polite"></ul><div class="footer-actions"><button class="tiny-btn" type="button" id="helpBtn">? COMMENT JOUER</button><button class="tiny-btn" type="button" id="exportBtn">↓ SAUVEGARDE</button><button class="tiny-btn" type="button" id="importBtn">↑ RESTAURER</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="tiny-btn" type="button" id="resetBtn">↺ NOUVELLE PARTIE</button></div></section>
       <section class="panel" id="settingsPanel">
         <div class="panel-header"><h2>09 / SON & ALERTES</h2><span class="section-number">PRÉFÉRENCES</span></div>
-        <div class="bb-setting"><strong>♫ EFFETS SONORES 8-BIT</strong><button type="button" id="soundSwitch" class="primary">🔊 SON ACTIVÉ</button></div>
+        <div class="bb-setting"><strong>♫ EFFETS SONORES 8-BIT</strong><button type="button" id="soundSwitch" class="primary"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-sound"/></svg> SON ACTIVÉ</button></div>
         <label class="bb-setting" for="soundVolume"><strong>VOLUME</strong><input id="soundVolume" type="range" min="0" max="100" step="5" value="45" /></label>
         <button type="button" class="tiny-btn" id="testSound">♫ ÉCOUTER UN SON</button>
-        <div class="bb-setting"><strong>🔔 ALERTES DU MONSTRE</strong><button type="button" id="enableNotifications" class="primary">ACTIVER</button></div>
+        <div class="bb-setting"><strong><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-bell"/></svg> ALERTES DU MONSTRE</strong><button type="button" id="enableNotifications" class="primary">ACTIVER</button></div>
         <p id="notificationStatus" class="bb-setting-help" aria-live="polite">Les alertes sont désactivées.</p>
-        <button type="button" class="tiny-btn" id="testNotification">🔔 ENVOYER UNE NOTIFICATION TEST</button>
+        <button type="button" class="tiny-btn" id="testNotification"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-bell"/></svg> ENVOYER UNE NOTIFICATION TEST</button>
         <p class="bb-setting-help">Les alertes locales fonctionnent quand le jeu reste ouvert. Sur iPhone, installe ByteBuddy sur l’écran d’accueil pour les notifications push.</p>
-        <div class="bb-setting"><strong>📲 PUSH — MÊME JEU FERMÉ</strong><button type="button" id="enableCloudPush" class="primary" disabled>SERVEUR EN PRÉPARATION</button></div>
+        <div class="bb-setting"><strong><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-phone"/></svg> PUSH — MÊME JEU FERMÉ</strong><button type="button" id="enableCloudPush" class="primary" disabled>SERVEUR EN PRÉPARATION</button></div>
         <p id="cloudPushStatus" class="bb-setting-help" aria-live="polite">Un serveur dédié est nécessaire pour les notifications quand le jeu est fermé.</p>
-        <button type="button" class="tiny-btn" id="testCloudPush" disabled>📲 TESTER LA NOTIFICATION PUSH</button>
+        <button type="button" class="tiny-btn" id="testCloudPush" disabled><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-phone"/></svg> TESTER LA NOTIFICATION PUSH</button>
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.8 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.9.1 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
   <div class="modal battle-modal"><div class="modal-top"><div><div class="mono-label">// ARÈNE TACTIQUE</div><h2 id="battleHeading">ARÈNE PIXEL</h2></div><button class="close" id="battleClose" type="button">✕</button></div>
-    <div class="battle-intent"><strong id="intentIcon">⚔</strong><div><b id="intentTitle">INTENTION : ATTAQUE</b><small id="intentDetail">Observe le mouvement ennemi avant d’agir.</small></div></div><div class="battle-field" id="battleField" data-biome="nature"><div class="pixel-burst" id="pixelBurst" aria-hidden="true"></div><div class="fighter"><div class="fighter-name" id="yourFightName">BUDDY</div><canvas id="fighterOwn" width="88" height="88"></canvas><div class="hpbar"><div id="ownHpBar"></div></div><div class="fighter-name" id="ownHpText">100/100 PV</div></div><div class="vs">VS</div><div class="fighter"><div class="fighter-name" id="enemyFightName">GLITCH</div><canvas id="fighterEnemy" width="88" height="88"></canvas><div class="hpbar"><div id="enemyHpBar"></div></div><div class="fighter-name" id="enemyHpText">25/25 PV</div></div></div>
-    <div class="stack-row" style="font-size:10px;color:#c4d9ce;margin-top:12px"><span id="yourTypeLabel">TON ÉLÉMENT</span><span id="enemyTypeLabel">ÉLÉMENT ADVERSE</span></div><div class="fight-message" id="fightMessage" aria-live="polite">Choisis ton attaque !</div><div class="battle-meter"><span>✦ IMPULSION <b id="focusMeter">0 / 3</b></span><span>⚡ ÉNERGIE <b id="energyMeter">100</b></span></div><div class="battle-actions"><button type="button" id="attackBtn">⚔ FRAPPER <small>+1 impulsion</small></button><button type="button" id="defendBtn">▣ PARER <small>réduit les dégâts</small></button><button type="button" class="focus" id="focusBtn">◈ CANALISER <small>énergie + impulsion</small></button><button type="button" class="super" id="specialBtn">✦ POUVOIR <small id="specialLabel">10 énergie</small></button></div><div class="battle-strategy">💡 L’ennemi annonce son prochain mouvement. Pare un coup puissant, frappe pendant sa concentration et emploie ton pouvoir contre sa garde.</div><div class="battle-log" id="battleLog" aria-live="polite"></div><div class="battle-bottom"><span id="battleNote">Pouvoir : 10 énergie</span><button class="tiny-btn" id="leaveBattle" type="button">QUITTER</button></div>
+    <div class="battle-intent"><strong id="intentIcon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></strong><div><b id="intentTitle">INTENTION : ATTAQUE</b><small id="intentDetail">Observe le mouvement ennemi avant d’agir.</small></div></div><div class="battle-field" id="battleField" data-biome="nature"><div class="pixel-burst" id="pixelBurst" aria-hidden="true"></div><div class="fighter"><div class="fighter-name" id="yourFightName">BUDDY</div><canvas id="fighterOwn" width="88" height="88"></canvas><div class="hpbar"><div id="ownHpBar"></div></div><div class="fighter-name" id="ownHpText">100/100 PV</div></div><div class="vs">VS</div><div class="fighter"><div class="fighter-name" id="enemyFightName">GLITCH</div><canvas id="fighterEnemy" width="88" height="88"></canvas><div class="hpbar"><div id="enemyHpBar"></div></div><div class="fighter-name" id="enemyHpText">25/25 PV</div></div></div>
+    <div class="stack-row" style="font-size:10px;color:#c4d9ce;margin-top:12px"><span id="yourTypeLabel">TON ÉLÉMENT</span><span id="enemyTypeLabel">ÉLÉMENT ADVERSE</span></div><div class="fight-message" id="fightMessage" aria-live="polite">Choisis ton attaque !</div><div class="battle-meter"><span>✦ IMPULSION <b id="focusMeter">0 / 3</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> ÉNERGIE <b id="energyMeter">100</b></span></div><div class="battle-actions"><button type="button" id="attackBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg> FRAPPER <small>+1 impulsion</small></button><button type="button" id="defendBtn">▣ PARER <small>réduit les dégâts</small></button><button type="button" class="focus" id="focusBtn">◈ CANALISER <small>énergie + impulsion</small></button><button type="button" class="super" id="specialBtn">✦ POUVOIR <small id="specialLabel">10 énergie</small></button></div><div class="battle-strategy"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-alert"/></svg> L’ennemi annonce son prochain mouvement. Pare un coup puissant, frappe pendant sa concentration et emploie ton pouvoir contre sa garde.</div><div class="battle-log" id="battleLog" aria-live="polite"></div><div class="battle-bottom"><span id="battleNote">Pouvoir : 10 énergie</span><button class="tiny-btn" id="leaveBattle" type="button">QUITTER</button></div>
   </div>
 </div>
-<div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button">✕</button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, amuse, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> 7 soins pour devenir Rookie puis 24 soins et 3 victoires pour devenir Ultime. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme → Nature → Eau → Flamme ; Foudre → Eau ; Lumière ↔ Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (◀ ▶) et de valider (●). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>V0.5 :</strong> Débloque les 16 formes, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
+<div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button">✕</button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, amuse, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> 7 soins pour devenir Rookie puis 24 soins et 3 victoires pour devenir Ultime. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme → Nature → Eau → Flamme ; Foudre → Eau ; Lumière <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-dodge"/></svg> Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (●). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>V0.5 :</strong> Débloque les 16 formes, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
 <script>
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
+
+  // Fixed icon identifiers only: no fonts or externally loaded emoji sets.
+  const pixelIcon=(id)=>{
+    const allowed=new Set(['heart','food','play','train','clean','sleep','heal','egg','battle','target','dodge','bell','phone','sound','muted','sun','star','trophy','left','right','clock','menu','home','alert','guard']);
+    return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
+  };
+
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
   const order=['egg','baby','ember','verd','volt','aqua','shade','ember2','verd2','volt2','aqua2','shade2','lumia','nebula','prism','auror'];
   const types={prism:'lumière',auror:'foudre',egg:'mystère',baby:'neutre',ember:'flamme',ember2:'flamme',verd:'nature',verd2:'nature',volt:'foudre',volt2:'foudre',aqua:'eau',aqua2:'eau',shade:'ombre',shade2:'ombre',lumia:'lumière',nebula:'lumière'};
-  const signature={mystère:['◈','ÉVEIL MYSTÈRE','Un destin encore inconnu.'],neutre:['♥','BULLE AMICALE','Un petit cœur plein de courage.'],flamme:['▲','FLAMME VIVE','Attaque renforcée contre la Nature.'],nature:['❀','RACINES VIVES','Attaque renforcée contre l’Eau.'],eau:['≈','VAGUE AZUR','Attaque renforcée contre la Flamme.'],foudre:['ϟ','ÉCLAIR FULGURANT','Attaque renforcée contre l’Eau.'],ombre:['☾','GRIFFE NOCTURNE','Attaque renforcée contre la Lumière.'],lumière:['✧','ÉCLAT STELLAIRE','Attaque renforcée contre l’Ombre.']};
-  const symbols={mystère:'◈',neutre:'♥',flamme:'▲',nature:'❀',foudre:'ϟ',eau:'≈',ombre:'☾',lumière:'✧'};
+  const signature={mystère:['◈','ÉVEIL MYSTÈRE','Un destin encore inconnu.'],neutre:['+','BULLE AMICALE','Un petit cœur plein de courage.'],flamme:['▲','FLAMME VIVE','Attaque renforcée contre la Nature.'],nature:['❀','RACINES VIVES','Attaque renforcée contre l’Eau.'],eau:['≈','VAGUE AZUR','Attaque renforcée contre la Flamme.'],foudre:['ϟ','ÉCLAIR FULGURANT','Attaque renforcée contre l’Eau.'],ombre:['☾','GRIFFE NOCTURNE','Attaque renforcée contre la Lumière.'],lumière:['✧','ÉCLAT STELLAIRE','Attaque renforcée contre l’Ombre.']};
+  const symbols={mystère:'◈',neutre:'+',flamme:'▲',nature:'❀',foudre:'ϟ',eau:'≈',ombre:'☾',lumière:'✧'};
   const isRare=id=>['lumia','nebula','prism','auror'].includes(id);
   const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
   const blankDaily=()=>({day:today(),feed:0,play:0,win:0,claimed:false});
@@ -446,10 +465,10 @@
     if(state.lifeAutoSleep && !state.sleeping)state.lifeAutoSleep=false;
     if(!state.sleeping && state.energy<10 && state.health>0){
       state.sleeping=true;state.lifeAutoSleep=true;lifeReact('sleep');
-      log(`${names[state.form]} s'endort, épuisé.`);notify('💤 Ton compagnon fait une sieste !');
+      log(`${names[state.form]} s'endort, épuisé.`);notify('ZZZ Ton compagnon fait une sieste !');
     }else if(state.lifeAutoSleep && state.sleeping && state.energy>=75){
       state.sleeping=false;state.lifeAutoSleep=false;lifeReact('wake');
-      log(`${names[state.form]} s'est réveillé après sa sieste.`);notify('☀ Ton compagnon est reposé !');
+      log(`${names[state.form]} s'est réveillé après sa sieste.`);notify('REVEIL Ton compagnon est reposé !');
     }
   }
   function degrade(seconds){
@@ -491,13 +510,13 @@
       state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`★ ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
     }
   }
-  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render()}
+  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render()}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
     if(activitySceneState||miniState)return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
-      state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();playSound('sleep');return;
+      state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'REVEIL Ton compagnon est réveillé !');save();render();playSound('sleep');return;
     }
     if(state.sleeping){notify('Il dort. Réveille-le avant de jouer !');return}
     if(state.health<=0 && type!=='heal'){notify('Ton compagnon est épuisé. Il lui faut des soins !');return}
@@ -541,7 +560,7 @@
     const genetics={affinity,talent,mutation,parent:state.form,partner:partner.id};
     state.eggs.push({id:Date.now()+Math.floor(Math.random()*10000),genetics,generation:state.generation+1});
     state.bits-=40;log(`Un œuf de ${names[state.form]} et ${names[partner.id]} rejoint l’incubateur !`);
-    notify(mutation?'✦ Un œuf à l’éclat inhabituel !':'🥚 Nouvel œuf placé en incubateur !');
+    notify(mutation?'✦ Un œuf à l’éclat inhabituel !':'OEUF Nouvel œuf placé en incubateur !');
     actionFx={type:'evolve',until:Date.now()+1200};save();render();
   }
   function activateEgg(id){
@@ -553,7 +572,7 @@
     const eggs=state.eggs.filter((_,idx)=>idx!==i);
     const bits=state.bits,dex={...state.dex},daily={...state.daily},genetics=normalizeGenetics(egg.genetics);
     state={...base(),bits,generation:state.generation+1,dex,eggs,family:family.slice(-12),genetics,daily,log:[`Génération ${state.generation+1} : l’œuf de ${names[genetics.parent]} et ${names[genetics.partner]} attend son éclosion !`]};
-    fight=null;closeBattle();save();render();notify('🥚 Nouvel œuf : appuie sur le bouton central !');
+    fight=null;closeBattle();save();render();notify('OEUF Nouvel œuf : appuie sur le bouton central !');
   }
   function renderGenealogy(){
     const gene=state.genetics;
@@ -572,7 +591,7 @@
     if(!state.eggs.length){const empty=document.createElement('div');empty.className='empty-nest';empty.textContent='Aucun œuf en attente. Ton incubateur pourra contenir jusqu’à trois descendants.';list.appendChild(empty)}
     state.eggs.forEach(egg=>{
       const b=document.createElement('button');b.type='button';b.className='egg-card'+(egg.genetics.mutation?' rare':'');b.setAttribute('aria-label',`Activer l’œuf ${egg.genetics.affinity}, ${talents[egg.genetics.talent].name}`);
-      const ico=document.createElement('span');ico.className='egg-icon';ico.textContent=egg.genetics.mutation?'✧🥚':'🥚';
+      const ico=document.createElement('span');ico.className='egg-icon';ico.innerHTML=(egg.genetics.mutation?pixelIcon('star'):'')+pixelIcon('egg');
       const title=document.createElement('b');title.textContent=`AFFINITÉ ${egg.genetics.affinity.toUpperCase()}`;
       const note=document.createElement('small');note.textContent=`${talents[egg.genetics.talent].name} · ${egg.genetics.mutation?'★ RARE':'STANDARD'} · ISSUE GEN ${Math.max(1,egg.generation-1)}`;
       b.append(ico,title,note);b.addEventListener('click',()=>activateEgg(egg.id));list.appendChild(b);
@@ -588,7 +607,7 @@
     if(!confirm('Nouvelle génération sans héritage ? Le compagnon actuel sera archivé. Les œufs en incubateur, le bestiaire et les Bits seront conservés.'))return;
     const generation=(state.generation||1)+1;
     const old=state;const family=[...state.family];if(old.stage>0)family.push({generation:old.generation,form:old.form,wins:old.wins,level:old.level,trait:old.genetics?.talent||null,parents:old.genetics?[old.genetics.parent,old.genetics.partner]:[]});
-    state={...base(),bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};fight=null;closeBattle();save();render();notify('🥚 Une nouvelle aventure commence !');
+    state={...base(),bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};fight=null;closeBattle();save();render();notify('OEUF Une nouvelle aventure commence !');
   }
   function drawPixelCreature(canvas,form,t,options={}){
     const ctx=canvas.getContext('2d');
@@ -714,7 +733,7 @@
     drawPixelCreature(canvas,state.form,t,{scene:true,ill:state.health<20});
     // Optional signs of daily life.
     for(let i=0;i<state.poops;i++){const x=10+i*18;ctx.fillStyle='#3e593f';ctx.fillRect(x,h-50,8,5);ctx.fillRect(x+2,h-56,5,6);ctx.fillRect(x+3,h-60,3,4)}
-    if(actionFx.until>Date.now()){ctx.fillStyle='#405f3d';ctx.font='bold 18px monospace';const label=actionFx.type==='feed'?'♥':actionFx.type==='train'?'✦':actionFx.type==='clean'?'✧':actionFx.type==='evolve'?'★ ★':'♪';ctx.fillText(label,155,74-(Math.sin(t/160)*4));}
+    if(actionFx.until>Date.now()){ctx.fillStyle='#405f3d';ctx.font='bold 18px monospace';const label=actionFx.type==='feed'?'+':actionFx.type==='train'?'✦':actionFx.type==='clean'?'✧':actionFx.type==='evolve'?'★ ★':'♪';ctx.fillText(label,155,74-(Math.sin(t/160)*4));}
     if(state.health<20){ctx.fillStyle='#405a3d';ctx.font='bold 12px monospace';ctx.fillText('!',151,80)}
   }
   // Draws a sprite over a complete LCD scene; the sprite helper clears its canvas,
@@ -742,7 +761,7 @@
     return 'calm';
   }
   function lifeMoodLabel(){
-    const labels={egg:'◈ EN ATTENTE',sleep:'☾ ENDORMI',sick:'✚ MALADE',hungry:'🍖 AFFAMÉ',tired:'Zz FATIGUÉ',dirty:'◌ SALE',sad:'♡ TRISTE',happy:'♥ HEUREUX',calm:'✦ '+lifePersonality()};
+    const labels={egg:'◈ EN ATTENTE',sleep:'☾ ENDORMI',sick:'✚ MALADE',hungry:'FAIM AFFAMÉ',tired:'Zz FATIGUÉ',dirty:'◌ SALE',sad:'♡ TRISTE',happy:'+ HEUREUX',calm:'✦ '+lifePersonality()};
     return labels[lifeFeeling()]||'✦ CURIEUX';
   }
   function lifeReact(type){lifeState.reaction=type;lifeState.until=performance.now()+2500;}
@@ -752,7 +771,7 @@
     lifeState.lastPet=now;lifeReact('pet');
     if(now-lifeState.lastBonus>=12000 || lifeState.lastBonus===0){
       state.joy=CLAMP(state.joy+3);state.bond=CLAMP(state.bond+1);lifeState.lastBonus=now;
-      notify('♥ Une petite caresse ! +3 moral');save();render();
+      notify('+ Une petite caresse ! +3 moral');save();render();
     }
     playSound('play');
   }
@@ -781,7 +800,7 @@
     if(state.stage===0||activitySceneState||activeScreen!=='home')return;
     const mood=lifeFeeling(),react=lifeState.until>t?lifeState.reaction:'';
     let message='';
-    if(react==='pet')message='♥ MERCI !';
+    if(react==='pet')message='+ MERCI !';
     else if(react==='feed')message='MIAM !';
     else if(react==='train')message='JE SUIS FORT !';
     else if(react==='play')message='ENCORE !';
@@ -817,7 +836,7 @@
     if(state.stage>0 && !state.sleeping){const beat=Math.floor(t/260);ctx.fillStyle='#7b9d6d';for(let i=0;i<4;i++){const x=32+((beat*2+i*61)%178),y=53+((i*31+Math.floor(beat/3))%73);ctx.fillRect(x,y,2,3)}}
     if(state.sleeping){ctx.fillStyle='#476948';ctx.font='bold 14px monospace';ctx.fillText('z z',162,82-Math.sin(t/330)*7)}
     ctx.fillStyle='#395641';for(let i=0;i<state.poops;i++){const x=15+i*20;ctx.fillRect(x,h-54,13,6);ctx.fillRect(x+3,h-61,8,7);ctx.fillRect(x+5,h-65,4,4)}
-    if(actionFx.until>Date.now()){ctx.fillStyle='#3b563d';ctx.font='bold 21px monospace';ctx.fillText(actionFx.type==='evolve'?'✦ ✦':actionFx.type==='feed'?'♥':actionFx.type==='play'?'♪':actionFx.type==='train'?'✦':'✧',173,84-Math.sin(t/130)*7)}
+    if(actionFx.until>Date.now()){ctx.fillStyle='#3b563d';ctx.font='bold 21px monospace';ctx.fillText(actionFx.type==='evolve'?'✦ ✦':actionFx.type==='feed'?'+':actionFx.type==='play'?'♪':actionFx.type==='train'?'✦':'✧',173,84-Math.sin(t/130)*7)}
     if(actionFx.type==='evolve'&&actionFx.until>Date.now()){
       const elapsed=(3200-(actionFx.until-Date.now()))/70;
       for(let i=0;i<18;i++){const angle=i*Math.PI*2/18+elapsed*.07;const radius=27+(elapsed%35)*1.3;const x=120+Math.cos(angle)*radius,y=92+Math.sin(angle)*radius*.6;ctx.fillStyle=i%2?'#415c3f':'#718a62';ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,6,6)}
@@ -828,7 +847,7 @@
   const metrics=[['fullness','SATIÉTÉ'],['energy','ÉNERGIE'],['joy','MORAL'],['hygiene','HYGIÈNE'],['health','SANTÉ']];
   function renderDaily(){
     const missions=dailyTasks(),done=missions.filter(m=>m.count>=m.goal).length;
-    $('dailyStatus').textContent=`${done} / 3`;$('dailyList').innerHTML=missions.map(m=>`<div class="mission"><div><strong>${m.count>=m.goal?'✓ ':'◻ '}${m.name}</strong><small>${m.note}</small></div><span>${Math.min(m.count,m.goal)} / ${m.goal}</span></div>`).join('');
+    $('dailyStatus').textContent=`${done} / 3`;$('dailyList').innerHTML=missions.map(m=>`<div class="mission"><div><strong>${m.count>=m.goal?'✓ ':'[] '}${m.name}</strong><small>${m.note}</small></div><span>${Math.min(m.count,m.goal)} / ${m.goal}</span></div>`).join('');
     $('dailyHint').textContent=state.daily.claimed?'RÉCOMPENSE OBTENUE':done===3?'BRAVO, À RÉCUPÉRER':'ENCORE '+(3-done)+' MISSION(S) À TERMINER';
     $('claimDaily').disabled=done<3||state.daily.claimed;$('claimDaily').textContent=state.daily.claimed?'✓ OBTENU':'+25 BITS ◈';
   }
@@ -856,7 +875,7 @@
     $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Entraîner : Flamme · Jouer : Nature · Nettoyer : Eau · Équilibrer : Foudre · Combattre et entraîner : Ombre.':state.stage===2?'Pour une évolution secrète, vise 5 à 7 victoires et un niveau élevé avant ton 24e soin !':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
-    $('lcdMood').textContent=state.stage===0?'♥ PRÊT':state.sleeping?'☾ ZZZ':state.health<25?'! SOS':state.joy<30?'☹ TRISTE':'♥ CONTENT';
+    $('lcdMood').textContent=state.stage===0?'+ PRÊT':state.sleeping?'☾ ZZZ':state.health<25?'! SOS':state.joy<30?'TRISTE TRISTE':'+ CONTENT';
     $('displayNote').textContent=state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
     document.querySelectorAll('[data-action]').forEach(btn=>{const a=btn.dataset.action;btn.disabled=state.stage===0 || (state.sleeping&&a!=='sleep') || (state.health<=0&&a!=='sleep'&&a!=='heal')});
     $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();
@@ -872,7 +891,7 @@
   ];
   const multipliers={flamme:{nature:1.35,eau:.8},nature:{eau:1.35,flamme:.8},eau:{flamme:1.35,nature:.8},foudre:{eau:1.35,nature:.9},ombre:{lumière:1.35},lumière:{ombre:1.35}};
   const effectiveness=(a,b)=>(multipliers[a]||{})[b]||1;
-  const intents={attack:{icon:'⚔',label:'FRAPPE RAPIDE',detail:'Une attaque classique arrive. Tu peux parer ou riposter.'},heavy:{icon:'‼',label:'COUP PUISSANT',detail:'Gros dégâts annoncés : la parade est conseillée.'},charge:{icon:'◈',label:'CONCENTRATION',detail:'L’ennemi reprend son souffle : une ouverture pour attaquer !'},guard:{icon:'▣',label:'GARDE RENFORCÉE',detail:'Les frappes normales sont réduites, mais les pouvoirs traversent sa défense.'}};
+  const intents={attack:{icon:'battle',label:'FRAPPE RAPIDE',detail:'Une attaque classique arrive. Tu peux parer ou riposter.'},heavy:{icon:'alert',label:'COUP PUISSANT',detail:'Gros dégâts annoncés : la parade est conseillée.'},charge:{icon:'star',label:'CONCENTRATION',detail:'L’ennemi reprend son souffle : une ouverture pour attaquer !'},guard:{icon:'guard',label:'GARDE RENFORCÉE',detail:'Les frappes normales sont réduites, mais les pouvoirs traversent sa défense.'}};
   function chooseIntent(previous=''){
     const pool=['attack','attack','attack','heavy','charge','guard'];
     if(previous==='charge')return 'heavy';
@@ -917,7 +936,7 @@
     $('battleNote').textContent=fight.done?'Combat terminé · Tu peux fermer la fenêtre':`Pouvoir : 10 énergie • Tour ${fight.turn+1} • Niveau ${state.level}`;
     $('focusMeter').textContent=`${fight.focus} / 3`;$('energyMeter').textContent=Math.round(state.energy)+' / 100';
     const intent=intents[fight.intent]||intents.attack;
-    $('intentIcon').textContent=fight.done?(fight.won?'★':'☾'):intent.icon;
+    $('intentIcon').innerHTML=pixelIcon(fight.done?(fight.won?'trophy':'sleep'):intent.icon);
     $('intentTitle').textContent=fight.done?'COMBAT TERMINÉ':'INTENTION : '+intent.label;
     $('intentDetail').textContent=fight.done?'Tu peux quitter l’arène.':intent.detail;
     $('battleLog').replaceChildren();for(const entry of fight.history){const div=document.createElement('div');div.textContent=entry;$('battleLog').appendChild(div)}
@@ -1003,13 +1022,13 @@
   }
   function finishFight(won){if(!fight)return;fight.done=true;fight.won=won;
     playSound(won?'victory':'defeat');
-    if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=fight.ownHp;state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('🏆 Victoire dans l’arène !');evolve()}
-    else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';battleHistory('☾ Défaite : soigne ton compagnon.');notify('💔 Défaite : pense à le soigner !')}
+    if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=fight.ownHp;state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('RECORD Victoire dans l’arène !');evolve()}
+    else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';battleHistory('☾ Défaite : soigne ton compagnon.');notify('KO Défaite : pense à le soigner !')}
     $('battleHeading').textContent=won?'★ VICTOIRE !':'COMBAT TERMINÉ';fight.busy=false;updateFight();save();render();
   }
   function closeBattle(){if(fight&&fight.busy)return;$('battleOverlay').classList.remove('visible');fight=null}
   document.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',()=>action(el.dataset.action)));
-  $('middleBtn').addEventListener('click',()=>state.stage===0?hatch():notify(`${names[state.form]} te regarde avec affection ♥`));$('leftBtn').addEventListener('click',()=>action('feed'));$('rightBtn').addEventListener('click',()=>action('play'));
+  $('middleBtn').addEventListener('click',()=>state.stage===0?hatch():notify(`${names[state.form]} te regarde avec affection +`));$('leftBtn').addEventListener('click',()=>action('feed'));$('rightBtn').addEventListener('click',()=>action('play'));
   $('battleStart').addEventListener('click',startBattle);$('attackBtn').addEventListener('click',()=>battleMove('attack'));$('defendBtn').addEventListener('click',()=>battleMove('defend'));$('specialBtn').addEventListener('click',()=>battleMove('special'));$('focusBtn').addEventListener('click',()=>battleMove('focus'));
   $('claimDaily').addEventListener('click',claimDaily);$('breedBtn').addEventListener('click',breed);
   $('exportBtn').addEventListener('click',exportSave);
@@ -1035,7 +1054,7 @@
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
   const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings'];
-  const headings={home:'MON COMPAGNON',stats:'♥ ÉTAT DU MONSTRE',care:'🍖 PRENDRE SOIN',arena:'⚔ ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'🥚 LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',menu:'▦ MENU PRINCIPAL'};
+  const headings={home:'MON COMPAGNON',stats:'+ ÉTAT DU MONSTRE',care:'FAIM PRENDRE SOIN',arena:'X ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'OEUF LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',menu:'▦ MENU PRINCIPAL'};
   const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','menu'];
   let activeScreen='home';
   app.appendChild(dashboard);
@@ -1045,18 +1064,18 @@
   const activityCanvas=$('activityCanvas'),activityCtx=activityCanvas.getContext('2d');
   const activitySprite=document.createElement('canvas');activitySprite.width=100;activitySprite.height=100;
   const activitySpecs={
-    feed:{title:'🍖 REPAS',messages:['UN PETIT CREUX...','MIAM, MIAM !','REPAS TERMINÉ !'],result:'+30 SATIÉTÉ',duration:5400},
-    train:{title:'🥊 ENTRAÎNEMENT',messages:['ÉCHAUFFEMENT','1 · 2 · 3... FRAPPE !','PLUS FORT !'],result:'+1 ENTRAÎNEMENT · +4 BITS',duration:5700},
-    play:{title:'🎾 JEU',messages:['ON JOUE ?','ATTRAPE LA BALLE !','SUPER PARTIE !'],result:'+27 MORAL · +2 BITS',duration:4400},
-    clean:{title:'🫧 DOUCHE',messages:['PRÉPARATION','SPLASH !','TOUT PROPRE !'],result:'+35 HYGIÈNE',duration:4400},
-    heal:{title:'💊 SOINS',messages:['PETIT REMÈDE...','LES FORCES REVIENNENT','BON RÉTABLISSEMENT !'],result:'+45 PV',duration:4200}
+    feed:{title:'FAIM REPAS',messages:['UN PETIT CREUX...','MIAM, MIAM !','REPAS TERMINÉ !'],result:'+30 SATIÉTÉ',duration:5400},
+    train:{title:'TRAIN ENTRAÎNEMENT',messages:['ÉCHAUFFEMENT','1 · 2 · 3... FRAPPE !','PLUS FORT !'],result:'+1 ENTRAÎNEMENT · +4 BITS',duration:5700},
+    play:{title:'JEU JEU',messages:['ON JOUE ?','ATTRAPE LA BALLE !','SUPER PARTIE !'],result:'+27 MORAL · +2 BITS',duration:4400},
+    clean:{title:'PROPRE DOUCHE',messages:['PRÉPARATION','SPLASH !','TOUT PROPRE !'],result:'+35 HYGIÈNE',duration:4400},
+    heal:{title:'SOINS SOINS',messages:['PETIT REMÈDE...','LES FORCES REVIENNENT','BON RÉTABLISSEMENT !'],result:'+45 PV',duration:4200}
   };
   let activitySceneState=null;
   const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)');
   function startActivityScene(type,actorForm){
     const spec=activitySpecs[type];if(!spec)return;
     activitySceneState={type,form:actorForm||state.form,start:performance.now(),duration:reducedMotion?.matches?1600:spec.duration};
-    $('activityTitle').textContent=spec.title;$('activityStep').textContent='00%';$('activityMessage').textContent=spec.messages[0];$('activityProgress').style.width='0%';
+    $('activityTitle').innerHTML=pixelIcon(type==='feed'?'food':type==='play'?'play':type==='train'?'train':type==='clean'?'clean':'heal')+' '+spec.title;$('activityStep').textContent='00%';$('activityMessage').textContent=spec.messages[0];$('activityProgress').style.width='0%';
     $('activityScene').classList.add('active');$('activityScene').setAttribute('aria-live','off');
     playSound(type);drawActivityScene(activitySceneState.start); // Draw the first frame synchronously.
     // The action's effects have already been saved by the original V0.5 logic.
@@ -1098,7 +1117,7 @@
       const munch=p>.12&&p<.87&&Math.floor(t/220)%2===0;
       c.drawImage(activitySprite,0,0,100,100,37+(munch?9:0),74+(munch?5:0),126,126);
       if(munch){activityRect(146,133,9,4,dark);activityRect(152,132,4,4,light)}
-      for(let i=0;i<3;i++){const s=(elapsed/550+i*.4)%1;activityText(['♥','✦','♥'][i],114+i*21,70-s*25,12)}
+      for(let i=0;i<3;i++){const s=(elapsed/550+i*.4)%1;activityText(['+','✦','+'][i],114+i*21,70-s*25,12)}
       activityText('BON APPÉTIT !',120,28,12);
     }else if(a.type==='train'){
       // Punching bag reacts to each impact; the creature lunges towards it.
@@ -1124,7 +1143,7 @@
     }else if(a.type==='heal'){
       c.drawImage(activitySprite,0,0,100,100,53,79-Math.round(bounce*3),134,134);
       for(let i=0;i<7;i++){const an=t/600+i*Math.PI*2/7,rad=57+Math.sin(t/300+i)*6;const x=120+Math.cos(an)*rad,y=134+Math.sin(an)*rad*.65;activityRect(x-2,y-9,5,22,mid);activityRect(x-10,y,21,5,mid)}
-      activityText('+ SANTÉ +',120,24,13);activityText('♥',189,72,25);
+      activityText('+ SANTÉ +',120,24,13);activityText('+',189,72,25);
     }
   }
 
@@ -1141,7 +1160,7 @@
     miniState={phase:'select'};
     $('miniGame').classList.add('open');$('miniGame').classList.remove('running');
     $('miniSelection').hidden=false;$('miniResult').hidden=true;
-    $('miniHeading').textContent='🥊 ENTRAÎNEMENT';$('miniInfo').textContent='CHOISIS TON ÉPREUVE';
+    $('miniHeading').innerHTML=pixelIcon('train')+' ENTRAÎNEMENT';$('miniInfo').textContent='CHOISIS TON ÉPREUVE';
     $('miniRecords').textContent=miniRecords();
   }
   function startTrainingMode(mode){
@@ -1150,7 +1169,7 @@
     miniState={phase:'playing',mode,form:state.form,wave:0,start:now,score:0,lane:1,
       obstacle:Math.floor(Math.random()*3),checked:false,target:.3,message:'PRÊT !'};
     $('miniGame').classList.add('running');$('miniSelection').hidden=true;$('miniResult').hidden=true;
-    $('miniHeading').textContent=mode==='precision'?'🎯 PRÉCISION':'↔ ESQUIVE';
+    $('miniHeading').innerHTML=pixelIcon(mode==='precision'?'target':'dodge')+' '+(mode==='precision'?'PRÉCISION':'ESQUIVE');
     $('miniInfo').textContent=mode==='precision'?'CLIQUE QUAND LE CURSEUR EST DANS LE CADRE':'CHANGE DE VOIE POUR ESQUIVER';
     $('miniStrike').hidden=mode!=='precision';
     $('miniLeft').hidden=mode==='precision';$('miniRight').hidden=mode==='precision';
@@ -1266,7 +1285,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.9 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.9.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1280,13 +1299,13 @@
   function syncConsole(){
     $('homeName').textContent=names[state.form];
     $('homeLevel').textContent=`LV.${state.level} • GÉN.${String(state.generation).padStart(2,'0')}`;
-    $('homeHealth').textContent=`♥ SANTÉ ${Math.round(state.health)}%`;
+    $('homeHealth').textContent=`+ SANTÉ ${Math.round(state.health)}%`;
     $('homeBits').textContent=`◈ ${state.bits} BITS`;
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.9 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.9.1 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1371,7 +1390,7 @@
       btn.disabled=false;btn.textContent=avPrefs.notifications?'✓ ALERTES ACTIVÉES':'ACTIVER LES ALERTES';
       label.textContent=avPrefs.notifications?'Alertes activées pendant que le jeu reste ouvert en arrière-plan.':'Les alertes sont désactivées. Clique pour les autoriser.';
     }
-    $('soundSwitch').textContent=avPrefs.sound?'🔊 SON ACTIVÉ':'🔇 SON COUPÉ';
+    $('soundSwitch').innerHTML=pixelIcon(avPrefs.sound?'sound':'muted')+(avPrefs.sound?' SON ACTIVÉ':' SON COUPÉ');
     $('soundVolume').value=Math.round(avPrefs.volume*100);
   }
   let swRegistrationPromise=null;
@@ -1416,12 +1435,12 @@
     try{
       const permission=Notification.permission==='default'?await Notification.requestPermission():Notification.permission;
       avPrefs.notifications=permission==='granted';persistPrefs();refreshPreferences();
-      if(avPrefs.notifications){playSound('play');notify('🔔 Notifications activées !')}
+      if(avPrefs.notifications){playSound('play');notify('ALERTE Notifications activées !')}
     }catch(err){console.warn(err);refreshPreferences()}
   });
   $('testNotification').addEventListener('click',async()=>{
-    const ok=await showSystemNotification('ByteBuddy ’98 🎮','Test réussi ! Ton compagnon peut t’alerter pendant que le jeu reste ouvert.', 'test',true);
-    notify(ok?'🔔 Notification test envoyée !':'🔔 Active les alertes, ou installe le jeu sur l’écran d’accueil.');
+    const ok=await showSystemNotification('ByteBuddy ’98 JEU','Test réussi ! Ton compagnon peut t’alerter pendant que le jeu reste ouvert.', 'test',true);
+    notify(ok?'ALERTE Notification test envoyée !':'ALERTE Active les alertes, ou installe le jeu sur l’écran d’accueil.');
   });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)void checkPetAlerts()});
   setInterval(()=>void checkPetAlerts(),45000);
