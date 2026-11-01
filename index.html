@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.9.1 • Pixel Art UI</title>
+    <title>ByteBuddy '98 — V0.10 • Élevage & Stats</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -276,9 +276,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● PIXEL ICON EDITION / 0.9.1</div>
+    <div class="edition">● TAMER EDITION / 0.10</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.9</strong> — mini-jeux Précision & Esquive · records · élevage vivant · 16 formes</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.10</strong> — 6 statistiques · nutrition ciblée · croissance bébé · fiche VS</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -397,7 +397,7 @@
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.9.1 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.10 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
@@ -407,6 +407,8 @@
   </div>
 </div>
 <div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button">✕</button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, amuse, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> 7 soins pour devenir Rookie puis 24 soins et 3 victoires pour devenir Ultime. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme → Nature → Eau → Flamme ; Foudre → Eau ; Lumière <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-dodge"/></svg> Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (●). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>V0.5 :</strong> Débloque les 16 formes, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
+<script src="./progression-v010.js?v=010"></script>
+<script src="./ui-v010.js?v=010"></script>
 <script>
 (() => {
   'use strict';
@@ -418,6 +420,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
+  const V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI;
+  if(!V10||!V10UI)throw Error('Composants V0.10 manquants');
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX'};
@@ -446,6 +450,7 @@
   state.daily=state.daily&&state.daily.day===today()?state.daily:blankDaily();
   state.level=Number.isInteger(state.level)&&state.level>=1?state.level:1;state.xp=Math.max(0,Number(state.xp)||0);state.mistakes=Math.max(0,Number(state.mistakes)||0);
   state.bond=CLAMP(Number(state.bond)||0);state.lifeAutoSleep=state.lifeAutoSleep===true;
+   V10.initialize(state);
   let fight=null;
   let toastTimer=null;
   let actionFx={type:'',until:0};
@@ -456,7 +461,7 @@
   function progressDaily(field){if(state.daily.day!==today())state.daily=blankDaily();state.daily[field]=Math.min(99,(state.daily[field]||0)+1)}
   const dailyTasks=()=>[{name:'Deux bons repas',note:'Nourrir 2 fois',count:state.daily.feed,goal:2},{name:'Deux jeux ensemble',note:'Jouer 2 fois',count:state.daily.play,goal:2},{name:'Une victoire',note:'Gagner un combat',count:state.daily.win,goal:1}];
   function claimDaily(){if(state.daily.day!==today())state.daily=blankDaily();if(state.daily.claimed||!dailyTasks().every(m=>m.count>=m.goal))return;state.daily.claimed=true;state.bits+=25;log('Missions quotidiennes terminées : +25 Bits !');notify('◈ +25 BITS ! Missions accomplies.');save();render()}
-  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];next.lastDate=Date.now();return next}
+  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];next.lastDate=Date.now();return next}
   const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download='bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
   const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent='SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
   const timeString = secs => {const n=Math.max(0,Math.floor(secs));return String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n%3600/60)).padStart(2,'0')};
@@ -487,7 +492,17 @@
   const offline = Math.max(0,Math.min(15*60,(Date.now()-Number(state.lastDate||Date.now()))/1000));
   if(offline>5 && state.stage>0){degrade(offline);state.age+=offline;log('Te revoilà ! Ton compagnon a continué à vivre.')}
   state.lastDate=Date.now();
-  const evoConfig=()=>state.stage===0?{target:'Éclosion',detail:'Prêt maintenant',fraction:1}:state.stage===1?{target:'Forme Rookie',detail:`${Math.min(state.care,7)} / 7 soins`,fraction:CLAMP(state.care/7,0,1)}:state.stage===2?{target:'Forme Ultime (ou secrète)',detail:`${Math.min(state.care,24)} / 24 soins · ${Math.min(state.wins,3)} / 3 victoires`,fraction:(Math.min(1,state.care/24)+Math.min(1,state.wins/3))/2}:{target:'Évolution accomplie',detail:'Forme ultime atteinte',fraction:1};
+  const evoConfig=()=>{
+    if(state.stage===0)return {target:'Éclosion',detail:'Prêt maintenant',fraction:1};
+    if(state.stage===1){
+      const b=V10.babyStatus(state);
+      return {target:'Bébé → Rookie',detail:b.ready?'ÉVOLUTION PRÊTE':b.missing.join(' · '),
+        fraction:(Math.min(1,b.ageMinutes/20)+Math.min(1,state.care/12)+Math.min(1,V10.diversity(state)/2)+Math.min(1,state.train))/4};
+    }
+    if(state.stage===2)return {target:'Forme Ultime',detail:Math.min(24,state.care)+'/24 soins · '+Math.min(3,state.wins)+'/3 victoires',
+      fraction:(Math.min(1,state.care/24)+Math.min(1,state.wins/3))/2};
+    return {target:'Évolution accomplie',detail:'Forme ultime atteinte',fraction:1};
+  };
   function rookieRoute(){
     if(state.train>=(state.genetics?.affinity==='ombre'?3:4)&&state.wins>=1&&state.train>state.play+1)return 'shade';
     const a=state.genetics?.affinity;const p=state.play+(a==='nature'?2:0),t=state.train+(a==='flamme'?2:0),c=state.clean+(a==='eau'?2:0);
@@ -497,29 +512,25 @@
     return 'volt';
   }
   function evolve(){
-    if(state.stage===1&&state.care>=7){
-      const next=rookieRoute();state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`✦ ÉVOLUTION : ${names[next]} ! +15 Bits`);playSound('evolve');
+    if(state.stage===1&&V10.babyStatus(state).ready){
+      const next=V10.rookie(state);state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`✦ ÉVOLUTION : ${names[next]} ! +15 Bits`);playSound('evolve');
     }else if(state.stage===2&&state.care>=24&&state.wins>=3){
-      let next=state.form+'2';
-      // To reveal a secret, the player needs to win enough before the usual evolution.
-      if(state.wins>=5&&state.mistakes<=1&&state.health>=70&&state.hygiene>=70&&state.joy>=70&&state.train>=5)next='lumia';
-      else if(state.wins>=7&&state.play>=8&&state.level>=4)next='nebula';
-      if(state.genetics?.mutation==='prisme'&&state.wins>=5)next='prism';
-      if(state.genetics?.mutation==='aurore'&&state.wins>=5)next='auror';
+      let next=V10.adult(state);
       if(!names[next])next='volt2';
       state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`★ ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
     }
   }
-  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render()}
+  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render()}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
-    if(activitySceneState||miniState)return;
+    if(activitySceneState||miniState||V10UI.isFoodOpen())return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
       state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'REVEIL Ton compagnon est réveillé !');save();render();playSound('sleep');return;
     }
     if(state.sleeping){notify('Il dort. Réveille-le avant de jouer !');return}
     if(state.health<=0 && type!=='heal'){notify('Ton compagnon est épuisé. Il lui faut des soins !');return}
+    if(type==='feed'){V10UI.openFood();return;}
     if(type==='heal'){
       if(state.health>=100){notify('Il est déjà en pleine forme !');return}
       if(state.bits<10){notify('Il faut 10 Bits pour acheter un soin.');return}
@@ -572,7 +583,7 @@
     const eggs=state.eggs.filter((_,idx)=>idx!==i);
     const bits=state.bits,dex={...state.dex},daily={...state.daily},genetics=normalizeGenetics(egg.genetics);
     state={...base(),bits,generation:state.generation+1,dex,eggs,family:family.slice(-12),genetics,daily,log:[`Génération ${state.generation+1} : l’œuf de ${names[genetics.parent]} et ${names[genetics.partner]} attend son éclosion !`]};
-    fight=null;closeBattle();save();render();notify('OEUF Nouvel œuf : appuie sur le bouton central !');
+    V10.initialize(state);fight=null;closeBattle();save();render();notify('OEUF Nouvel œuf : appuie sur le bouton central !');
   }
   function renderGenealogy(){
     const gene=state.genetics;
@@ -607,7 +618,7 @@
     if(!confirm('Nouvelle génération sans héritage ? Le compagnon actuel sera archivé. Les œufs en incubateur, le bestiaire et les Bits seront conservés.'))return;
     const generation=(state.generation||1)+1;
     const old=state;const family=[...state.family];if(old.stage>0)family.push({generation:old.generation,form:old.form,wins:old.wins,level:old.level,trait:old.genetics?.talent||null,parents:old.genetics?[old.genetics.parent,old.genetics.partner]:[]});
-    state={...base(),bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};fight=null;closeBattle();save();render();notify('OEUF Une nouvelle aventure commence !');
+    state={...base(),bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};V10.initialize(state);fight=null;closeBattle();save();render();notify('OEUF Une nouvelle aventure commence !');
   }
   function drawPixelCreature(canvas,form,t,options={}){
     const ctx=canvas.getContext('2d');
@@ -861,6 +872,7 @@
     for(const id of order){const seen=!!state.dex[id],el=$('dex-'+id);el.classList.toggle('locked',!seen);el.classList.toggle('new',id===state.form);$('label-'+id).textContent=seen?names[id]:'???';$('kind-'+id).textContent=seen?(isRare(id)?'★ SECRET':(id.endsWith('2')?'ULTIME':id==='egg'?'ŒUF':id==='baby'?'BÉBÉ':id==='lumia'||id==='nebula'?'SECRET':'ROOKIE')):'NON DÉCOUVERT';}
   }
   function render(){
+    V10UI.render(state);
     if(state.daily.day!==today())state.daily=blankDaily();
     $('elementBadge').textContent=(symbols[types[state.form]]||'◈')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
@@ -1053,9 +1065,9 @@
   const app=$('lcdApp');
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
-  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings'];
-  const headings={home:'MON COMPAGNON',stats:'+ ÉTAT DU MONSTRE',care:'FAIM PRENDRE SOIN',arena:'X ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'OEUF LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',menu:'▦ MENU PRINCIPAL'};
-  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','menu'];
+  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs'];
+  const headings={home:'MON COMPAGNON',stats:'+ ÉTAT DU MONSTRE',care:'FAIM PRENDRE SOIN',arena:'X ARÈNE TACTIQUE',evolution:'✦ ÉVOLUTION',missions:'☷ MISSIONS DU JOUR',lab:'OEUF LABORATOIRE',dex:'▦ BESTIAIRE',journal:'▤ JOURNAL & OPTIONS',settings:'♫ SON & ALERTES',vs:'VS DRESSEURS',menu:'▦ MENU PRINCIPAL'};
+  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','menu'];
   let activeScreen='home';
   app.appendChild(dashboard);
   // Move existing dialogs inside the handheld; original game handlers stay intact.
@@ -1285,7 +1297,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.9.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.10 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1305,7 +1317,7 @@
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.9.1 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.10 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1446,6 +1458,19 @@
   setInterval(()=>void checkPetAlerts(),45000);
   refreshPreferences();
 
+
+  function v10Feed(id){
+    if(state.stage===0||state.sleeping||state.health<=0)return;
+    const outcome=V10.meal(state,id);
+    state.care++;progressDaily('feed');awardXP(2);lifeReact('feed');
+    log(names[state.form]+' mange '+outcome.food.name.toLowerCase()+
+        (outcome.trained?' · +2 '+V10.labels[outcome.stat]:' · pause bonus nutritif'));
+    activitySpecs.feed.result=outcome.food.name+' · '+(outcome.trained?'+2 '+V10.labels[outcome.stat]:'SATIÉTÉ');
+    actionFx={type:'feed',until:Date.now()+850};
+    startActivityScene('feed',state.form);
+    evolve();save();render();
+  }
+  V10UI.setup({state:()=>state,feed:v10Feed});
   render();syncConsole();save();requestAnimationFrame(paint);
 })();
 </script>
