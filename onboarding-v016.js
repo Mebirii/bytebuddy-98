@@ -46,9 +46,8 @@ for(const [id,item] of Object.entries(DEFAULTS)){
  el.appendChild(button);
 }
 function isActive(){
- const st=bridge?.state();
- return !!st?.onboarding&&STEPS.includes(st.onboarding.step)&&st.onboarding.step!=="ready"||
-        !!st?.onboarding&&st.onboarding.step==="ready";
+ const step=bridge?.state()?.onboarding?.step;
+ return STEPS.includes(step);
 }
 function isShown(){return isActive()&&!paused;}
 function setStep(step){
@@ -130,7 +129,14 @@ function advance(){
  if(step==="ready"){
   st.onboarding={step:"done",completedAt:Date.now()};
   bridge.save();paused=false;render();
-  bridge.showScreen("home");bridge.render();
+  bridge.render();
+  // An invitation scanned before creating a character can continue automatically.
+  let invitation=null;
+  try{invitation=new URL(location.href).searchParams.get("vs");}catch(_){}
+  if(invitation&&window.ByteBuddyV12UI?.joinInvite){
+    bridge.showScreen("vs");
+    window.ByteBuddyV12UI.joinInvite(invitation);
+  }else bridge.showScreen("home");
  }
 }
 function back(){
