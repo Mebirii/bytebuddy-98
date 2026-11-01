@@ -5,7 +5,9 @@
 const TYPES={ember:"flamme",ember2:"flamme",verd:"nature",verd2:"nature",
  volt:"foudre",volt2:"foudre",aqua:"eau",aqua2:"eau",
  shade:"ombre",shade2:"ombre",lumia:"lumière",nebula:"lumière",
- prism:"lumière",auror:"foudre",baby:"neutre"};
+ prism:"lumière",auror:"foudre",baby:"neutre",
+ cindr:"flamme",cindr2:"flamme",bramble:"nature",bramble2:"nature",
+ tide:"eau",tide2:"eau",surge:"foudre",surge2:"foudre"};
 const ADVANTAGES={flamme:"nature",nature:"eau",eau:"flamme",foudre:"eau",ombre:"lumière",lumière:"ombre"};
 const ACTIONS=["attack","guard","focus","special"];
 const ACTION_LABELS={attack:"FRAPPER",guard:"PARER",focus:"CANALISER",special:"POUVOIR"};
@@ -16,8 +18,8 @@ function normalize(s){
  const V=window.ByteBuddyV10;
  if(!V)throw Error("Statistiques du jeu indisponibles");
  const v=V.validateSnapshot(s);
- const stats={...v.attributes},combat=V.fighter({attributes:stats});
- return {form:v.form,type:TYPES[v.form]||"neutre",level:v.level,stage:v.stage,stats,
+ const stats={...v.attributes},combat=V.fighter({attributes:stats,form:v.form});
+ return {form:v.form,type:TYPES[v.form]||"neutre",trait:combat.trait||null,level:v.level,stage:v.stage,stats,
    maxHp:combat.maxPV,hp:combat.maxPV,maxEnergy:Math.min(100,48+Math.round(stats.endurance*.55)),
    energy:Math.min(100,48+Math.round(stats.endurance*.55)),focus:0,guard:false};
 }
@@ -52,7 +54,8 @@ function resolve(room){
    if(action==="focus"){p.energy=clamp(p.energy+14,0,p.maxEnergy);p.focus=Math.min(3,p.focus+1);messages.push("J"+(i+1)+" canalise son énergie.");}
  }
  // Higher speed acts first; a seeded coin toss resolves ties.
- const order=[0,1].sort((i,j)=>P[j].stats.vitesse-P[i].stats.vitesse||(roll(room)<.5?-1:1));
+ const speed=p=>p.stats.vitesse+(p.trait==='vitesse'?5:0);
+ const order=[0,1].sort((i,j)=>speed(P[j])-speed(P[i])||(roll(room)<.5?-1:1));
  for(const i of order){
    const atk=P[i],def=P[1-i],action=C[i];
    if(atk.hp<=0||def.hp<=0)continue;
@@ -62,13 +65,14 @@ function resolve(room){
    }else{
      atk.focus=Math.min(3,atk.focus+1);
    }
-   const hit=clamp(.79+atk.stats.precision*.0023-def.stats.vitesse*.0011,.64,.96);
+   const hit=clamp(.79+atk.stats.precision*.0023-def.stats.vitesse*.0011+(atk.trait==='precision'?.035:0),.64,.96);
    if(roll(room)>hit){messages.push("J"+(i+1)+" manque sa cible.");continue;}
-   const critical=roll(room)<clamp(.035+atk.stats.precision*.0017,.04,.22);
+   const critical=roll(room)<clamp(.035+atk.stats.precision*.0017+(atk.trait==='precision'?.025:0),.04,.25);
    const power=action==="special"?(11+atk.stats.esprit*.44+atk.level*.5):(8+atk.stats.force*.4+atk.level*.38);
-   const resist=Math.max(.52,1-def.stats.defense*.0045);
+   const resist=Math.max(.52,1-def.stats.defense*.0045)*(def.trait==='defense'?.93:1);
    const element=chanceType(atk.type,def.type);
-   let dmg=Math.max(1,Math.round((power+roll(room)*4)*resist*element*(critical?1.45:1)));
+   const specialBoost=action==='special'&&atk.trait==='esprit'?1.1:1;
+   let dmg=Math.max(1,Math.round((power+roll(room)*4)*resist*element*specialBoost*(critical?1.45:1)));
    if(def.guard)dmg=Math.max(1,Math.round(dmg*(action==="special"?.62:.32)));
    def.hp=Math.max(0,def.hp-dmg);
    messages.push("J"+(i+1)+" "+(action==="special"?"POUVOIR":"FRAPPE")+
