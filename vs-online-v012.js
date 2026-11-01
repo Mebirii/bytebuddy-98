@@ -12,7 +12,7 @@ $("lcdScreen").appendChild(overlay);
 let api=null, peer=null, conn=null, role=null, room=null, code="", phase="idle", myChoice=false, seen=[false,false], resultLines=[], intentional=false, timeoutId=null, roomReady=false;
 const status=m=>$("onlineStatus").textContent=m;
 const index=()=>role==="host"?0:1;
-const roomNames={baby:"BIBI",ember:"EMBERIX",verd:"VERDIX",volt:"ZAPPIX",aqua:"AQUARI",shade:"OMBRO",ember2:"INFERIX",verd2:"FLORION",volt2:"VOLTAR",aqua2:"MARÉON",shade2:"NOCTURON",lumia:"LUMIAR",nebula:"NÉBULIX",prism:"PRISMOR",auror:"AURORIX"};
+const roomNames={baby:"BIBI",ember:"EMBERIX",verd:"VERDIX",volt:"ZAPPIX",aqua:"AQUARI",shade:"OMBRO",ember2:"INFERIX",verd2:"FLORION",volt2:"VOLTAR",aqua2:"MARÉON",shade2:"NOCTURON",lumia:"LUMIAR",nebula:"NÉBULIX",prism:"PRISMOR",auror:"AURORIX",...Object.fromEntries(Object.entries(window.ByteBuddyBestiaryV18?.species||{}).map(([id,info])=>[id,info.name]))};
 const protocol="bb98-p2p-v012";
 function newCode(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",a=crypto.getRandomValues(new Uint8Array(14));return "BB98-"+Array.from(a,x=>chars[x%chars.length]).join("");}
 function parseCode(raw){
