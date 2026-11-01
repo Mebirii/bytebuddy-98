@@ -28,7 +28,7 @@ $("lcdScreen").appendChild(food);
 const vs=document.createElement("section");vs.className="panel v10-vs";vs.id="v10VsPanel";
 vs.innerHTML='<div class="panel-header"><h2>10 / FICHES DE DRESSEURS</h2><span class="section-number">PRÉ-VS</span></div><p class="v10-notice">Partage une fiche de monstre pour un duel simulé local. Le VS en ligne en temps réel et les classements nécessitent un serveur sécurisé : ils ne sont pas encore activés.</p><div class="v10-vsbuttons"><button id="v10ExportVS" type="button">MA FICHE</button><button id="v10LoadVS" type="button">IMPORTER</button></div><textarea id="v10VSCode" placeholder="Colle un code BBVS1 de ton ami" spellcheck="false" aria-label="Code de défi"></textarea><div class="v10-vsbuttons"><button id="v10SparVS" type="button">DUEL SIMULÉ</button><button id="v10ClearVS" type="button">EFFACER</button></div><p id="v10VSStatus">Le résultat simulé ne donne ni récompenses ni classement.</p>';
 document.querySelector(".right").appendChild(vs);
-const menuButton=document.createElement("button");menuButton.type="button";menuButton.dataset.view="vs";menuButton.innerHTML="<span>VS</span>DUELS";
+const menuButton=document.createElement("button");menuButton.type="button";menuButton.dataset.view="vs";menuButton.innerHTML='<span><svg class="px-icon" aria-hidden="true"><use href="#px-battle"/></svg></span>DUELS';
 $("lcdMenu").querySelector(".lcd-menu-grid").appendChild(menuButton);
 let bridge=null,foodOpen=false,opponent=null;
 function closeFood(){foodOpen=false;food.hidden=true;}
