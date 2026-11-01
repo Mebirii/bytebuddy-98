@@ -1,41 +1,42 @@
-# ByteBuddy '98 — notifications Web Push (backend)
+# ByteBuddy Web Push — V0.14 (Supabase)
 
-The browser and service worker live at https://mebirii.github.io/bytebuddy-98/.
-This directory describes a **dedicated Supabase backend**. Do not deploy it inside
-an unrelated application project.
+## Déploiement actuel
 
-## Setup (not yet deployed)
+Projet dédié : **ByteBuddy** — \`tqgnarnuohglfxrbxroi\` (eu-west-3).
 
-1. Create a dedicated Supabase project for ByteBuddy. Check billing first.
-2. Apply schema.sql in that project's database (RLS is enabled and no public policies exist).
-3. Generate VAPID keys via a trusted Web Push library/CLI. Keep the **private** VAPID key
-   outside GitHub and all browser code.
-4. Set Supabase Edge Function secrets in the dashboard:
-   VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, PUSH_CRON_SECRET.
-   Use a random 32+-byte token for PUSH_CRON_SECRET.
-5. Deploy edge-function.ts as the function named bytebuddy-push with verify_jwt=false.
-   This is intentional: public API operations are checked using per-device secrets;
-   the scheduled tick is protected by PUSH_CRON_SECRET.
-6. Enable pg_cron and pg_net in the **dedicated** Supabase project and schedule a
-   POST to https://<project-ref>.supabase.co/functions/v1/bytebuddy-push/tick.
-   Store PUSH_CRON_SECRET in Supabase Vault and reference it using
-   vault.decrypted_secrets. Use the schedule template in cron-template.sql.
-7. Change the public push-config.js to:
-      window.BYTEBUDDY_PUSH_API = "https://<project-ref>.supabase.co/functions/v1/bytebuddy-push";
-   Push subscriptions remain opt-in per device.
+Fonction : \`bytebuddy-push\`, déployée à
+\`https://tqgnarnuohglfxrbxroi.supabase.co/functions/v1/bytebuddy-push\`.
 
-## Behavior & privacy
+Un seul abonnement par installation et uniquement après une action volontaire.
 
-- Push works when the tab is closed; iOS 16.4+ requires installation via
-  "Add to Home Screen" and user permission requested from inside the installed app.
-- No central player account is needed. Each browser stores one random per-device secret.
-- The server stores encrypted Web Push subscription endpoint and keys, plus a
-  small snapshot of pet needs. It does not store the complete game save.
-- At most 3 alerts/day, with 4-hour separation, silent 22:00–08:00 Paris time.
-- Subscriptions may be removed from the game's settings.
-- Auto alert projections are approximate: browser-only game progression is
-  not executed in the cloud. Back-end alerts stop after ~24h without a game sync.
-- Test push is user-initiated and rate limited.
-- On HTTP 404/410 from a push provider, the backend deletes the stale subscription.
-- Keep service-role keys and private VAPID keys out of git. Never place them in
-  a file served by GitHub Pages. The existing push-config.js contains no secrets.
+### Fonctionnement
+
+- La clé VAPID est générée à la première requête du serveur, puis **conservée uniquement en base de données** dans \`public.bytebuddy_push_settings\` (RLS activée, aucun accès \`anon\` ou \`authenticated\`).
+- La clé privée et le jeton de cron ne doivent jamais apparaître dans un fichier Git ou dans le navigateur.
+- Les abonnements sont stockés dans \`public.bytebuddy_push_devices\` ; les opérations serveur utilisent le rôle \`service_role\` du runtime Edge, jamais celui du navigateur.
+- La fonction refuse les requêtes de navigateur hors origine \`https://mebirii.github.io\` et exige un secret individuel aléatoire pour les appareils.
+- Supabase \`pg_cron\` et \`pg_net\` appellent \`/tick\` toutes les **15 minutes**, avec un secret lu côté base.
+- Les pushes de besoins sont limités à **3 par jour**, au moins **4 heures** entre les alertes et un silence entre **22 h et 8 h**, heure de Paris.
+- Les appareils qui n'ont pas synchronisé leur état depuis 24 h ne reçoivent plus d'alerte de besoins, jusqu'au retour du joueur.
+
+### Tests effectués sur la plateforme
+
+- \`GET /public-key\` : réponse HTTP 200, \`ready:true\`, clé VAPID publique fournie.
+- \`POST /tick\` autorisé depuis le cron secret : HTTP 200, résultat JSON valide.
+- Tentative d'inscription invalide : HTTP 400, aucun appareil ajouté.
+- Planification cron active, contrôlée via \`cron.job\`.
+- Les tables ont RLS active et les permissions de lecture publiques désactivées.
+
+### Test manuel indispensable
+
+1. Depuis un ordinateur compatible, ouvrir \`https://mebirii.github.io/bytebuddy-98/\`, puis **SON & ALERTES → ACTIVER LES PUSH**.
+2. Accepter l'autorisation du navigateur, puis **TEST NOTIFICATION PUSH**.
+3. Fermer le site et vérifier la réception d'une notification de test. Le service push fonctionne côté serveur même si le jeu est fermé.
+4. Sur iPhone : iOS 16.4 ou supérieur, ouvrir Safari, **Partager → Sur l'écran d'accueil**, ouvrir ByteBuddy depuis cette icône, puis autoriser les notifications et effectuer le test.
+5. Vérifier les cas de désinscription, changement d'appareil, réseau mobile, autorisations refusées.
+
+### Limites
+
+Les notifications de faim ou fatigue projetent la dernière situation sauvegardée quand le jeu est fermé : elles sont estimatives, pas un accès direct à l'état du jeu. La fonction doit éviter de multiplier les notifications. Les délais et quotas du service Push dépendent aussi du navigateur et du système.
+
+Le serveur est actif, mais le bon fonctionnement de l'affichage sur chaque téléphone **ne peut pas être garanti sans test réel de l'appareil**.
