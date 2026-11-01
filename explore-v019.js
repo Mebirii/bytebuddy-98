@@ -32,7 +32,7 @@ function normalize(x){
    egg:raw.daily?.egg===true}
  };
 }
-let api=null,watch=null,enabled=false,lastFix=null,startedAt=0,status="GPS INACTIF",requestId=0;
+let api=null,watch=null,enabled=false,lastFix=null,status="GPS INACTIF",requestId=0;
 function state(){return api?.state()}
 function ensure(){const st=state();if(!st)return null;st.exploration=normalize(st.exploration);
  if(st.exploration.daily.date!==day())st.exploration.daily={date:day(),meters:0,chests:0,egg:false};
@@ -91,6 +91,7 @@ function rewardEgg(e){
 function commit(){api.save();api.render();update();}
 function acceptPosition(position){
  if(!enabled||document.hidden)return;
+ if(state()?.stage===0){stop('EXPLORATION ARRÊTÉE : LA CRÉATURE ATTEND SON ÉCLOSION.');return;}
  const c=position?.coords||{},now=Number(position.timestamp);
  const lat=Number(c.latitude),lon=Number(c.longitude),acc=Number(c.accuracy);
  if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180||
@@ -136,7 +137,7 @@ function start(){
  if(!api||state()?.stage===0||state()?.sleeping){update("IL FAUT UNE CRÉATURE ÉVEILLÉE POUR EXPLORER.");return;}
  if(!window.isSecureContext||!navigator.geolocation?.watchPosition){update("GPS NON PRIS EN CHARGE. UTILISE HTTPS ET UN TÉLÉPHONE.");return;}
  if(document.hidden){update("OUVRE LE JEU AU PREMIER PLAN.");return;}
- enabled=true;lastFix=null;startedAt=Date.now();const own=++requestId;
+ enabled=true;lastFix=null;const own=++requestId;
  update("DEMANDE D'AUTORISATION GPS...");
  try{
   const id=navigator.geolocation.watchPosition(
@@ -160,5 +161,5 @@ $("bbExpStart").addEventListener("click",start);
 $("bbExpStop").addEventListener("click",()=>stop());
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&enabled)stop("GPS MIS EN PAUSE : JEU MASQUÉ. RELANCE LA PROMENADE.");});
 window.addEventListener("pagehide",()=>{if(enabled)stop("GPS ARRÊTÉ : PAGE QUITTÉE.");});
-window.ByteBuddyExploreV19={setup(x){api=x;ensure();update();},start,stop,active:()=>enabled,refresh:()=>update(),acceptPosition};
+window.ByteBuddyExploreV19={setup(x){api=x;ensure();update();},start,stop,active:()=>enabled,refresh:()=>update()};
 })();
