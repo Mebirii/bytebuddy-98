@@ -7,7 +7,7 @@ const pane=document.createElement("div");pane.className="bb-online";
 pane.innerHTML='<strong>VS EN LIGNE — BÊTA P2P</strong><p>Deux téléphones ou PC, salon privé. Les deux jeux doivent rester ouverts.</p><div class="bb-online-actions"><button type="button" id="onlineCreate">CRÉER UN SALON</button><button type="button" id="onlineJoin">REJOINDRE</button></div><input id="onlineCode" aria-label="Code ou lien du salon" autocomplete="off" spellcheck="false" placeholder="CODE DU SALON OU LIEN"><div class="bb-online-actions"><button type="button" id="onlineCopy">COPIER LE LIEN</button><button type="button" id="onlineLeave">FERMER LE SALON</button></div><div class="bb-online-state" id="onlineStatus" role="status" aria-live="polite">Crée un salon pour inviter un ami.</div><p>Matchs amicaux uniquement. Connexion directe via un service tiers, disponibilité selon le réseau.</p>';
 $("v10VsPanel").appendChild(pane);
 const overlay=document.createElement("section");overlay.className="bb-online-stage";overlay.id="onlineStage";
-overlay.setAttribute("aria-label","Arène de duel à distance");overlay.innerHTML="\n<div class=\"bb-online-top\"><b id=\"onlineRound\">SALON EN LIGNE</b><button type=\"button\" id=\"onlineExit\">QUITTER</button></div>\n<div class=\"bb-online-fighters\">\n <div class=\"bb-online-fighter\"><b id=\"onlineName0\">HÔTE</b><canvas id=\"onlineSprite0\" width=\"88\" height=\"88\"></canvas><div class=\"bb-online-hp\"><span id=\"onlineHP0\"></span></div><small id=\"onlineVitals0\">PV --</small></div>\n <b style=\"text-align:center\">VS</b>\n <div class=\"bb-online-fighter\"><b id=\"onlineName1\">INVITÉ</b><canvas id=\"onlineSprite1\" width=\"88\" height=\"88\"></canvas><div class=\"bb-online-hp\"><span id=\"onlineHP1\"></span></div><small id=\"onlineVitals1\">PV --</small></div>\n</div>\n<div class=\"bb-online-body\"><strong id=\"onlineHeading\">EN ATTENTE</strong><p id=\"onlineMessage\">Invite un autre joueur.</p>\n <div class=\"bb-online-moves\" id=\"onlineMoves\" hidden><button type=\"button\" data-online-move=\"attack\">FRAPPER</button><button type=\"button\" data-online-move=\"guard\">PARER</button><button type=\"button\" data-online-move=\"focus\">CANALISER</button><button type=\"button\" data-online-move=\"special\">POUVOIR</button></div>\n <button type=\"button\" id=\"onlineContinue\" class=\"bb-online-go\" hidden>CONTINUER</button>\n</div>\n<div class=\"bb-online-foot\" id=\"onlineFoot\">AMICAL · PAS DE CLASSEMENT</div>";
+overlay.setAttribute("aria-label","Arène de duel à distance");overlay.innerHTML="\n<div class=\"bb-online-top\"><b id=\"onlineRound\">SALON EN LIGNE</b><button type=\"button\" id=\"onlineExit\">QUITTER</button></div>\n<div class=\"bb-online-fighters\">\n <div class=\"bb-online-fighter\"><b id=\"onlineName0\">HÔTE</b><canvas id=\"onlineSprite0\" width=\"88\" height=\"88\"></canvas><div class=\"bb-online-hp\"><span id=\"onlineHP0\"></span></div><small id=\"onlineVitals0\">PV --</small></div>\n <b style=\"text-align:center\">VS</b>\n <div class=\"bb-online-fighter\"><b id=\"onlineName1\">INVITÉ</b><canvas id=\"onlineSprite1\" width=\"88\" height=\"88\"></canvas><div class=\"bb-online-hp\"><span id=\"onlineHP1\"></span></div><small id=\"onlineVitals1\">PV --</small></div>\n</div>\n<div class=\"bb-online-body\"><strong id=\"onlineHeading\">EN ATTENTE</strong><p id=\"onlineMessage\">Invite un autre joueur.</p>\n <button type=\"button\" id=\"onlineShare\" hidden>COPIER L'INVITATION</button>\n <div class=\"bb-online-moves\" id=\"onlineMoves\" hidden><button type=\"button\" data-online-move=\"attack\">FRAPPER</button><button type=\"button\" data-online-move=\"guard\">PARER</button><button type=\"button\" data-online-move=\"focus\">CANALISER</button><button type=\"button\" data-online-move=\"special\">POUVOIR</button></div>\n <button type=\"button\" id=\"onlineContinue\" class=\"bb-online-go\" hidden>CONTINUER</button>\n</div>\n<div class=\"bb-online-foot\" id=\"onlineFoot\">AMICAL · PAS DE CLASSEMENT</div>";
 $("lcdScreen").appendChild(overlay);
 let api=null, peer=null, conn=null, role=null, room=null, code="", phase="idle", myChoice=false, seen=[false,false], resultLines=[], intentional=false, timeoutId=null;
 const status=m=>$("onlineStatus").textContent=m;
@@ -50,6 +50,7 @@ function render(){
   });
  }
  const waiting=!room, finished=room?.phase==="ended", result=phase==="result";
+ $("onlineShare").hidden=!(waiting&&role==="host");
  $("onlineMoves").hidden=waiting||result||finished||myChoice;
  $("onlineContinue").hidden=waiting||!result||finished||seen[index()];
  if(waiting){$("onlineHeading").textContent="EN ATTENTE D'UN DRESSEUR";$("onlineMessage").textContent=role==="host"?"Partage ton code et attends ton adversaire.":"Connexion au salon...";}
@@ -184,6 +185,11 @@ $("onlineJoin").addEventListener("click",join);
 $("onlineLeave").addEventListener("click",()=>close());
 $("onlineExit").addEventListener("click",()=>close());
 $("onlineContinue").addEventListener("click",next);
+$("onlineShare").addEventListener("click",async()=>{
+ if(!code)return;
+ try{await navigator.clipboard.writeText(inviteLink());$("onlineMessage").textContent="Lien copié ! Envoie-le à ton ami.";}
+ catch(_){$("onlineMessage").textContent="Partage ce code : "+code;}
+});
 $("onlineCopy").addEventListener("click",async()=>{
  if(!code){status("Crée un salon pour obtenir un lien.");return;}
  const url=new URL(location.href);url.searchParams.set("vs",code);url.searchParams.set("v","012");
