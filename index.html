@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-  <title>ByteBuddy '98 — V0.7.1 • Préparation Web Push</title>
+    <title>ByteBuddy '98 — V0.8 • Créature vivante</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -240,13 +240,17 @@
     .bb-setting-help{font-size:10px;line-height:1.55;color:#45644a;margin:11px 0}
     #settingsPanel .primary{font-size:10px;padding:8px;min-height:36px;white-space:normal;flex-shrink:0}
     #settingsPanel .tiny-btn{min-height:37px;margin-bottom:9px}
+    /* V0.8 — Living pixel monster. The entire interaction stays on the LCD. */
+    #gameCanvas{cursor:pointer;touch-action:manipulation}
+    .lcd-pet-meta .living-mood{color:#2a603f;background:#dbeab9;border:1px solid #a4b88d;border-radius:4px;padding:2px 5px}
+    @media(prefers-reduced-motion:reduce){#gameCanvas{transition:none}}
   </style>
 </head>
 <body>
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● SOUND EDITION / 0.7</div>
+    <div class="edition">● LIVING EDITION / 0.8</div>
   </header>
   <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.6</strong> — scènes de repas et entraînement animées · élevage vivant · 16 formes · arène tactique</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
@@ -259,7 +263,7 @@
           <div class="screen" id="lcdScreen"><div class="lcd-hud"><span id="lcdTitle">BYTEBUDDY</span><span id="lcdTime">00:00</span></div><canvas id="gameCanvas" width="240" height="190" role="img" aria-label="Monstre pixelisé sur écran LCD"></canvas><div class="sleep-filter"></div><div class="sleeping-indicator">Z z</div><div class="lcd-footer"><span id="lcdMood">♥ PRÊT</span><span id="lcdInfo">GEN 01</span></div>
             <section class="lcd-home-info" id="lcdHomeInfo" aria-label="Compagnon virtuel">
               <div class="lcd-pet-line"><strong id="homeName">ŒUF MYSTÈRE</strong><span id="homeLevel">NIVEAU 1</span></div>
-              <div class="lcd-pet-meta"><span id="homeHealth">♥ SANTÉ 100%</span><span id="homeBits">◈ 20 BITS</span><span id="homeEvolution">ÉCLOSION</span></div>
+              <div class="lcd-pet-meta"><span id="homeHealth">♥ SANTÉ 100%</span><span id="homeBits">◈ 20 BITS</span><span id="homeEvolution">ÉCLOSION</span><span class="living-mood" id="homeFeeling">◈ EN ATTENTE</span></div>
               <div class="lcd-quick-actions">
                 <button type="button" id="hatchHome" class="lcd-hatch">✦ FAIRE ÉCLORE</button>
                 <button type="button" data-action="feed" class="lcd-quick">🍖 NOURRIR</button>
@@ -350,7 +354,7 @@
       </section>
     </section>
   </section>
-  <footer class="foot">BYTEBUDDY '98 — V0.5 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
+  <footer class="foot">BYTEBUDDY '98 — V0.8 · Jeu original créé pour le web · Sauvegarde locale · Export disponible</footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay" id="battleOverlay" role="dialog" aria-modal="true" aria-labelledby="battleHeading">
@@ -375,7 +379,7 @@
   const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
   const blankDaily=()=>({day:today(),feed:0,play:0,win:0,claimed:false});
   const desc = {prism:'Né d’une mutation prismatique, ce gardien reflète l’énergie de plusieurs générations.',auror:'Une créature des aurores numériques dont l’ADN résonne avec les anciens mondes.',egg:"Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.",baby:"Une petite boule de pixels pleine d'énergie. Tout reste à construire !",ember:"Un petit dragon intrépide. Il adore les défis et les entraînements.",verd:"Un gardien des forêts, doux et joueur. L'affection le rend plus fort.",volt:"Une créature électrique, vive et équilibrée. Toujours prête à découvrir.",ember2:"Sa force brûlante révèle des années de courage et d'entraînement.",verd2:"Son énergie végétale protège maintenant tous ses compagnons.",volt2:"Le maître des étincelles est devenu une légende de l'arène !",aqua:"Un gardien aquatique qui aime un environnement impeccablement entretenu.",shade:"Un rôdeur des ombres, né des défis et de la discipline.",aqua2:"Il commande les marées et protège les rivières numériques.",shade2:"Dans la nuit, ses ailes de pixels ne font aucun bruit.",lumia:"Une rare légende de lumière, révélée par des soins exemplaires.",nebula:"Une créature stellaire apparue au terme de grands défis."};
-  const base = () => ({version:4,genetics:null,eggs:[],family:[],form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,mistakes:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,level:1,xp:0,record:{},dex:{egg:true},daily:blankDaily(),log:['Un mystérieux œuf vient d’apparaître…']});
+  const base = () => ({version:4,genetics:null,eggs:[],family:[],form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,mistakes:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,bond:0,lifeAutoSleep:false,level:1,xp:0,record:{},dex:{egg:true},daily:blankDaily(),log:['Un mystérieux œuf vient d’apparaître…']});
   let state;
   try{const saved = JSON.parse(localStorage.getItem(KEY));state = saved && [1,2,3,4].includes(saved.version) && names[saved.form] ? {...base(),...saved,version:4} : base();}catch(_){state=base()}
   const talents={force:{name:'FORCE',detail:'Dégâts directs +12 %.'},garde:{name:'GARDE',detail:'Dégâts reçus −15 %.'},esprit:{name:'ESPRIT',detail:'Pouvoir élémentaire +20 %.'}};
@@ -391,6 +395,7 @@
   state.record=state.record&&typeof state.record==='object'?state.record:{};
   state.daily=state.daily&&state.daily.day===today()?state.daily:blankDaily();
   state.level=Number.isInteger(state.level)&&state.level>=1?state.level:1;state.xp=Math.max(0,Number(state.xp)||0);state.mistakes=Math.max(0,Number(state.mistakes)||0);
+  state.bond=CLAMP(Number(state.bond)||0);state.lifeAutoSleep=state.lifeAutoSleep===true;
   let fight=null;
   let toastTimer=null;
   let actionFx={type:'',until:0};
@@ -405,6 +410,17 @@
   const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download='bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
   const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent='SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
   const timeString = secs => {const n=Math.max(0,Math.floor(secs));return String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n%3600/60)).padStart(2,'0')};
+  function tickAutoSleep(){
+    if(state.stage===0||fight)return;
+    if(state.lifeAutoSleep && !state.sleeping)state.lifeAutoSleep=false;
+    if(!state.sleeping && state.energy<10 && state.health>0){
+      state.sleeping=true;state.lifeAutoSleep=true;lifeReact('sleep');
+      log(`${names[state.form]} s'endort, épuisé.`);notify('💤 Ton compagnon fait une sieste !');
+    }else if(state.lifeAutoSleep && state.sleeping && state.energy>=75){
+      state.sleeping=false;state.lifeAutoSleep=false;lifeReact('wake');
+      log(`${names[state.form]} s'est réveillé après sa sieste.`);notify('☀ Ton compagnon est reposé !');
+    }
+  }
   function degrade(seconds){
     if(state.stage===0)return;
     const m=seconds/60;
@@ -444,13 +460,13 @@
       state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`★ ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
     }
   }
-  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};save();render()}
+  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render()}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
     if(activitySceneState)return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
-      state.sleeping=!state.sleeping;log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();playSound('sleep');return;
+      state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();playSound('sleep');return;
     }
     if(state.sleeping){notify('Il dort. Réveille-le avant de jouer !');return}
     if(state.health<=0 && type!=='heal'){notify('Ton compagnon est épuisé. Il lui faut des soins !');return}
@@ -469,7 +485,7 @@
     }else if(type==='clean'){
       state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');
     }else{return}
-    const actorForm=state.form;actionFx={type,until:Date.now()+850};startActivityScene(type,actorForm);evolve();save();render();
+    const actorForm=state.form;lifeReact(type);actionFx={type,until:Date.now()+850};startActivityScene(type,actorForm);evolve();save();render();
   }
   function availablePartners(){
     const unique=new Map(travelers.map(p=>[p.id,p]));
@@ -673,6 +689,89 @@
   // Draws a sprite over a complete LCD scene; the sprite helper clears its canvas,
   // so render the scene first and then composite the transparent sprite separately.
   const spriteLayer=document.createElement('canvas');spriteLayer.width=240;spriteLayer.height=190;
+  // V0.8: autonomous behavior comes from current needs, care choices and personality.
+  // The saved game still uses version 4 to preserve compatibility with all prior saves.
+  const lifeState={reaction:'',until:0,lastPet:0,lastBonus:0};
+  function lifePersonality(){
+    if(state.train>=Math.max(3,state.play+2)&&state.train>state.clean)return 'COURAGEUX';
+    if(state.play>=Math.max(3,state.train+2)&&state.play>state.clean)return 'JOUEUR';
+    if(state.clean>=Math.max(4,state.train+2,state.play+2))return 'SOIGNEUX';
+    if(state.bond>=18)return 'AFFECTUEUX';
+    return 'CURIEUX';
+  }
+  function lifeFeeling(){
+    if(state.stage===0)return 'egg';
+    if(state.sleeping)return 'sleep';
+    if(state.health<25)return 'sick';
+    if(state.fullness<25)return 'hungry';
+    if(state.energy<20)return 'tired';
+    if(state.hygiene<25)return 'dirty';
+    if(state.joy<28)return 'sad';
+    if(state.joy>74&&state.fullness>40)return 'happy';
+    return 'calm';
+  }
+  function lifeMoodLabel(){
+    const labels={egg:'◈ EN ATTENTE',sleep:'☾ ENDORMI',sick:'✚ MALADE',hungry:'🍖 AFFAMÉ',tired:'Zz FATIGUÉ',dirty:'◌ SALE',sad:'♡ TRISTE',happy:'♥ HEUREUX',calm:'✦ '+lifePersonality()};
+    return labels[lifeFeeling()]||'✦ CURIEUX';
+  }
+  function lifeReact(type){lifeState.reaction=type;lifeState.until=performance.now()+2500;}
+  function petCompanion(){
+    if(activeScreen!=='home'||state.stage===0||state.sleeping||fight||activitySceneState)return;
+    const now=performance.now();if(now-lifeState.lastPet<900)return;
+    lifeState.lastPet=now;lifeReact('pet');
+    if(now-lifeState.lastBonus>=12000 || lifeState.lastBonus===0){
+      state.joy=CLAMP(state.joy+3);state.bond=CLAMP(state.bond+1);lifeState.lastBonus=now;
+      notify('♥ Une petite caresse ! +3 moral');save();render();
+    }
+    playSound('play');
+  }
+  function drawLivingCreature(ctx,t){
+    const mood=lifeFeeling(),active=state.stage>0;
+    const calm=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const happy=mood==='happy',weak=['sick','tired','hungry'].includes(mood);
+    const personality=lifePersonality();
+    const pace=personality==='JOUEUR'?1400:personality==='COURAGEUX'?2000:3000;
+    const move=active&&!state.sleeping&&!weak&&!calm?Math.sin(t/pace)*20:0;
+    const hop=active&&!state.sleeping&&!weak&&!calm?(happy?Math.abs(Math.sin(t/330))*7:Math.abs(Math.sin(t/1000))*2):0;
+    const wobble=weak?Math.sin(t/600)*1.2:0;
+    drawPixelCreature(spriteLayer,state.form,t,{ill:state.health<20,still:state.sleeping||calm});
+    ctx.save();ctx.translate(Math.round(move+wobble),-Math.round(hop));ctx.drawImage(spriteLayer,0,-1);ctx.restore();
+    if(active && !state.sleeping && !calm && happy){
+      const drift=Math.floor(t/230)%9;
+      ctx.fillStyle='#557b50';
+      ctx.fillRect(168,88-drift*2,3,3);ctx.fillRect(171,86-drift*2,3,3);
+      ctx.fillRect(185,116-(drift*2)%23,3,3);
+    }
+    if(active && mood==='sick'){
+      ctx.fillStyle='#4b6846';ctx.font='bold 17px monospace';ctx.fillText('+',190,105);
+    }
+  }
+  function drawLivingSpeech(ctx,t){
+    if(state.stage===0||activitySceneState||activeScreen!=='home')return;
+    const mood=lifeFeeling(),react=lifeState.until>t?lifeState.reaction:'';
+    let message='';
+    if(react==='pet')message='♥ MERCI !';
+    else if(react==='feed')message='MIAM !';
+    else if(react==='train')message='JE SUIS FORT !';
+    else if(react==='play')message='ENCORE !';
+    else if(react==='clean')message='TOUT PROPRE !';
+    else if(react==='heal')message='ÇA VA MIEUX !';
+    else if(react==='sleep')message='Zzz...';
+    else if(react==='wake')message='BONJOUR !';
+    else if(react==='hatch')message='COUCOU !';
+    else if(Math.floor(t/4600)%3===0){
+      const phrases={hungry:'J’AI FAIM !',tired:'JE SUIS FATIGUÉ',dirty:'UN BAIN ?',sad:'ON JOUE ?',sick:'AIDE-MOI...',happy:'YOUHOU !',sleep:'Zzz...',calm:lifePersonality()==='COURAGEUX'?'ON S’ENTRAÎNE ?':'SALUT !'};
+      message=phrases[mood]||'';
+    }
+    if(!message)return;
+    ctx.save();ctx.font='bold 9px monospace';
+    const width=Math.min(188,Math.max(71,ctx.measureText(message).width+19));
+    const x=Math.round((240-width)/2),y=31;
+    ctx.fillStyle='#4d6b4b';ctx.fillRect(x+3,y+3,width,27);
+    ctx.fillStyle='#e2edc7';ctx.fillRect(x,y,width,26);
+    ctx.strokeStyle='#4b6946';ctx.lineWidth=2;ctx.strokeRect(x+1,y+1,width-2,24);
+    ctx.fillStyle='#405e42';ctx.textAlign='center';ctx.fillText(message,120,y+17);ctx.textAlign='left';ctx.restore();
+  }
   function paint(t){
     const canvas=$('gameCanvas'),ctx=canvas.getContext('2d');const w=canvas.width,h=canvas.height;
     ctx.clearRect(0,0,w,h);
@@ -682,7 +781,7 @@
     ctx.fillStyle='#89a879';ctx.fillRect(0,h-44,w,2);
     ctx.fillStyle='#acc697';ctx.fillRect(14,91,23,4);ctx.fillRect(19,85,14,6);ctx.fillRect(191,106,34,4);ctx.fillRect(198,99,20,7);
     ctx.fillStyle='#718f67';ctx.fillRect(18,43,5,5);ctx.fillRect(23,43,5,5);ctx.fillRect(19,48,8,4);ctx.fillRect(212,52,5,5);ctx.fillRect(218,57,5,5);
-    drawPixelCreature(spriteLayer,state.form,t,{ill:state.health<20});ctx.drawImage(spriteLayer,0,-1);
+    drawLivingCreature(ctx,t);
     // A handful of slowly moving monochrome particles gives the old LCD room some life.
     if(state.stage>0 && !state.sleeping){const beat=Math.floor(t/260);ctx.fillStyle='#7b9d6d';for(let i=0;i<4;i++){const x=32+((beat*2+i*61)%178),y=53+((i*31+Math.floor(beat/3))%73);ctx.fillRect(x,y,2,3)}}
     if(state.sleeping){ctx.fillStyle='#476948';ctx.font='bold 14px monospace';ctx.fillText('z z',162,82-Math.sin(t/330)*7)}
@@ -693,7 +792,7 @@
       for(let i=0;i<18;i++){const angle=i*Math.PI*2/18+elapsed*.07;const radius=27+(elapsed%35)*1.3;const x=120+Math.cos(angle)*radius,y=92+Math.sin(angle)*radius*.6;ctx.fillStyle=i%2?'#415c3f':'#718a62';ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,6,6)}
     }
     if(state.health<25&&state.stage>0){ctx.font='bold 18px monospace';ctx.fillStyle='#3b563d';ctx.fillText('!',165,110)}
-    drawActivityScene(t);requestAnimationFrame(paint);
+    drawLivingSpeech(ctx,t);drawActivityScene(t);requestAnimationFrame(paint);
   }
   const metrics=[['fullness','SATIÉTÉ'],['energy','ÉNERGIE'],['joy','MORAL'],['hygiene','HYGIÈNE'],['health','SANTÉ']];
   function renderDaily(){
@@ -893,10 +992,10 @@
   let prev=Date.now();
   setInterval(()=>{
     const now=Date.now();const dt=Math.max(0,Math.min((now-prev)/1000,10));prev=now;
-    if(state.stage>0&&!fight){state.age+=dt;degrade(dt)}
+    if(state.stage>0&&!fight){state.age+=dt;degrade(dt);tickAutoSleep()}
     render();save();
   },3000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden){const now=Date.now();const dt=Math.min(15*60,Math.max(0,(now-prev)/1000));prev=now;if(state.stage>0&&!fight){state.age+=dt;degrade(dt)}render();save()}});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){const now=Date.now();const dt=Math.min(15*60,Math.max(0,(now-prev)/1000));prev=now;if(state.stage>0&&!fight){state.age+=dt;degrade(dt);tickAutoSleep()}render();save()}});
   window.addEventListener('pagehide',save);
 
   // V0.5: embed the existing, save-compatible game modules and battle dialogs INSIDE the LCD.
@@ -1002,7 +1101,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.7 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.8 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1019,10 +1118,13 @@
     $('homeHealth').textContent=`♥ SANTÉ ${Math.round(state.health)}%`;
     $('homeBits').textContent=`◈ ${state.bits} BITS`;
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
+    $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.7 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.8 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
+  // A gentle pat is an actual game interaction; each bonus has a cooldown.
+  $('gameCanvas').addEventListener('click',petCompanion);
   // Keep original rendering/data logic intact; mirror its state into the console header.
   showScreen('home');
   const consoleTicker=setInterval(syncConsole,900);
