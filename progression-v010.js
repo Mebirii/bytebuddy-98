@@ -85,7 +85,14 @@ function rookie(state){
   const inherited=typeForm[state.genetics.affinity];
   if(inherited)scores[inherited]+=6;
  }
- return Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+ const base=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+ // A distinct rookie family is earned by specialization, not random chance.
+ // Conditions are compatible with the 20-minute baby stage and six training games.
+ if(base==='ember'&&s.force>=20&&s.precision>=16&&(d.viande||0)>=2)return 'cindr';
+ if(base==='verd'&&s.defense>=20&&(d.legumes||0)>=2)return 'bramble';
+ if(base==='aqua'&&s.esprit>=18&&(d.poisson||0)>=2)return 'tide';
+ if(base==='volt'&&s.vitesse>=20&&s.endurance>=16)return 'surge';
+ return base;
 }
 function adult(state){
  initialize(state);const s=state.attributes;
@@ -98,13 +105,15 @@ function adult(state){
 }
 function fighter(state){
  initialize(state);const s=state.attributes;
+ const trait=window.ByteBuddyBestiaryV18?.trait(state.form)||null;
  return {maxPV:Math.round(86+s.vitalite*1.9+s.endurance*.65),
-  attack:1+(s.force-10)*.025,defense:1/(1+Math.max(0,s.defense-10)*.021),
-  crit:Math.min(.28,.065+s.precision*.003),
-  precision:Math.min(1,.82+s.precision*.004),
-  priority:s.vitesse,
-  special:1+(s.esprit-10)*.025,
-  attributes:{...s}};
+  attack:1+(s.force-10)*.025,
+  defense:1/(1+Math.max(0,s.defense-10)*.021)*(trait==='defense'?.91:1),
+  crit:Math.min(.28,.065+s.precision*.003+(trait==='precision'?.025:0)),
+  precision:Math.min(1,.82+s.precision*.004+(trait==='precision'?.04:0)),
+  priority:s.vitesse+(trait==='vitesse'?5:0),
+  special:(1+(s.esprit-10)*.025)*(trait==='esprit'?1.1:1),
+  attributes:{...s},trait};
 }
 function snapshot(state){
  initialize(state);
@@ -115,7 +124,7 @@ function snapshot(state){
 }
 function validateSnapshot(raw){
  if(!raw||raw.kind!=='bytebuddy-vs-preview'||raw.ruleset!=='v010')throw Error('Code VS incompatible');
- if(!['baby','ember','verd','volt','aqua','shade','ember2','verd2','volt2','aqua2','shade2','lumia','nebula','prism','auror'].includes(raw.form))throw Error('Créature invalide');
+ if(!['baby','ember','verd','volt','aqua','shade','ember2','verd2','volt2','aqua2','shade2','lumia','nebula','prism','auror','cindr','cindr2','bramble','bramble2','tide','tide2','surge','surge2'].includes(raw.form))throw Error('Créature invalide');
  if(!Number.isInteger(raw.stage)||raw.stage<1||raw.stage>3 || !Number.isInteger(raw.level)||raw.level<1||raw.level>99)throw Error('Fiche invalide');
  if(!raw.attributes||keys.some(k=>!Number.isInteger(raw.attributes[k])||raw.attributes[k]<1||raw.attributes[k]>99))throw Error('Statistiques invalides');
  return raw;
