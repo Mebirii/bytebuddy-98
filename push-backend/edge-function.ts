@@ -103,10 +103,10 @@ function estimate(snapshot:any, minutes:number) {
 }
 function chooseAlert(p:any): {title:string,body:string} | null {
   if (p.stage===0 || p.sleeping) return null;
-  if (p.health<=24) return {title:"💊 ByteBuddy a besoin de soins",body:"Ton compagnon est affaibli. Viens prendre soin de lui !"};
-  if (p.fullness<=22) return {title:"🍖 ByteBuddy a faim",body:"Sa satiété est basse. Un bon repas lui ferait plaisir !"};
-  if (p.hygiene<=20) return {title:"🫧 Petite toilette nécessaire",body:"Ton compagnon a besoin d'un nettoyage."};
-  if (p.energy<=16) return {title:"💤 ByteBuddy est fatigué",body:"Il aimerait faire une sieste."};
+  if (p.health<=24) return {title:"ByteBuddy a besoin de soins",body:"Ton compagnon est affaibli. Viens prendre soin de lui !"};
+  if (p.fullness<=22) return {title:"ByteBuddy a faim",body:"Sa satiété est basse. Un bon repas lui ferait plaisir !"};
+  if (p.hygiene<=20) return {title:"Petite toilette nécessaire",body:"Ton compagnon a besoin d'un nettoyage."};
+  if (p.energy<=16) return {title:"ByteBuddy est fatigué",body:"Il aimerait faire une sieste."};
   return null;
 }
 async function dispatch(subscription:any,title:string,body:string):Promise<number> {
@@ -206,7 +206,7 @@ Deno.serve(async (req:Request) => {
     if(path==="test"){
       const age=row.last_test_at?Date.now()-Date.parse(row.last_test_at):Infinity;
       if(age<120000)return response(req,{error:"test cooldown"},429);
-      const code=await dispatch(row.subscription,"🎮 ByteBuddy : test réussi !",
+      const code=await dispatch(row.subscription,"ByteBuddy : test réussi !",
         "Tu peux recevoir des notifications même après avoir fermé le jeu.");
       if(code===404||code===410){
         await db.from("bytebuddy_push_devices").delete().eq("device_id",body.deviceId);
