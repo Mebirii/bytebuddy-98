@@ -996,14 +996,15 @@
       const baseDmg=Math.round((atk+bonus+Math.floor(Math.random()*6))*fighter.attack);
       const guardFactor=incoming==='guard'?(move==='special'?.95:.34):1;
       const factor=move==='special'?(1.45+.22*fight.focus):1;
-      const dmg=Math.max(1,Math.round(baseDmg*eff*factor*guardFactor*(critical?1.45:1)*(state.genetics?.talent==='force'?1.12:1)*(move==='special'&&state.genetics?.talent==='esprit'?1.2:1)*(move==='special'?fighter.special:1)));
+      const landed=Math.random()<fighter.precision;
+      const dmg=landed?Math.max(1,Math.round(baseDmg*eff*factor*guardFactor*(critical?1.45:1)*(state.genetics?.talent==='force'?1.12:1)*(move==='special'&&state.genetics?.talent==='esprit'?1.2:1)*(move==='special'?fighter.special:1))):0;
       fight.enemyHp=Math.max(0,fight.enemyHp-dmg);
       if(move==='special'){state.energy=CLAMP(state.energy-10);fight.focus=0}
       else fight.focus=Math.min(3,fight.focus+1);
       battleFx('enemy',types[state.form]);playSound(move==='special'?'special':'hit');
       const attackName=move==='special'?(signature[types[state.form]]||signature.neutre)[1]:'FRAPPE PIXEL';
       const effLabel=eff>1?' • SUPER EFFICACE':eff<1?' • Résistance ennemie':'';
-      msg=`${attackName} : -${dmg} PV${critical?' • CRITIQUE':''}${effLabel}${guardFactor<.5?' • Bloqué par la garde':''}`;
+      msg=landed?`${attackName} : -${dmg} PV${critical?' • CRITIQUE':''}${effLabel}${guardFactor<.5?' • Bloqué par la garde':''}`:'ATTAQUE MANQUÉE · entraîne sa précision !';
     }else if(move==='defend'){
       state.energy=CLAMP(state.energy+4);msg=`${names[state.form]} se met en garde. +4 énergie.`;
     }else if(move==='focus'){
@@ -1024,9 +1025,11 @@
         dmg=Math.max(1,Math.round(dmg*eff*V10.fighter(state).defense));
         if(defending){dmg=Math.max(1,Math.floor(dmg/(incoming==='heavy'?5:3)));fight.focus=Math.min(3,fight.focus+1)}
         if(state.genetics?.talent==='garde')dmg=Math.max(1,Math.round(dmg*.85));
+        const dodgeChance=Math.min(.22,Math.max(0,(state.attributes.vitesse-10)*.0025));
+        if(Math.random()<dodgeChance)dmg=0;
         fight.ownHp=Math.max(0,fight.ownHp-dmg);state.health=Math.round(100*fight.ownHp/fight.ownMax);
         battleFx('own',fight.enemyType);
-        retaliation=`${fight.enemyName} : -${dmg} PV${defending?' • parade réussie (+1 impulsion)':''}${eff>1?' • efficace':''}`;
+        retaliation=dmg===0?`${names[state.form]} esquive l’attaque grâce à sa vitesse !`:`${fight.enemyName} : -${dmg} PV${defending?' • parade réussie (+1 impulsion)':''}${eff>1?' • efficace':''}`;
       }
       battleHistory(retaliation);$('fightMessage').textContent=retaliation;
       if(fight.ownHp<=0){finishFight(false);return}
@@ -1297,7 +1300,7 @@
   },true);
 
   function showScreen(name){
-    if(!orderedScreens.includes(name)||activitySceneState||miniState)return;
+    if(!orderedScreens.includes(name)||activitySceneState||miniState||V10UI.isFoodOpen())return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
@@ -1334,9 +1337,10 @@
   $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
   $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
   const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
-  $('leftBtn').addEventListener('click',()=>miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
-  $('rightBtn').addEventListener('click',()=>miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
+  $('leftBtn').addEventListener('click',()=>V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
+  $('rightBtn').addEventListener('click',()=>V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
   $('middleBtn').addEventListener('click',()=>{
+    if(V10UI.isFoodOpen()){V10UI.closeFood();return;}
     if(miniState){miniHardware('middle');return;}
     if(activitySceneState){finishActivityScene();return;}
     if(activeScreen==='home'){if(state.stage===0)hatch();else showScreen('care')}
@@ -1347,6 +1351,7 @@
     else showScreen('menu');
   });
   document.addEventListener('keydown',e=>{
+    if(V10UI.isFoodOpen()){if(e.key==='Escape'){e.preventDefault();V10UI.closeFood();}return;}
     if(activitySceneState){if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();finishActivityScene();}return;}
     if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
     if(!e.altKey&&!e.ctrlKey&&!e.metaKey&&['ArrowLeft','ArrowRight'].includes(e.key)){
