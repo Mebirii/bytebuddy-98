@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.8 • Créature vivante</title>
+    <title>ByteBuddy '98 — V0.9 • Mini-jeux</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,6 +217,20 @@
       .pad-label{font-size:9px}.aside-note{margin-top:13px}
     }
     @media(max-width:360px){.screen{height:415px}.lcd-app .actions{grid-template-columns:repeat(2,minmax(0,1fr))}.lcd-menu-grid button{height:72px}.screen .modal{padding:9px}}
+
+    /* V0.9 - Handheld mini-games */
+    .mini-game{position:absolute;inset:0;z-index:66;background:#cddfb1;color:#34543a;display:none;overflow:hidden}
+    .mini-game.open{display:block}.mini-game [hidden]{display:none!important}
+    .mini-head{height:52px;display:flex;flex-direction:column;gap:4px;padding:9px 12px;background:#e4edc6;border-bottom:3px solid #8ba17b;font-weight:900}
+    .mini-head strong{font-size:13px}.mini-head small{font-size:10px}
+    .mini-panel{position:absolute;inset:52px 0 72px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:13px}
+    .mini-panel p{font-size:11px;line-height:1.5;margin:0;text-align:center}
+    .mini-panel button,.mini-foot button{background:#355d42;border:2px solid #527754;color:#f0fbdd;border-radius:5px;font:900 11px monospace;padding:10px 5px;min-height:43px;width:100%}
+    .mini-scene-canvas{position:absolute;left:0;top:52px;width:100%!important;height:calc(100% - 124px)!important;display:none!important;image-rendering:pixelated}
+    .mini-game.running .mini-scene-canvas{display:block!important}
+    .mini-foot{position:absolute;bottom:0;left:0;right:0;height:72px;padding:9px;display:none;gap:7px;background:#e4edc6;border-top:3px solid #8ba17b}
+    .mini-game.running .mini-foot{display:flex}
+    .mini-exit{position:absolute;right:7px;top:8px;font:900 10px monospace;background:#d4e3b7;border:1px solid #718b70;border-radius:4px;padding:6px;z-index:2;color:#355a3a}
     /* V0.6 — Full-LCD animated care sequences. No new game state or save keys. */
     .activity-scene{position:absolute;inset:0;z-index:60;display:none;overflow:hidden;background:#cfdfb2;color:#324e36;isolation:isolate}
     .activity-scene.active{display:block}
@@ -250,9 +264,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true">✦</div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">● LIVING EDITION / 0.8</div>
+    <div class="edition">● MINIGAME EDITION / 0.9</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.6</strong> — scènes de repas et entraînement animées · élevage vivant · 16 formes · arène tactique</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>✦ NOUVEAU / V0.9</strong> — mini-jeux Précision & Esquive · records · élevage vivant · 16 formes</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -274,6 +288,23 @@
               <div class="activity-title"><span id="activityTitle">ACTIVITÉ</span><small id="activityStep">PRÉPARATION</small></div>
               <canvas id="activityCanvas" width="240" height="230" aria-label="Scène animée pixel art"></canvas>
               <div class="activity-bottom"><span id="activityMessage" class="activity-message">C'EST PARTI !</span><div class="activity-progress" aria-hidden="true"><div id="activityProgress"></div></div><button id="activitySkip" type="button" class="activity-skip" aria-label="Terminer l'animation">PASSER ↪</button></div>
+            </section>
+
+            <section class="mini-game" id="miniGame" aria-label="Entraînements interactifs">
+              <div class="mini-head"><strong id="miniHeading">🥊 ENTRAÎNEMENT</strong><small id="miniInfo">CHOISIS TON ÉPREUVE</small></div>
+              <button type="button" id="miniExit" class="mini-exit">✕ QUITTER</button>
+              <div class="mini-panel" id="miniSelection">
+                <p>JOUER DIRECTEMENT DANS L'ÉCRAN LCD<br><span id="miniRecords"></span></p>
+                <button type="button" id="miniPrecision">🎯 PRÉCISION — FRAPPER AU BON MOMENT</button>
+                <button type="button" id="miniDodge">↔ ESQUIVE — ÉVITER LES OBSTACLES</button>
+              </div>
+              <canvas class="mini-scene-canvas" id="miniCanvas" width="240" height="180"></canvas>
+              <div class="mini-foot" id="miniFoot"><button type="button" id="miniLeft">◀</button><button type="button" id="miniStrike">● FRAPPER</button><button type="button" id="miniRight">▶</button></div>
+              <div class="mini-panel" id="miniResult" hidden>
+                <h3 id="miniVerdict">BRAVO !</h3><p id="miniScore">SCORE</p><p id="miniReward">RÉCOMPENSES</p>
+                <button type="button" id="miniReturn">✓ TERMINER</button>
+                <button type="button" id="miniReplay">↺ REJOUER</button>
+              </div>
             </section>
             <div id="lcdApp" class="lcd-app" aria-live="off"><div id="lcdViewHeading" class="lcd-view-heading"></div></div>
             <section id="lcdMenu" class="lcd-menu" aria-label="Menu du jeu">
@@ -463,7 +494,7 @@
   function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('🥚✨ Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render()}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
-    if(activitySceneState)return;
+    if(activitySceneState||miniState)return;
     if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
       state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'☀ Ton compagnon est réveillé !');save();render();playSound('sleep');return;
@@ -481,7 +512,7 @@
       state.joy=CLAMP(state.joy+27);state.energy=CLAMP(state.energy-8);state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=2;progressDaily('play');awardXP(3);log(`${names[state.form]} s'est amusé avec toi. +2 Bits`);
     }else if(type==='train'){
       if(state.energy<15 || state.fullness<8){notify('Nourris-le et laisse-le se reposer avant de l’entraîner.');return}
-      state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);state.joy=CLAMP(state.joy-3);state.train++;state.care++;state.bits+=4;awardXP(5);log('Entraînement terminé. Il gagne en puissance ! +4 Bits');
+      openTrainingMini();return;
     }else if(type==='clean'){
       state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');
     }else{return}
@@ -716,7 +747,7 @@
   }
   function lifeReact(type){lifeState.reaction=type;lifeState.until=performance.now()+2500;}
   function petCompanion(){
-    if(activeScreen!=='home'||state.stage===0||state.sleeping||fight||activitySceneState)return;
+    if(activeScreen!=='home'||state.stage===0||state.sleeping||fight||activitySceneState||miniState)return;
     const now=performance.now();if(now-lifeState.lastPet<900)return;
     lifeState.lastPet=now;lifeReact('pet');
     if(now-lifeState.lastBonus>=12000 || lifeState.lastBonus===0){
@@ -792,7 +823,7 @@
       for(let i=0;i<18;i++){const angle=i*Math.PI*2/18+elapsed*.07;const radius=27+(elapsed%35)*1.3;const x=120+Math.cos(angle)*radius,y=92+Math.sin(angle)*radius*.6;ctx.fillStyle=i%2?'#415c3f':'#718a62';ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,6,6)}
     }
     if(state.health<25&&state.stage>0){ctx.font='bold 18px monospace';ctx.fillStyle='#3b563d';ctx.fillText('!',165,110)}
-    drawLivingSpeech(ctx,t);drawActivityScene(t);requestAnimationFrame(paint);
+    drawLivingSpeech(ctx,t);drawActivityScene(t);drawTrainingMini(t);requestAnimationFrame(paint);
   }
   const metrics=[['fullness','SATIÉTÉ'],['energy','ÉNERGIE'],['joy','MORAL'],['hygiene','HYGIÈNE'],['health','SANTÉ']];
   function renderDaily(){
@@ -1096,12 +1127,146 @@
       activityText('+ SANTÉ +',120,24,13);activityText('♥',189,72,25);
     }
   }
+
+  /* V0.9 - Neither game introduces a new save format. */
+  const miniCanvas=$('miniCanvas'),miniCtx=miniCanvas.getContext('2d');
+  const miniSprite=document.createElement('canvas');miniSprite.width=100;miniSprite.height=100;
+  let miniState=null;
+  const miniBox=(x,y,w,h,ink='#4d704c')=>{miniCtx.fillStyle=ink;miniCtx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));};
+  const miniLabel=(txt,x,y,size=10)=>{miniCtx.fillStyle='#314f35';miniCtx.textAlign='center';miniCtx.font='900 '+size+'px monospace';miniCtx.fillText(txt,x,y);miniCtx.textAlign='left'};
+  const miniTotal=a=>a.mode==='precision'?6:7;
+  function miniRecords(){return 'RECORDS : '+(state.record.miniPrecisionBest||0)+'/6 · '+(state.record.miniDodgeBest||0)+'/7'}
+  function openTrainingMini(){
+    if(miniState||activitySceneState||fight||state.stage===0||state.sleeping)return;
+    miniState={phase:'select'};
+    $('miniGame').classList.add('open');$('miniGame').classList.remove('running');
+    $('miniSelection').hidden=false;$('miniResult').hidden=true;
+    $('miniHeading').textContent='🥊 ENTRAÎNEMENT';$('miniInfo').textContent='CHOISIS TON ÉPREUVE';
+    $('miniRecords').textContent=miniRecords();
+  }
+  function startTrainingMode(mode){
+    if(!miniState||!['precision','dodge'].includes(mode)||miniState.phase==='playing')return;
+    const now=performance.now();
+    miniState={phase:'playing',mode,form:state.form,wave:0,start:now,score:0,lane:1,
+      obstacle:Math.floor(Math.random()*3),checked:false,target:.3,message:'PRÊT !'};
+    $('miniGame').classList.add('running');$('miniSelection').hidden=true;$('miniResult').hidden=true;
+    $('miniHeading').textContent=mode==='precision'?'🎯 PRÉCISION':'↔ ESQUIVE';
+    $('miniInfo').textContent=mode==='precision'?'CLIQUE QUAND LE CURSEUR EST DANS LE CADRE':'CHANGE DE VOIE POUR ESQUIVER';
+    $('miniStrike').hidden=mode!=='precision';
+    $('miniLeft').hidden=mode==='precision';$('miniRight').hidden=mode==='precision';
+    playSound('train');drawTrainingMini(now);
+  }
+  function miniCursor(now){
+    return 1-Math.abs((Math.max(0,now-miniState.start)*.00085%2)-1);
+  }
+  function miniNext(now){
+    const a=miniState;if(!a||a.phase!=='playing')return;
+    a.wave++;
+    if(a.wave===miniTotal(a)){finishTrainingMini();return}
+    a.start=now;a.checked=false;a.target=[.3,.7,.48,.62,.35,.56][a.wave%6];
+    a.obstacle=Math.floor(Math.random()*3);
+  }
+  function miniHit(){
+    const a=miniState;if(!a||a.phase!=='playing'||a.mode!=='precision')return;
+    const diff=Math.abs(miniCursor(performance.now())-a.target);
+    if(diff<=.11){a.score++;a.message=diff<.045?'PARFAIT !':'TOUCHÉ !';playSound('hit')}
+    else{a.message='RATÉ !';playSound('defeat')}
+    miniNext(performance.now());
+  }
+  function miniMove(delta){
+    const a=miniState;if(!a||a.phase!=='playing'||a.mode!=='dodge')return;
+    a.lane=Math.max(0,Math.min(2,a.lane+delta));playSound('bounce');
+  }
+  function finishTrainingMini(){
+    const a=miniState;if(!a||a.phase!=='playing')return;
+    a.phase='result';$('miniGame').classList.remove('running');
+    const max=miniTotal(a),success=a.score>=Math.ceil(max/2),perfect=a.score===max;
+    const bits=1+a.score*2+(perfect?4:0),xp=2+a.score*2+(perfect?5:0);
+    state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);
+    state.joy=CLAMP(state.joy+(success?3:-4));state.care++;
+    if(success)state.train++;
+    state.bits+=bits;state.record=state.record||{};
+    const key=a.mode==='precision'?'miniPrecisionBest':'miniDodgeBest';
+    state.record[key]=Math.max(Number(state.record[key])||0,a.score);
+    state.record.miniGamesPlayed=(Number(state.record.miniGamesPlayed)||0)+1;
+    awardXP(xp);lifeReact(success?'train':'tired');
+    log((a.mode==='precision'?'Précision':'Esquive')+' : '+a.score+'/'+max+' • +'+bits+' Bits • +'+xp+' XP');
+    evolve();save();render();
+    $('miniResult').hidden=false;$('miniVerdict').textContent=perfect?'★ PARFAIT !':success?'✓ BIEN JOUÉ !':'ENCORE UN EFFORT !';
+    $('miniScore').textContent='SCORE '+a.score+' / '+max;
+    $('miniReward').textContent='+'+bits+' BITS • +'+xp+' XP • '+(success?'ENTRAÎNEMENT VALIDÉ':'PAS DE BONUS ENTRAÎNEMENT');
+    $('miniInfo').textContent='ÉPREUVE TERMINÉE';
+    playSound(success?'victory':'defeat');
+  }
+  function exitTrainingMini(){
+    if(!miniState)return;
+    miniState=null;$('miniGame').classList.remove('open','running');
+    $('miniSelection').hidden=true;$('miniResult').hidden=true;
+    showScreen('home');syncConsole();
+  }
+  function miniHardware(key){
+    const a=miniState;if(!a)return;
+    if(a.phase==='result'){if(key==='middle')exitTrainingMini();return}
+    if(a.phase==='select'){startTrainingMode(key==='right'?'dodge':'precision');return}
+    if(a.mode==='precision'){if(key==='middle')miniHit()}
+    else if(key==='left'||key==='right')miniMove(key==='left'?-1:1);
+  }
+  function drawTrainingMini(t){
+    const a=miniState;if(!a||a.phase!=='playing'||document.hidden)return;
+    miniCtx.imageSmoothingEnabled=false;
+    miniBox(0,0,240,180,'#ccdfad');miniBox(0,152,240,28,'#a8c395');
+    miniBox(0,150,240,2,'#74946f');
+    drawPixelCreature(miniSprite,a.form,t,{still:matchMedia('(prefers-reduced-motion: reduce)').matches});
+    if(a.mode==='precision'){
+      if(t-a.start>=2200){a.message='TROP TARD !';miniNext(t);return}
+      miniCtx.drawImage(miniSprite,0,0,100,100,79,10,82,82);
+      miniBox(22,116,196,23,'#587752');miniBox(26,120,188,15,'#e5edcb');
+      miniBox(26+a.target*188-12,116,24,23,'#b5965c');
+      miniBox(26+miniCursor(t)*188-3,110,6,36,'#315138');
+      miniLabel(a.message||'FRAPPE !',120,103,12);
+      miniLabel('COUPS '+(a.wave+1)+'/6 • SUCCÈS '+a.score,120,168,10);
+    }else{
+      const ys=[25,78,130],elapsed=t-a.start,ox=240-Math.min(1,elapsed/1080)*220;
+      for(const y of ys)miniBox(0,y+41,240,2,'#91b282');
+      miniCtx.drawImage(miniSprite,0,0,100,100,20,ys[a.lane]-9,66,66);
+      miniBox(ox,ys[a.obstacle],21,34,'#4e7052');miniBox(ox+5,ys[a.obstacle]+5,11,24,'#92b48b');
+      if(!a.checked&&ox<=77){a.checked=true;
+        if(a.lane===a.obstacle){a.message='TOUCHÉ !';playSound('hit')}
+        else{a.score++;a.message='ESQUIVÉ !';playSound('bounce')}
+      }
+      if(elapsed>=1250){miniNext(t);return}
+      miniLabel('ESQUIVES '+a.score+' / 7',120,15,10);
+      miniLabel(a.message||'CHANGE DE VOIE !',120,173,11);
+    }
+  }
+  $('miniPrecision').addEventListener('click',()=>startTrainingMode('precision'));
+  $('miniDodge').addEventListener('click',()=>startTrainingMode('dodge'));
+  $('miniStrike').addEventListener('click',miniHit);
+  $('miniLeft').addEventListener('click',()=>miniMove(-1));
+  $('miniRight').addEventListener('click',()=>miniMove(1));
+  $('miniExit').addEventListener('click',exitTrainingMini);
+  $('miniReturn').addEventListener('click',exitTrainingMini);
+  $('miniReplay').addEventListener('click',()=>{
+    if(miniState?.phase!=='result')return;
+    if(state.energy<15||state.fullness<8){exitTrainingMini();notify('Nourris-le et laisse-le se reposer.');return}
+    const mode=miniState.mode;miniState={phase:'select'};startTrainingMode(mode);
+  });
+  document.addEventListener('keydown',e=>{
+    if(!miniState||e.altKey||e.ctrlKey||e.metaKey)return;
+    if(!['Escape','Enter',' ','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(e.key==='Escape'){exitTrainingMini();return}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')miniHardware('left');
+    else if(e.key==='ArrowRight'||e.key==='ArrowDown')miniHardware('right');
+    else miniHardware('middle');
+  },true);
+
   function showScreen(name){
-    if(!orderedScreens.includes(name)||activitySceneState)return;
+    if(!orderedScreens.includes(name)||activitySceneState||miniState)return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.8 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.9 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1121,7 +1286,7 @@
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.8 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.9 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1134,9 +1299,10 @@
   $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
   $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
   const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
-  $('leftBtn').addEventListener('click',()=>activitySceneState?finishActivityScene():navigate(-1));
-  $('rightBtn').addEventListener('click',()=>activitySceneState?finishActivityScene():navigate(1));
+  $('leftBtn').addEventListener('click',()=>miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
+  $('rightBtn').addEventListener('click',()=>miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
   $('middleBtn').addEventListener('click',()=>{
+    if(miniState){miniHardware('middle');return;}
     if(activitySceneState){finishActivityScene();return;}
     if(activeScreen==='home'){if(state.stage===0)hatch();else showScreen('care')}
     else if(activeScreen==='menu')showScreen('stats');
