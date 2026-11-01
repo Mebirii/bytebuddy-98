@@ -10,6 +10,7 @@ const nav=document.createElement("button");nav.type="button";nav.dataset.view="t
 $("lcdMenu").querySelector(".lcd-menu-grid").appendChild(nav);
 const section=document.createElement("section");section.className="panel";section.id="trainerPanel";
 section.innerHTML="\n<div class=\"panel-header\"><h2>11 / COMPTE DRESSEUR</h2><span class=\"section-number\">CLOUD V0.13</span></div>\n<div class=\"bb-trainer\">\n <p>Retrouve ton compagnon sur un autre appareil avec un compte personnel. Transferts volontaires.</p>\n <div class=\"bb-trainer-status\" id=\"trainerStatus\" role=\"status\" aria-live=\"polite\">Configuration en cours...</div>\n <div id=\"trainerGuest\">\n  <label for=\"trainerEmail\">EMAIL</label><input id=\"trainerEmail\" type=\"email\" autocomplete=\"email\" maxlength=\"254\" placeholder=\"adresse@email.fr\">\n  <label for=\"trainerPassword\">MOT DE PASSE</label><input id=\"trainerPassword\" type=\"password\" autocomplete=\"current-password\" minlength=\"8\" maxlength=\"128\" placeholder=\"8 caractères minimum\">\n  <label for=\"trainerHandle\">PSEUDO (POUR L'INSCRIPTION)</label><input id=\"trainerHandle\" autocomplete=\"nickname\" spellcheck=\"false\" minlength=\"3\" maxlength=\"20\" placeholder=\"pixel_tamer\">\n  <div class=\"bb-trainer-actions\"><button id=\"trainerSignup\" type=\"button\">S'INSCRIRE</button><button id=\"trainerSignin\" type=\"button\">SE CONNECTER</button></div>\n  <button id=\"trainerReset\" type=\"button\" style=\"width:100%;margin-top:8px\">MOT DE PASSE OUBLIÉ</button>\n </div>\n <div id=\"trainerLoggedIn\" hidden>\n  <div class=\"bb-trainer-info\"><strong id=\"trainerIdentity\">DRESSEUR</strong><p id=\"trainerEmailDisplay\"></p></div>\n  <div id=\"trainerNeedHandle\" hidden><p>Choisis ton pseudo de dresseur.</p>\n   <label for=\"trainerNewHandle\">PSEUDO UNIQUE</label><input id=\"trainerNewHandle\" autocomplete=\"nickname\" minlength=\"3\" maxlength=\"20\" placeholder=\"pixel_tamer\">\n   <button id=\"trainerClaim\" type=\"button\">VALIDER MON PSEUDO</button>\n  </div>\n  <div id=\"trainerCloud\" hidden><p id=\"trainerCloudInfo\">Recherche de sauvegarde cloud...</p>\n   <div class=\"bb-trainer-actions\"><button id=\"trainerUpload\" type=\"button\">ENVOYER MA PARTIE</button><button id=\"trainerDownload\" type=\"button\">RÉCUPÉRER MA PARTIE</button></div>\n   <p>Le cloud ne remplace jamais automatiquement ta partie locale. Une sauvegarde de sécurité est conservée avant récupération.</p>\n  </div>\n  <button id=\"trainerLogout\" type=\"button\" style=\"width:100%\">SE DÉCONNECTER</button>\n </div>\n <div id=\"trainerRecovery\" hidden>\n  <label for=\"trainerNewPassword\">NOUVEAU MOT DE PASSE</label><input id=\"trainerNewPassword\" type=\"password\" autocomplete=\"new-password\" minlength=\"8\" maxlength=\"128\">\n  <button id=\"trainerUpdatePassword\" type=\"button\">METTRE À JOUR</button>\n </div>\n</div>\n";document.querySelector(".right").appendChild(section);
+const undo=document.createElement("button");undo.id="trainerUndoCloud";undo.type="button";undo.textContent="RESTAURER MA COPIE DE SÉCURITÉ";undo.style.width="100%";$("trainerCloud").appendChild(undo);
 const BACKUP="bytebuddy98-save-backup-before-cloud-v013",PENDING="bytebuddy98-pending-handle";
 let client=null,bridge=null,user=null,profile=null,revision=null,cloudDate=null,busy=false,recovery=false;
 const info=message=>$("trainerStatus").textContent=String(message||"").slice(0,350);
@@ -150,6 +151,21 @@ async function upload(){
  }catch(e){info("Sauvegarde : "+(e.message||"échec"))}
  finally{busy=false;refresh()}
 }
+async function undoCloud(){
+ if(!bridge||busy)return;
+ let backup;
+ try{backup=localStorage.getItem(BACKUP)}
+ catch(_){info("Impossible de lire les sauvegardes locales.");return}
+ if(!backup){info("Aucune copie avant récupération cloud n'est disponible.");return}
+ try{
+  const validated=bridge.validate(JSON.parse(backup));
+  if(!window.confirm("Restaurer la partie locale sauvegardée avant la récupération cloud ? Cela remplace la partie actuelle et recharge le jeu."))return;
+  const current=bridge.snapshot();
+  try{localStorage.setItem("bytebuddy98-save-backup-before-recovery-v013",JSON.stringify(current))}
+  catch(_){throw Error("Impossible de protéger ta partie actuelle. Annulation.");}
+  bridge.restore(validated);info("Copie locale restaurée.");
+ }catch(e){info("Restauration : "+(e.message||"échec"));}
+}
 async function download(){
  if(!client||!user||!profile||!bridge||busy)return;
  busy=true;refresh();
@@ -171,7 +187,7 @@ async function download(){
 for(const [id,fn] of [
  ["trainerSignup",signup],["trainerSignin",signin],["trainerClaim",claim],["trainerLogout",logout],
  ["trainerReset",reset],["trainerUpdatePassword",updatePassword],
- ["trainerUpload",upload],["trainerDownload",download]
+ ["trainerUpload",upload],["trainerDownload",download],["trainerUndoCloud",undoCloud]
 ])$(id).addEventListener("click",fn);
 if(usable){
  client=window.supabase.createClient(endpoint,key,{auth:{persistSession:true,autoRefreshToken:true,
