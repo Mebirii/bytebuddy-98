@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#101d29" />
   <meta name="description" content="ByteBuddy 1998 : un petit monstre virtuel à élever, entraîner et faire évoluer. Jouable dans le navigateur, sans installation." />
-    <title>ByteBuddy '98 — V0.16 • Nouvelle aventure</title>
+    <title>ByteBuddy '98 — V0.16.1 • Nouvelle aventure</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -434,7 +434,7 @@
 <script src="./trainer-config.js?v=014"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
 <script src="./trainer-v013.js?v=013"></script>
-<script src="./onboarding-v016.js?v=016"></script>
+<script src="./onboarding-v016.js?v=0161"></script>
 <script>
 (() => {
   'use strict';
@@ -1358,7 +1358,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.16 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.16.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1378,7 +1378,7 @@
     $('homeFeeling').textContent=lifeMoodLabel();$('lcdMood').textContent=lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.16 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.16.1 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
