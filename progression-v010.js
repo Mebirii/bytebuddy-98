@@ -88,10 +88,10 @@ function rookie(state){
  const base=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
  // A distinct rookie family is earned by specialization, not random chance.
  // Conditions are compatible with the 20-minute baby stage and six training games.
- if(base==='ember'&&s.force>=20&&s.precision>=16&&(d.viande||0)>=2)return 'cindr';
- if(base==='verd'&&s.defense>=20&&(d.legumes||0)>=2)return 'bramble';
- if(base==='aqua'&&s.esprit>=18&&(d.poisson||0)>=2)return 'tide';
- if(base==='volt'&&s.vitesse>=20&&s.endurance>=16)return 'surge';
+ if((base==='ember'||state.genetics?.affinity==='flamme')&&s.force>=20&&s.precision>=16&&(d.viande||0)>=2)return 'cindr';
+ if((base==='verd'||state.genetics?.affinity==='nature')&&s.defense>=20&&(d.legumes||0)>=2)return 'bramble';
+ if((base==='aqua'||state.genetics?.affinity==='eau')&&s.esprit>=18&&(d.poisson||0)>=2)return 'tide';
+ if((base==='volt'||state.genetics?.affinity==='foudre')&&s.vitesse>=20&&s.endurance>=16)return 'surge';
  return base;
 }
 function adult(state){
