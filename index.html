@@ -931,7 +931,8 @@
     if(hard&&(state.level<3||state.stage<2)){notify('Mode Élite : niveau 3 et forme Rookie nécessaires.');return}
     const foe=foes[Math.floor(Math.random()*foes.length)],tier=state.stage===1?0:state.stage===2?1:2;
     const maxHp=(state.stage===1?32:state.stage===2?62:95)+(hard?40:0);
-    fight={enemyName:foe.name+(hard?' ★':''),enemyType:foe.type,enemyMax:maxHp,enemyHp:maxHp,ownMax:100,ownHp:Math.max(1,Math.round(state.health)),tier,hard,done:false,won:false,turn:0,busy:false,focus:0,intent:chooseIntent(),history:[`${foe.nature} : ${foe.name} s’approche !`]};
+    const combat=V10.fighter(state);
+    fight={enemyName:foe.name+(hard?' ★':''),enemyType:foe.type,enemyMax:maxHp,enemyHp:maxHp,ownMax:combat.maxPV,ownHp:Math.max(1,Math.round(combat.maxPV*state.health/100)),tier,hard,done:false,won:false,turn:0,busy:false,focus:0,intent:chooseIntent(),history:[`${foe.nature} : ${foe.name} s’approche !`]};
     $('battleField').dataset.biome=foe.type;$('pixelBurst').replaceChildren();
     $('battleHeading').textContent=hard?'DUEL ÉLITE !':'UN MONSTRE SAUVAGE !';$('fightMessage').textContent=`${foe.name} te défie ! Observe son prochain mouvement.`;
     $('battleOverlay').classList.add('visible');updateFight();
@@ -989,13 +990,13 @@
     const match=fight;fight.busy=true;fight.turn++;
     const atk=state.stage===1?10:state.stage===2?17:24;
     const bonus=Math.min(13,Math.floor(state.train*.65)+Math.floor((state.level-1)*1.3));
-    const incoming=fight.intent;let msg='',defending=move==='defend';
+    const incoming=fight.intent;const fighter=V10.fighter(state);let msg='',defending=move==='defend';
     if(move==='attack'||move==='special'){
-      const eff=effectiveness(types[state.form],fight.enemyType),critical=Math.random()<.08+Math.min(.10,state.level*.007);
-      const baseDmg=atk+bonus+Math.floor(Math.random()*6);
+      const eff=effectiveness(types[state.form],fight.enemyType),critical=Math.random()<fighter.crit;
+      const baseDmg=Math.round((atk+bonus+Math.floor(Math.random()*6))*fighter.attack);
       const guardFactor=incoming==='guard'?(move==='special'?.95:.34):1;
       const factor=move==='special'?(1.45+.22*fight.focus):1;
-      const dmg=Math.max(1,Math.round(baseDmg*eff*factor*guardFactor*(critical?1.45:1)*(state.genetics?.talent==='force'?1.12:1)*(move==='special'&&state.genetics?.talent==='esprit'?1.2:1)));
+      const dmg=Math.max(1,Math.round(baseDmg*eff*factor*guardFactor*(critical?1.45:1)*(state.genetics?.talent==='force'?1.12:1)*(move==='special'&&state.genetics?.talent==='esprit'?1.2:1)*(move==='special'?fighter.special:1)));
       fight.enemyHp=Math.max(0,fight.enemyHp-dmg);
       if(move==='special'){state.energy=CLAMP(state.energy-10);fight.focus=0}
       else fight.focus=Math.min(3,fight.focus+1);
@@ -1020,10 +1021,10 @@
       else{
         const eff=effectiveness(fight.enemyType,types[state.form]);
         let dmg=Math.round((incoming==='heavy'?11:5)+fight.tier*3+(fight.hard?5:0)+Math.random()*5);
-        dmg=Math.max(1,Math.round(dmg*eff));
+        dmg=Math.max(1,Math.round(dmg*eff*V10.fighter(state).defense));
         if(defending){dmg=Math.max(1,Math.floor(dmg/(incoming==='heavy'?5:3)));fight.focus=Math.min(3,fight.focus+1)}
         if(state.genetics?.talent==='garde')dmg=Math.max(1,Math.round(dmg*.85));
-        fight.ownHp=Math.max(0,fight.ownHp-dmg);state.health=fight.ownHp;
+        fight.ownHp=Math.max(0,fight.ownHp-dmg);state.health=Math.round(100*fight.ownHp/fight.ownMax);
         battleFx('own',fight.enemyType);
         retaliation=`${fight.enemyName} : -${dmg} PV${defending?' • parade réussie (+1 impulsion)':''}${eff>1?' • efficace':''}`;
       }
@@ -1034,7 +1035,7 @@
   }
   function finishFight(won){if(!fight)return;fight.done=true;fight.won=won;
     playSound(won?'victory':'defeat');
-    if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=fight.ownHp;state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('RECORD Victoire dans l’arène !');evolve()}
+    if(won){const reward=12+fight.tier*8+(fight.hard?22:0);state.bits+=reward;state.wins++;state.health=Math.round(100*fight.ownHp/fight.ownMax);state.joy=CLAMP(state.joy+12);progressDaily('win');awardXP(fight.hard?34:20);log(`Victoire contre ${fight.enemyName} ! +${reward} Bits.`);$('fightMessage').textContent=`★ VICTOIRE ! +${reward} Bits. +${fight.hard?34:20} XP !`;battleHistory('★ VICTOIRE ! Récompense obtenue.');notify('RECORD Victoire dans l’arène !');evolve()}
     else{state.health=8;state.energy=CLAMP(state.energy-12);log(`Défaite contre ${fight.enemyName}. Il a besoin de repos.`);$('fightMessage').textContent='Défaite… Ton compagnon est blessé, mais il peut être soigné.';battleHistory('☾ Défaite : soigne ton compagnon.');notify('KO Défaite : pense à le soigner !')}
     $('battleHeading').textContent=won?'★ VICTOIRE !':'COMBAT TERMINÉ';fight.busy=false;updateFight();save();render();
   }
@@ -1165,7 +1166,8 @@
   let miniState=null;
   const miniBox=(x,y,w,h,ink='#4d704c')=>{miniCtx.fillStyle=ink;miniCtx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));};
   const miniLabel=(txt,x,y,size=10)=>{miniCtx.fillStyle='#314f35';miniCtx.textAlign='center';miniCtx.font='900 '+size+'px monospace';miniCtx.fillText(txt,x,y);miniCtx.textAlign='left'};
-  const miniTotal=a=>a.mode==='precision'?6:7;
+  const precisionMode=m=>['precision','force','esprit'].includes(m);
+  const miniTotal=a=>a.mode==='endurance'?9:precisionMode(a.mode)?6:7;
   function miniRecords(){return 'RECORDS : '+(state.record.miniPrecisionBest||0)+'/6 · '+(state.record.miniDodgeBest||0)+'/7'}
   function openTrainingMini(){
     if(miniState||activitySceneState||fight||state.stage===0||state.sleeping)return;
@@ -1176,15 +1178,15 @@
     $('miniRecords').textContent=miniRecords();
   }
   function startTrainingMode(mode){
-    if(!miniState||!['precision','dodge'].includes(mode)||miniState.phase==='playing')return;
+    if(!miniState||!Object.hasOwn(V10.TRAINING,mode)||miniState.phase==='playing')return;
     const now=performance.now();
     miniState={phase:'playing',mode,form:state.form,wave:0,start:now,score:0,lane:1,
       obstacle:Math.floor(Math.random()*3),checked:false,target:.3,message:'PRÊT !'};
     $('miniGame').classList.add('running');$('miniSelection').hidden=true;$('miniResult').hidden=true;
-    $('miniHeading').innerHTML=pixelIcon(mode==='precision'?'target':'dodge')+' '+(mode==='precision'?'PRÉCISION':'ESQUIVE');
-    $('miniInfo').textContent=mode==='precision'?'CLIQUE QUAND LE CURSEUR EST DANS LE CADRE':'CHANGE DE VOIE POUR ESQUIVER';
-    $('miniStrike').hidden=mode!=='precision';
-    $('miniLeft').hidden=mode==='precision';$('miniRight').hidden=mode==='precision';
+    $('miniHeading').innerHTML=pixelIcon(precisionMode(mode)?'target':'dodge')+' '+V10.TRAINING[mode].name;
+    $('miniInfo').textContent=precisionMode(mode)?'FRAPPE AU BON MOMENT':'CHANGE DE VOIE POUR ESQUIVER';
+    $('miniStrike').hidden=!precisionMode(mode);
+    $('miniLeft').hidden=precisionMode(mode);$('miniRight').hidden=precisionMode(mode);
     playSound('train');drawTrainingMini(now);
   }
   function miniCursor(now){
@@ -1198,7 +1200,7 @@
     a.obstacle=Math.floor(Math.random()*3);
   }
   function miniHit(){
-    const a=miniState;if(!a||a.phase!=='playing'||a.mode!=='precision')return;
+    const a=miniState;if(!a||a.phase!=='playing'||!precisionMode(a.mode))return;
     const diff=Math.abs(miniCursor(performance.now())-a.target);
     if(diff<=.11){a.score++;a.message=diff<.045?'PARFAIT !':'TOUCHÉ !';playSound('hit')}
     else{a.message='RATÉ !';playSound('defeat')}
@@ -1217,15 +1219,16 @@
     state.joy=CLAMP(state.joy+(success?3:-4));state.care++;
     if(success)state.train++;
     state.bits+=bits;state.record=state.record||{};
-    const key=a.mode==='precision'?'miniPrecisionBest':'miniDodgeBest';
+    const key='mini'+a.mode.charAt(0).toUpperCase()+a.mode.slice(1)+'Best';
     state.record[key]=Math.max(Number(state.record[key])||0,a.score);
     state.record.miniGamesPlayed=(Number(state.record.miniGamesPlayed)||0)+1;
+    const gain=V10.workout(state,a.mode,a.score,max);
     awardXP(xp);lifeReact(success?'train':'tired');
-    log((a.mode==='precision'?'Précision':'Esquive')+' : '+a.score+'/'+max+' • +'+bits+' Bits • +'+xp+' XP');
+    log(V10.TRAINING[a.mode].name+' : '+a.score+'/'+max+' • '+gain.main+' +'+gain.gain+' • +'+bits+' Bits');
     evolve();save();render();
     $('miniResult').hidden=false;$('miniVerdict').textContent=perfect?'★ PARFAIT !':success?'✓ BIEN JOUÉ !':'ENCORE UN EFFORT !';
     $('miniScore').textContent='SCORE '+a.score+' / '+max;
-    $('miniReward').textContent='+'+bits+' BITS • +'+xp+' XP • '+(success?'ENTRAÎNEMENT VALIDÉ':'PAS DE BONUS ENTRAÎNEMENT');
+    $('miniReward').textContent='+'+bits+' BITS • +'+xp+' XP • '+V10.labels[gain.main]+' +'+gain.gain+(success?' • VALIDÉ':'');
     $('miniInfo').textContent='ÉPREUVE TERMINÉE';
     playSound(success?'victory':'defeat');
   }
@@ -1239,7 +1242,7 @@
     const a=miniState;if(!a)return;
     if(a.phase==='result'){if(key==='middle')exitTrainingMini();return}
     if(a.phase==='select'){startTrainingMode(key==='right'?'dodge':'precision');return}
-    if(a.mode==='precision'){if(key==='middle')miniHit()}
+    if(precisionMode(a.mode)){if(key==='middle')miniHit()}
     else if(key==='left'||key==='right')miniMove(key==='left'?-1:1);
   }
   function drawTrainingMini(t){
@@ -1248,14 +1251,14 @@
     miniBox(0,0,240,180,'#ccdfad');miniBox(0,152,240,28,'#a8c395');
     miniBox(0,150,240,2,'#74946f');
     drawPixelCreature(miniSprite,a.form,t,{still:matchMedia('(prefers-reduced-motion: reduce)').matches});
-    if(a.mode==='precision'){
+    if(precisionMode(a.mode)){
       if(t-a.start>=2200){a.message='TROP TARD !';miniNext(t);return}
       miniCtx.drawImage(miniSprite,0,0,100,100,79,10,82,82);
       miniBox(22,116,196,23,'#587752');miniBox(26,120,188,15,'#e5edcb');
       miniBox(26+a.target*188-12,116,24,23,'#b5965c');
       miniBox(26+miniCursor(t)*188-3,110,6,36,'#315138');
       miniLabel(a.message||'FRAPPE !',120,103,12);
-      miniLabel('COUPS '+(a.wave+1)+'/6 • SUCCÈS '+a.score,120,168,10);
+      miniLabel('COUPS '+(a.wave+1)+'/'+miniTotal(a)+' • SUCCÈS '+a.score,120,168,10);
     }else{
       const ys=[25,78,130],elapsed=t-a.start,ox=240-Math.min(1,elapsed/1080)*220;
       for(const y of ys)miniBox(0,y+41,240,2,'#91b282');
@@ -1266,12 +1269,13 @@
         else{a.score++;a.message='ESQUIVÉ !';playSound('bounce')}
       }
       if(elapsed>=1250){miniNext(t);return}
-      miniLabel('ESQUIVES '+a.score+' / 7',120,15,10);
+      miniLabel('ESQUIVES '+a.score+' / '+miniTotal(a),120,15,10);
       miniLabel(a.message||'CHANGE DE VOIE !',120,173,11);
     }
   }
   $('miniPrecision').addEventListener('click',()=>startTrainingMode('precision'));
   $('miniDodge').addEventListener('click',()=>startTrainingMode('dodge'));
+  document.querySelectorAll('[data-v10mode]').forEach(b=>b.addEventListener('click',()=>startTrainingMode(b.dataset.v10mode)));
   $('miniStrike').addEventListener('click',miniHit);
   $('miniLeft').addEventListener('click',()=>miniMove(-1));
   $('miniRight').addEventListener('click',()=>miniMove(1));
