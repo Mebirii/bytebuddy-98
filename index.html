@@ -166,6 +166,15 @@
     .lcd-app .foot,.screen .right .v02-ribbon{display:none}
     .lcd-app #statusOnline{font-size:10px;color:#456f4a}
     .lcd-app .creature-name{font-size:24px;color:#365b3f}
+    /* Five rare visuals displayed inside the original dev LCD. */
+    .bb-dual-showcase{margin-top:18px;padding:12px 5px 0;border-top:3px solid #8eaa81;color:#36553b;font:900 10px/1.5 monospace}
+    .bb-dual-showcase h3{font-size:12px;margin:0 0 3px;color:#304e38}
+    .bb-dual-showcase p{font-size:10px;color:#4a684b;margin:0 0 10px}
+    .bb-dual-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .bb-dual-card{min-width:0;display:flex;align-items:center;flex-direction:column;gap:4px;padding:9px 4px;border:2px solid #86a47a;background:#cfdfb5;border-radius:5px;text-align:center}
+    .bb-dual-card canvas{width:92px;height:92px;max-width:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+    .bb-dual-card strong{font-size:10px;line-height:1.3;color:#2c4e36;overflow-wrap:anywhere}
+    .bb-dual-card small{font-size:9px;line-height:1.4;color:#476749}
     .lcd-app .phase{color:#f1f9d5;background:#3e6040}
     .lcd-menu{padding:15px}
     .lcd-menu-top{display:flex;justify-content:space-between;align-items:center;gap:7px;font-size:12px;border-bottom:2px dotted #809b76;padding-bottom:12px;margin-bottom:14px;color:#37583d}
@@ -462,9 +471,9 @@
 <script src="./dual-sprites-v024.js?v=024"></script>
 <script src="./ui-v010.js?v=0172"></script>
 <script src="./vs-engine-v011.js?v=023"></script>
-<script src="./vs-ui-v011.js?v=023"></script>
+<script src="./vs-ui-v011.js?v=024"></script>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-<script src="./vs-online-v012.js?v=023"></script>
+<script src="./vs-online-v012.js?v=024"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script src="./qr-v015.js?v=0151"></script>
@@ -475,7 +484,7 @@
 <script src="./play-v017.js?v=0172"></script>
 <script src="./explore-v019.js?v=0201"></script>
 <script src="./lifecycle-v020.js?v=023"></script>
-<script src="./farewell-v022.js?v=023"></script>
+<script src="./farewell-v022.js?v=024"></script>
 <script src="./dev-lifecycle-v021.js?v=021"></script>
 <script>
 (() => {
@@ -1632,7 +1641,33 @@
     }
   });
   FarewellV22.setup({draw:(canvas,form,record)=>drawPixelCreature(canvas,form,performance.now(),{still:true,profile:record||null}),names,book:()=>showScreen('lab'),canNew:()=>state.stage===0&&!!state.lifeOutcome,next:()=>newGame()});
-  if(DEV_MODE){DevV21.setup({state:()=>state,save,render,hatch,evolve,newGame,reset:()=>{localStorage.removeItem(KEY);window.location.reload();}});}
+  if(DEV_MODE){
+    DevV21.setup({state:()=>state,save,render,hatch,evolve,newGame,reset:()=>{localStorage.removeItem(KEY);window.location.reload();}});
+    // An isolated, read-only showcase of all five rare silhouettes.
+    // These drawings never touch the real pet or its developer save.
+    const gallery=document.createElement('section');gallery.className='bb-dual-showcase';
+    const title=document.createElement('h3');title.textContent='GALERIE · DOUBLES TYPES RARES';
+    const hint=document.createElement('p');hint.textContent='LES CINQ VARIANTES VISUELLES · MÊME PALETTE LCD QUE TON MONSTRE';
+    const grid=document.createElement('div');grid.className='bb-dual-grid';
+    for(const [primary,secondary,form] of [
+      ['flamme','ombre','cindr2'],
+      ['nature','lumière','lumia'],
+      ['eau','foudre','tide2'],
+      ['foudre','ombre','volt2'],
+      ['foudre','lumière','nebula']
+    ]){
+      const cell=document.createElement('div');cell.className='bb-dual-card';
+      const pic=document.createElement('canvas');pic.width=100;pic.height=100;
+      pic.setAttribute('role','img');pic.setAttribute('aria-label','Variante '+primary+' et '+secondary);
+      drawPixelCreature(pic,form,0,{still:true,profile:{primaryType:primary,secondaryType:secondary}});
+      const label=document.createElement('strong');label.textContent=DualV24.label(primary,secondary);
+      const detail=document.createElement('small');detail.textContent=primary.toUpperCase()+' / '+secondary.toUpperCase();
+      cell.append(pic,label,detail);grid.appendChild(cell);
+    }
+    gallery.append(title,hint,grid);
+    const devPanel=$('bbDevPanel');
+    if(devPanel)devPanel.appendChild(gallery);
+  }
   render();syncConsole();save();if(DEV_MODE)showScreen('dev');requestAnimationFrame(paint);
 })();
 </script>
