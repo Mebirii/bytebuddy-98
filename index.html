@@ -300,9 +300,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">WILD EXPLORATION / 0.19.1</div>
+    <div class="edition">LIFE & GENERATIONS / 0.20</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.19.1</strong> — exploration GPS volontaire · coffres · objets bonus · œufs</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.20</strong> — 1 créature · cycle de vie · sanctuaire · générations</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -359,7 +359,7 @@
                 <button type="button" data-view="arena"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>COMBAT</button>
                 <button type="button" data-view="evolution"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></span>ÉVOLUTION</button>
                 <button type="button" data-view="missions"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-target"/></svg></span>MISSIONS</button>
-                <button type="button" data-view="lab"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>LABO</button>
+                <button type="button" data-view="lab"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>SANCTUAIRE</button>
                 <button type="button" data-view="dex"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-menu"/></svg></span>BESTIAIRE</button>
                 <button type="button" data-view="journal"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg></span>JOURNAL</button>
                 <button type="button" data-view="settings"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-sound"/></svg></span>SON / ALERTES</button><button type="button" id="menuHelp"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></span>AIDE</button>
@@ -370,7 +370,7 @@
               <button type="button" data-view="home" class="active" aria-pressed="true"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-home"/></svg></span>MONSTRE</button>
               <button type="button" data-view="care" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>SOINS</button>
               <button type="button" data-view="arena" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>ARÈNE</button>
-              <button type="button" data-view="lab" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>LABO</button>
+              <button type="button" data-view="lab" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>SANCTUAIRE</button>
               <button type="button" data-view="menu" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-menu"/></svg></span>MENU</button>
             </nav>
           </div>
@@ -404,13 +404,20 @@
       <section class="panel"><div class="arena"><div><h2>03 / ARÈNE PIXEL</h2><p>4 actions tactiques, intentions ennemies et pouvoirs élémentaires.</p><label class="stack-row" style="margin-top:9px"><span class="mono-label" style="font-size:9px">DÉFI</span><select class="mode-select" id="arenaMode" aria-label="Difficulté du combat"><option value="normal">STANDARD</option><option value="hard">ÉLITE (LV.3)</option></select></label></div><button type="button" class="primary" id="battleStart"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg> COMBATTRE</button></div><div class="arena-legend"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-flame"/></svg> FLAMME &gt; NATURE &gt; EAU &gt; FLAMME &nbsp;·&nbsp; <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-bolt"/></svg> FOUDRE &gt; EAU &nbsp;·&nbsp; <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-light"/></svg> LUMIÈRE / OMBRE</div></section>
       <section class="panel"><div class="panel-header"><h2>04 / PROCHAINE ÉVOLUTION</h2><span class="section-number" id="evoPercent">0 %</span></div><div class="progress-area"><span id="evoTarget">Éclosion</span><span id="evoRequirement">Prêt maintenant</span></div><div class="progress-track"><div id="evoBar"></div></div><div class="evo-hint" id="evoHint">Son destin dépendra de l'attention et de l'entraînement que tu lui donnes.</div></section>
       <section class="panel"><div class="panel-header"><h2>05 / MISSIONS DU JOUR</h2><span class="section-number" id="dailyStatus">0 / 3</span></div><p class="section-desc">Accomplis les trois missions pour gagner 25 Bits. Nouveau défi chaque jour, selon l'horloge de ton appareil.</p><div id="dailyList"></div><div class="stack-row" style="margin-top:12px"><span class="mono-label" id="dailyHint">SOIGNE TON AMI</span><button class="primary" type="button" id="claimDaily" disabled><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> +25 BITS</button></div></section>
-      <section class="panel breeding-panel" id="breedingPanel"><div class="panel-header"><h2>06 / LABORATOIRE DES GÉNÉRATIONS</h2><span class="section-number" id="eggCount">0 / 3 ŒUFS</span></div>
-        <p class="section-desc">À partir de la forme Rookie et de 2 victoires, associe ton compagnon à un partenaire numérique. Chaque œuf hérite d’une affinité et d’un talent, avec une chance de mutation rare. Le parent reste jouable jusqu'à l’activation de l’œuf.</p>
-        <div class="genetic-summary"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> ADN DU COMPAGNON</span><b id="currentDna">LIGNÉE ORIGINELLE</b><small id="currentTalent">Les générations suivantes pourront transmettre des talents.</small></div>
-        <div class="breed-controls"><label for="partnerSelect">PARTENAIRE NUMÉRIQUE</label><select id="partnerSelect" class="mode-select" aria-label="Choisir un partenaire de reproduction"></select><button type="button" class="primary" id="breedBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> CRÉER UN ŒUF · 40 BITS</button></div>
-        <div class="lab-status" id="breedStatus">Fais évoluer ton compagnon pour accéder au laboratoire.</div>
-        <div class="nest-heading"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> INCUBATEUR — CHOISIS UN ŒUF POUR LA PROCHAINE GÉNÉRATION</div><div id="eggList" class="egg-list"></div>
-        <div class="nest-heading"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> ARBRE GÉNÉALOGIQUE</div><div id="familyTree" class="family-tree"></div>
+      <section class="panel breeding-panel" id="breedingPanel"><div class="panel-header"><h2>06 / CYCLE DE VIE & SANCTUAIRE</h2><span class="section-number" id="lifePhase">ŒUF</span></div>
+        <p class="section-desc" id="lifeSummary">Une seule créature active à la fois.</p>
+        <div class="genetic-summary"><span>ESPÉRANCE DE VIE</span><b id="lifeLongevity">45 À 60 JOURS</b><small id="lifeAdvice">Les soins réguliers influencent la longévité.</small></div>
+        <div class="progress-track" style="margin:13px 0"><div id="lifeBar" style="width:0%"></div></div>
+        <div class="lab-status" id="lifeBonus">Un compagnon par génération.</div>
+        <div class="breed-controls"><label for="nextAffinity">AFFINITÉ DE LA PROCHAINE CRÉATURE</label>
+          <select id="nextAffinity" class="mode-select" aria-label="Choisir l'affinité de la prochaine génération">
+            <option value="flamme">FLAMME · FORCE</option><option value="nature" selected>NATURE · DÉFENSE</option>
+            <option value="eau">EAU · PRÉCISION</option><option value="foudre">FOUDRE · VITESSE</option>
+          </select>
+          <button type="button" class="primary" id="sanctuaryBtn">CONFIER AU SANCTUAIRE</button>
+        </div>
+        <div class="nest-heading">LIVRE DES GÉNÉRATIONS · MÉMORIAL & SANCTUAIRE</div>
+        <div id="familyTree" class="family-tree"></div>
       </section>
       <section class="panel"><div class="panel-header"><h2>07 / BESTIAIRE PIXEL</h2><span class="section-number" id="dexCount">0 / 24</span></div><p class="section-desc">24 formes à découvrir. Touche une silhouette pour voir sa fiche ou obtenir un indice. Les découvertes restent enregistrées après chaque génération.</p><div id="dexGrid" class="dex-grid"></div></section>
       <section class="panel"><div class="panel-header"><h2>08 / CARNET DE BORD</h2><span class="section-number">DERNIERS ÉVÉNEMENTS</span></div><ul class="journal" id="journal" aria-live="polite"></ul><div class="footer-actions"><button class="tiny-btn" type="button" id="helpBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> COMMENT JOUER</button><button class="tiny-btn" type="button" id="exportBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> SAUVEGARDE</button><button class="tiny-btn" type="button" id="importBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-home"/></svg> RESTAURER</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="tiny-btn" type="button" id="resetBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> NOUVELLE PARTIE</button></div></section>
@@ -455,7 +462,8 @@
 <script src="./trainer-v013.js?v=0172"></script>
 <script src="./onboarding-v016.js?v=0161"></script>
 <script src="./play-v017.js?v=0172"></script>
-<script src="./explore-v019.js?v=0191"></script>
+<script src="./explore-v019.js?v=0201"></script>
+<script src="./lifecycle-v020.js?v=0201"></script>
 <script>
 (() => {
   'use strict';
@@ -480,7 +488,7 @@
   const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
   const blankDaily=()=>({day:today(),feed:0,play:0,win:0,claimed:false});
   const desc = {prism:'Né d’une mutation prismatique, ce gardien reflète l’énergie de plusieurs générations.',auror:'Une créature des aurores numériques dont l’ADN résonne avec les anciens mondes.',egg:"Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.",baby:"Une petite boule de pixels pleine d'énergie. Tout reste à construire !",ember:"Un petit dragon intrépide. Il adore les défis et les entraînements.",verd:"Un gardien des forêts, doux et joueur. L'affection le rend plus fort.",volt:"Une créature électrique, vive et équilibrée. Toujours prête à découvrir.",ember2:"Sa force brûlante révèle des années de courage et d'entraînement.",verd2:"Son énergie végétale protège maintenant tous ses compagnons.",volt2:"Le maître des étincelles est devenu une légende de l'arène !",aqua:"Un gardien aquatique qui aime un environnement impeccablement entretenu.",shade:"Un rôdeur des ombres, né des défis et de la discipline.",aqua2:"Il commande les marées et protège les rivières numériques.",shade2:"Dans la nuit, ses ailes de pixels ne font aucun bruit.",lumia:"Une rare légende de lumière, révélée par des soins exemplaires.",nebula:"Une créature stellaire apparue au terme de grands défis.",...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.detail]))};
-  const base = () => ({version:4,petName:'',trainerName:'',starterEgg:null,onboarding:null,genetics:null,exploration:null,eggs:[],family:[],form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,mistakes:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,bond:0,lifeAutoSleep:false,level:1,xp:0,record:{},dex:{egg:true},daily:blankDaily(),log:['Un mystérieux œuf vient d’apparaître…']});
+  const base = () => ({version:4,petName:'',trainerName:'',starterEgg:null,onboarding:null,genetics:null,exploration:null,eggs:[],family:[],lifeData:null,lifeOutcome:null,legacyEggRefunded:false,form:'egg',stage:0,generation:1,age:0,bits:20,wins:0,care:0,train:0,play:0,clean:0,mistakes:0,health:100,energy:85,fullness:85,joy:85,hygiene:90,poops:0,sleeping:false,actionTime:0,lastDate:Date.now(),timeAccum:0,poopAccum:0,bond:0,lifeAutoSleep:false,level:1,xp:0,record:{},dex:{egg:true},daily:blankDaily(),log:['Un mystérieux œuf vient d’apparaître…']});
   let state,firstInstall=false;
   let namingOpen=false;
   try{
@@ -507,6 +515,7 @@
   state.level=Number.isInteger(state.level)&&state.level>=1?state.level:1;state.xp=Math.max(0,Number(state.xp)||0);state.mistakes=Math.max(0,Number(state.mistakes)||0);
   state.bond=CLAMP(Number(state.bond)||0);state.lifeAutoSleep=state.lifeAutoSleep===true;
    V10.initialize(state);
+  LifeV20.normalize(state);
   let fight=null;
   let toastTimer=null;
   let actionFx={type:'',until:0};
@@ -517,7 +526,7 @@
   function progressDaily(field){if(state.daily.day!==today())state.daily=blankDaily();state.daily[field]=Math.min(99,(state.daily[field]||0)+1)}
   const dailyTasks=()=>[{name:'Deux bons repas',note:'Nourrir 2 fois',count:state.daily.feed,goal:2},{name:'Deux jeux ensemble',note:'Jouer 2 fois',count:state.daily.play,goal:2},{name:'Une victoire',note:'Gagner un combat',count:state.daily.win,goal:1}];
   function claimDaily(){if(state.daily.day!==today())state.daily=blankDaily();if(state.daily.claimed||!dailyTasks().every(m=>m.count>=m.goal))return;state.daily.claimed=true;state.bits+=25;log('Missions quotidiennes terminées : +25 Bits !');notify('+25 BITS ! Missions accomplies.');save();render()}
-  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];next.petName=typeof data.petName==='string'?data.petName.replace(/[^\p{L}\p{N} _'-]/gu,'').replace(/\s+/g,' ').trim().slice(0,18):'';next.trainerName=typeof data.trainerName==='string'&&/^[a-z][a-z0-9_]{2,19}$/.test(data.trainerName)?data.trainerName:'';next.lastDate=Date.now();return next}
+  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];next.petName=typeof data.petName==='string'?data.petName.replace(/[^\p{L}\p{N} _'-]/gu,'').replace(/\s+/g,' ').trim().slice(0,18):'';next.trainerName=typeof data.trainerName==='string'&&/^[a-z][a-z0-9_]{2,19}$/.test(data.trainerName)?data.trainerName:'';next.lastDate=Date.now();LifeV20.normalize(next);return next}
   const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download='bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
   const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent='SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
   const timeString = secs => {const n=Math.max(0,Math.floor(secs));return String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n%3600/60)).padStart(2,'0')};
@@ -552,11 +561,11 @@
     if(state.stage===0)return {target:'Éclosion',detail:'Prêt maintenant',fraction:1};
     if(state.stage===1){
       const b=V10.babyStatus(state);
-      return {target:'Bébé → Rookie',detail:b.ready?'ÉVOLUTION PRÊTE':b.missing.join(' · '),
-        fraction:(Math.min(1,b.ageMinutes/20)+Math.min(1,state.care/12)+Math.min(1,V10.diversity(state)/2)+Math.min(1,state.train))/4};
+      return {target:'Bébé → Rookie',detail:LifeV20.ageDays(state)<3?'JOUR 3 REQUIS · '+b.missing.join(' · '):b.ready?'ÉVOLUTION PRÊTE':b.missing.join(' · '),
+        fraction:(Math.min(1,LifeV20.ageDays(state)/3)+Math.min(1,state.care/12)+Math.min(1,V10.diversity(state)/2)+Math.min(1,state.train))/4};
     }
-    if(state.stage===2)return {target:'Forme Ultime',detail:Math.min(24,state.care)+'/24 soins · '+Math.min(3,state.wins)+'/3 victoires',
-      fraction:(Math.min(1,state.care/24)+Math.min(1,state.wins/3))/2};
+    if(state.stage===2)return {target:'Forme Ultime',detail:'J'+LifeV20.ageDays(state)+'/16 · '+Math.min(24,state.care)+'/24 soins · '+Math.min(3,state.wins)+'/3 victoires',
+      fraction:(Math.min(1,LifeV20.ageDays(state)/16)+Math.min(1,state.care/24)+Math.min(1,state.wins/3))/3};
     return {target:'Évolution accomplie',detail:'Forme ultime atteinte',fraction:1};
   };
   function rookieRoute(){
@@ -568,19 +577,19 @@
     return 'volt';
   }
   function evolve(){
-    if(state.stage===1&&V10.babyStatus(state).ready){
+    if(state.stage===1&&LifeV20.ageDays(state)>=3&&V10.babyStatus(state).ready){
       const next=V10.rookie(state);state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`ÉVOLUTION : ${names[next]} ! +15 Bits`);playSound('evolve');
-    }else if(state.stage===2&&state.care>=24&&state.wins>=3){
+    }else if(state.stage===2&&LifeV20.ageDays(state)>=16&&state.care>=24&&state.wins>=3){
       let next=V10.adult(state);
       if(!names[next])next='volt2';
       state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
     }
   }
-  function hatch(){if(state.stage!==0)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render();if(IntroV16.isActive())IntroV16.onHatch();else openNaming(true)}
+  function hatch(){if(state.stage!==0||state.lifeOutcome)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);LifeV20.onHatch(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render();if(IntroV16.isActive())IntroV16.onHatch();else openNaming(true)}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
     if(activitySceneState||miniState||V10UI.isFoodOpen()||namingOpen||PlayV17.active()||IntroV16.isShown())return;
-    if(state.stage===0){if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
+    if(state.stage===0){if(state.lifeOutcome){notify('Ouvre le sanctuaire pour commencer une nouvelle génération.');return;}if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
       state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'REVEIL Ton compagnon est réveillé !');save();render();playSound('sleep');return;
     }
@@ -594,90 +603,28 @@
     if(type==='heal'){
       if(state.health>=100){notify('Il est déjà en pleine forme !');return}
       if(state.bits<10){notify('Il faut 10 Bits pour acheter un soin.');return}
-      state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);log('Un remède pixel lui redonne de la santé.');awardXP(2);
+      state.bits-=10;state.health=CLAMP(state.health+45);state.energy=CLAMP(state.energy+10);LifeV20.recordCare(state,'heal');log('Un remède pixel lui redonne de la santé.');awardXP(2);
     }else if(type==='feed'){
       state.fullness=CLAMP(state.fullness+30);state.joy=CLAMP(state.joy+3);state.hygiene=CLAMP(state.hygiene-3);log(`${names[state.form]} a bien mangé !`);state.care++;progressDaily('feed');awardXP(2);
     }else if(type==='train'){
       if(state.energy<15 || state.fullness<8){notify('Nourris-le et laisse-le se reposer avant de l’entraîner.');return}
       openTrainingMini();return;
     }else if(type==='clean'){
-      state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');
+      state.hygiene=CLAMP(state.hygiene+35);state.poops=0;state.clean++;state.care++;LifeV20.recordCare(state,'clean');awardXP(2);log('Un grand nettoyage, et tout brille à nouveau !');
     }else{return}
     const actorForm=state.form;lifeReact(type);actionFx={type,until:Date.now()+850};startActivityScene(type,actorForm);evolve();save();render();
   }
-  function availablePartners(){
-    const unique=new Map(travelers.map(p=>[p.id,p]));
-    for(const id of order.filter(x=>state.dex[x]&&x!==state.form&&state.stage>=2&&!["egg","baby"].includes(x)))if(!unique.has(id))unique.set(id,{id,label:`${names[id]} — ${types[id]}`,type:types[id],talent:types[id]==='flamme'?'force':types[id]==='eau'?'esprit':'garde'});
-    return [...unique.values()];
-  }
-  function breed(){
-    if(state.stage<2){notify('Débloque d’abord une forme Rookie !');return}
-    if(state.sleeping||state.health<40){notify('Réveille et soigne ton compagnon pour créer un œuf.');return}
-    if(state.wins<2){notify('Il faut deux victoires avec ce compagnon.');return}
-    if(state.eggs.length>=3){notify('L’incubateur est plein (3 œufs).');return}
-    if(state.bits<40){notify('Il faut 40 Bits pour créer un œuf.');return}
-    const partner=availablePartners().find(x=>x.id===$('partnerSelect').value);
-    if(!partner){notify('Sélectionne un partenaire.');return}
-    const parentType=types[state.form];
-    const affinity=Math.random()<.55&&knownType(parentType)&&parentType!=='neutre'?parentType:partner.type;
-    const parentTalent=state.genetics?.talent || (parentType==='flamme'?'force':parentType==='eau'?'esprit':'garde');
-    const talent=Math.random()<.58?parentTalent:partner.talent;
-    // Une hybridation entre deux éléments différents peut révéler une mutation rare.
-    const roll=Math.random(),chance=parentType===partner.type?.06:.14;
-    const mutation=roll<chance*.55?'prisme':roll<chance?'aurore':null;
-    const genetics={affinity,talent,mutation,parent:state.form,partner:partner.id};
-    state.eggs.push({id:Date.now()+Math.floor(Math.random()*10000),genetics,generation:state.generation+1});
-    state.bits-=40;log(`Un œuf de ${names[state.form]} et ${names[partner.id]} rejoint l’incubateur !`);
-    notify(mutation?'Un œuf à l’éclat inhabituel !':'OEUF Nouvel œuf placé en incubateur !');
-    actionFx={type:'evolve',until:Date.now()+1200};save();render();
-  }
-  function activateEgg(id){
-    const i=state.eggs.findIndex(e=>String(e.id)===String(id));if(i<0)return;
-    const egg=state.eggs[i];
-    if(!confirm(`Faire éclore cet œuf à la génération ${state.generation+1} ? Ton compagnon actuel rejoindra l’arbre généalogique et sa progression individuelle sera clôturée. Les autres œufs et ton bestiaire seront conservés.`))return;
-    ExploreV19.stop('EXPLORATION EN PAUSE : NOUVEL ŒUF.');
-    const family=[...state.family];
-    if(state.stage>0)family.push({generation:state.generation,form:state.form,wins:state.wins,level:state.level,trait:state.genetics?.talent||null,parents:state.genetics?[state.genetics.parent,state.genetics.partner]:[]});
-    const eggs=state.eggs.filter((_,idx)=>idx!==i);
-    const bits=state.bits,dex={...state.dex},daily={...state.daily},genetics=normalizeGenetics(egg.genetics);
-    state={...base(),trainerName:state.trainerName,exploration:state.exploration,onboarding:{step:'done'},bits,generation:state.generation+1,dex,eggs,family:family.slice(-12),genetics,daily,log:[`Génération ${state.generation+1} : l’œuf de ${names[genetics.parent]} et ${names[genetics.partner]} attend son éclosion !`]};
-    V10.initialize(state);fight=null;closeBattle();save();render();notify('OEUF Nouvel œuf : appuie sur le bouton central !');
-  }
-  function renderGenealogy(){
-    const gene=state.genetics;
-    $('geneBadge').innerHTML=pixelIcon('star')+' '+(gene?'ADN : '+gene.affinity.toUpperCase()+' · '+talents[gene.talent].name:'PREMIÈRE LIGNÉE');
-    $('currentDna').textContent=gene?`${gene.affinity.toUpperCase()} · ${talents[gene.talent].name}${gene.mutation?' · MUTATION':''}`:'LIGNÉE ORIGINELLE';
-    $('currentTalent').textContent=gene?`${talents[gene.talent].detail} ${gene.mutation?'Une mutation secrète pourrait s’exprimer à la forme Ultime (5 victoires).':''}`:'Ton premier compagnon crée la souche de ton arbre familial.';
-    const select=$('partnerSelect'),selected=select.value;
-    const partners=availablePartners();select.replaceChildren();
-    for(const mate of partners){const option=document.createElement('option');option.value=mate.id;option.textContent=mate.label;select.appendChild(option)}
-    if(partners.some(p=>p.id===selected))select.value=selected;
-    const can=state.stage>=2&&!state.sleeping&&state.health>=40&&state.wins>=2&&state.eggs.length<3&&state.bits>=40;
-    $('breedBtn').disabled=!can;$('partnerSelect').disabled=state.stage<2;
-    $('eggCount').textContent=`${state.eggs.length} / 3 ŒUFS`;
-    $('breedStatus').textContent=state.stage<2?'Atteins le stade Rookie pour débloquer la reproduction.':state.wins<2?'Remporte deux combats avec cette génération.':state.bits<40?'Économise 40 Bits pour créer un œuf.':state.eggs.length>=3?'Incubateur rempli : active l’un des œufs pour libérer une place.':state.health<40||state.sleeping?'Réveille ou soigne ton compagnon.':'Prêt ! Le partenaire détermine une partie de l’héritage. Chaque œuf coûte 40 Bits.';
-    const list=$('eggList');list.replaceChildren();
-    if(!state.eggs.length){const empty=document.createElement('div');empty.className='empty-nest';empty.textContent='Aucun œuf en attente. Ton incubateur pourra contenir jusqu’à trois descendants.';list.appendChild(empty)}
-    state.eggs.forEach(egg=>{
-      const b=document.createElement('button');b.type='button';b.className='egg-card'+(egg.genetics.mutation?' rare':'');b.setAttribute('aria-label',`Activer l’œuf ${egg.genetics.affinity}, ${talents[egg.genetics.talent].name}`);
-      const ico=document.createElement('span');ico.className='egg-icon';ico.innerHTML=(egg.genetics.mutation?pixelIcon('star'):'')+pixelIcon('egg');
-      const title=document.createElement('b');title.textContent=`AFFINITÉ ${egg.genetics.affinity.toUpperCase()}`;
-      const note=document.createElement('small');note.textContent=`${talents[egg.genetics.talent].name} · ${egg.genetics.mutation?'RARE':'STANDARD'} · ISSUE GEN ${Math.max(1,egg.generation-1)}`;
-      b.append(ico,title,note);b.addEventListener('click',()=>activateEgg(egg.id));list.appendChild(b);
-    });
-    const tree=$('familyTree');tree.replaceChildren();
-    if(!state.family.length && state.stage===0){const empty=document.createElement('div');empty.className='empty-nest';empty.textContent='Ton histoire familiale commence avec le premier œuf.';tree.appendChild(empty)}
-    for(const m of [...state.family].reverse().slice(0,6)){
-      const row=document.createElement('div');row.className='family-member';const label=document.createElement('b');label.textContent=`GEN ${String(m.generation).padStart(2,'0')} · ${names[m.form]}`;const details=document.createElement('span');details.textContent=`LV.${m.level||1} · ${m.wins||0} victoires${Array.isArray(m.parents)&&m.parents.length===2&&m.parents.every(id=>Object.hasOwn(names,id))?' · '+m.parents.map(id=>names[id]).join(' / '):''}`;row.append(label,details);tree.appendChild(row);
-    }
-    if(state.stage>0){const row=document.createElement('div');row.className='family-member current';const label=document.createElement('b');label.textContent=`GEN ${String(state.generation).padStart(2,'0')} · ${state.petName||names[state.form]}`;const details=document.createElement('span');details.textContent=state.genetics?`EN COURS · ${names[state.genetics.parent]} / ${names[state.genetics.partner]}`:'EN COURS';row.append(label,details);tree.prepend(row)}
-  }
+  function renderGenealogy(){LifeV20.render(state,names);}
   function newGame(){
-    if(!confirm('Nouvelle génération sans héritage ? Le compagnon actuel sera archivé. Les œufs en incubateur, le bestiaire et les Bits seront conservés.'))return;
+    if(state.stage>0&&!confirm('Confier définitivement '+(state.petName||names[state.form])+' au sanctuaire ? Sa fiche restera dans le Livre des générations. Tu ne pourras pas le récupérer.'))return;
+    if(state.stage===0&&!state.lifeOutcome&&!confirm('Recommencer avec un nouvel œuf ?'))return;
     ExploreV19.stop('EXPLORATION EN PAUSE : NOUVELLE GÉNÉRATION.');
-    const generation=(state.generation||1)+1;
-    const old=state;const family=[...state.family];if(old.stage>0)family.push({generation:old.generation,form:old.form,wins:old.wins,level:old.level,trait:old.genetics?.talent||null,parents:old.genetics?[old.genetics.parent,old.genetics.partner]:[]});
-    state={...base(),trainerName:old.trainerName,exploration:old.exploration,onboarding:{step:'done'},bits:old.bits,dex:{...old.dex,egg:true},daily:{...old.daily},eggs:[...old.eggs],family:family.slice(-12),generation,log:[`Génération ${generation} : un nouvel œuf apparaît !`]};V10.initialize(state);fight=null;closeBattle();save();render();notify('OEUF Une nouvelle aventure commence !');
+    const old=state;
+    if(old.stage>0)LifeV20.archive(old,'sanctuary');
+    state=LifeV20.newGeneration(old,base,$('nextAffinity').value);
+    V10.initialize(state);fight=null;closeBattle();save();render();
+    notify('NOUVELLE GÉNÉRATION ! Fais éclore ton unique œuf.');
+    showScreen('home');
   }
   function drawPixelCreature(canvas,form,t,options={}){
     const ctx=canvas.getContext('2d');
@@ -955,6 +902,7 @@
   $('petNamingCancel').addEventListener('click',closeNaming);
   $('petNamingInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();savePetName();}else if(e.key==='Escape'){e.stopPropagation();closeNaming();}});
   function render(){
+    if(!fight&&LifeV20.evaluate(state))ExploreV19.stop('FIN DE VIE : EXPLORATION ARRÊTÉE.');
     V10UI.render(state);
     ExploreV19.refresh();
     if(state.daily.day!==today())state.daily=blankDaily();
@@ -962,9 +910,9 @@
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
     $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
     renderDaily();renderDex();renderGenealogy();
-    $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=['À ÉCLORE','BÉBÉ','ROOKIE','ULTIME'][state.stage];$('creatureDesc').textContent=desc[state.form];
+    $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=LifeV20.phase(state);$('creatureDesc').textContent=desc[state.form];
     $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=['EGG','BABY','ROOKIE','ULTIMATE'][state.stage]+' / '+String(state.generation).padStart(2,'0');
-    $('age').textContent=timeString(state.age);$('lcdTime').textContent=timeString(state.age);$('bits').textContent=state.bits;$('wins').textContent=state.wins;$('gen').textContent=String(state.generation).padStart(2,'0');$('lcdInfo').textContent='GEN '+String(state.generation).padStart(2,'0');
+    $('age').textContent=state.stage>0?'J'+LifeV20.ageDays(state):'—';$('lcdTime').textContent=state.stage>0?'J'+LifeV20.ageDays(state):timeString(state.age);$('bits').textContent=state.bits;$('wins').textContent=state.wins;$('gen').textContent=String(state.generation).padStart(2,'0');$('lcdInfo').textContent='GEN '+String(state.generation).padStart(2,'0');
     const well=state.stage===0?'EN ATTENTE':state.health<25?'DANGER':state.health<55?'FRAGILE':state.sleeping?'ENDORMI':state.health>=80?'EN FORME':'À SURVEILLER';$('wellnessTag').textContent=well;
     $('statList').innerHTML=metrics.map(([key,label])=>{const val=Math.round(state[key]);return `<div class="stat-row"><span class="stat-label">${label}</span><div class="bar" role="progressbar" aria-label="${label}" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="100"><div class="fill ${val<28?'low':val<51?'medium':''}" style="width:${val}%"></div></div><span class="stat-value">${val}%</span></div>`}).join('');
     const ev=evoConfig();$('evoTarget').textContent=ev.target;$('evoRequirement').textContent=ev.detail;$('evoPercent').textContent=Math.round(ev.fraction*100)+' %';$('evoBar').style.width=Math.round(ev.fraction*100)+'%';
@@ -972,7 +920,7 @@
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
     $('lcdMood').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':'heart')+' '+(state.stage===0?'PRÊT':state.sleeping?'ZZZ':state.health<25?'SOS':state.joy<30?'TRISTE':'CONTENT');
-    $('displayNote').textContent=state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
+    $('displayNote').textContent=state.lifeOutcome?'VOIR LE LIVRE DES GÉNÉRATIONS':state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
     document.querySelectorAll('[data-action]').forEach(btn=>{const a=btn.dataset.action;btn.disabled=state.stage===0 || (state.sleeping&&a!=='sleep') || (state.health<=0&&a!=='sleep'&&a!=='heal')});
     $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();
   }
@@ -1130,7 +1078,7 @@
   document.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',()=>action(el.dataset.action)));
   $('middleBtn').addEventListener('click',()=>state.stage===0?hatch():notify(`${names[state.form]} te regarde avec affection +`));$('leftBtn').addEventListener('click',()=>action('feed'));$('rightBtn').addEventListener('click',()=>action('play'));
   $('battleStart').addEventListener('click',startBattle);$('attackBtn').addEventListener('click',()=>battleMove('attack'));$('defendBtn').addEventListener('click',()=>battleMove('defend'));$('specialBtn').addEventListener('click',()=>battleMove('special'));$('focusBtn').addEventListener('click',()=>battleMove('focus'));
-  $('claimDaily').addEventListener('click',claimDaily);$('breedBtn').addEventListener('click',breed);
+  $('claimDaily').addEventListener('click',claimDaily);$('sanctuaryBtn').addEventListener('click',newGame);
   $('exportBtn').addEventListener('click',exportSave);
   $('importBtn').addEventListener('click',()=>$('importFile').click());
   $('importFile').addEventListener('change',async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{const restored=restoreSave(await file.text());if(!confirm('Restaurer cette sauvegarde ? La partie actuelle sera remplacée.'))return;closeBattle();state=restored;save();render();notify('Sauvegarde restaurée !')}catch(err){notify('Fichier de sauvegarde incompatible.')}});
@@ -1154,7 +1102,7 @@
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
   const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer','explore'];
-  const headings={home:'MON COMPAGNON',stats:'ÉTAT DU MONSTRE',care:'PRENDRE SOIN',arena:'ARÈNE TACTIQUE',evolution:'ÉVOLUTION',missions:'MISSIONS DU JOUR',lab:'LABORATOIRE',dex:'BESTIAIRE',journal:'JOURNAL & OPTIONS',settings:'SON & ALERTES',vs:'VS DRESSEURS',trainer:'MON DRESSEUR',explore:'EXPLORATION',menu:'MENU PRINCIPAL'};
+  const headings={home:'MON COMPAGNON',stats:'ÉTAT DU MONSTRE',care:'PRENDRE SOIN',arena:'ARÈNE TACTIQUE',evolution:'ÉVOLUTION',missions:'MISSIONS DU JOUR',lab:'SANCTUAIRE & GÉNÉRATIONS',dex:'BESTIAIRE',journal:'JOURNAL & OPTIONS',settings:'SON & ALERTES',vs:'VS DRESSEURS',trainer:'MON DRESSEUR',explore:'EXPLORATION',menu:'MENU PRINCIPAL'};
   const orderedScreens=['home','stats','care','arena','evolution','missions','lab','explore','dex','journal','settings','vs','trainer','menu'];
   let activeScreen='home';
   app.appendChild(dashboard);
@@ -1304,7 +1252,7 @@
     const bits=1+a.score*2+(perfect?4:0),xp=2+a.score*2+(perfect?5:0);
     state.energy=CLAMP(state.energy-15);state.fullness=CLAMP(state.fullness-10);
     state.joy=CLAMP(state.joy+(success?3:-4));state.care++;
-    if(success)state.train++;
+    if(success){state.train++;LifeV20.recordCare(state,'train');}
     state.bits+=bits;state.record=state.record||{};
     const key='mini'+a.mode.charAt(0).toUpperCase()+a.mode.slice(1)+'Best';
     state.record[key]=Math.max(Number(state.record[key])||0,a.score);
@@ -1388,7 +1336,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.19.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.20 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1406,9 +1354,9 @@
     $('homeBits').innerHTML=pixelIcon('star')+' '+state.bits+' BITS';
     $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
     $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
-    $('hatchHome').style.display=state.stage===0?'':'none';
+    $('hatchHome').style.display=state.stage===0&&!state.lifeOutcome?'':'none';
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.19.1 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.20 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1559,7 +1507,7 @@
   function v10Feed(id){
     if(state.stage===0||state.sleeping||state.health<=0)return;
     const outcome=V10.meal(state,id);
-    state.care++;progressDaily('feed');awardXP(2);lifeReact('feed');
+    state.care++;LifeV20.recordCare(state,'feed');progressDaily('feed');awardXP(2);lifeReact('feed');
     log(names[state.form]+' mange '+outcome.food.name.toLowerCase()+
         (outcome.trained?' · +2 '+V10.labels[outcome.stat]:' · pause bonus nutritif'));
     activitySpecs.feed.result=outcome.food.name+' · '+(outcome.trained?'+2 '+V10.labels[outcome.stat]:'SATIÉTÉ');
@@ -1602,7 +1550,7 @@
       const points=Math.max(0,Math.min(total,Math.floor(score)));
       const joy=8+Math.round(points*1.6),bits=2+points,xp=3+points;
       state.joy=CLAMP(state.joy+joy);state.energy=CLAMP(state.energy-8);
-      state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;state.bits+=bits;
+      state.fullness=CLAMP(state.fullness-6);state.play++;state.care++;LifeV20.recordCare(state,'play');state.bits+=bits;
       progressDaily('play');awardXP(xp);lifeReact(points>=7?'play':'tired');
       log((state.petName||names[state.form])+' a joué : '+points+'/'+total+
         ' points, '+stars+' étoiles, '+avoids+' bugs évités, '+hits+' chocs. +'+bits+' Bits.');
