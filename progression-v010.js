@@ -86,6 +86,8 @@ function adult(state){
  if(state.genetics?.mutation==="aurore"&&primary!=="foudre"&&state.wins>=5&&s.vitesse>=25)return "auror";
  if(primary==="nature"&&state.wins>=5&&s.defense>=25&&s.esprit>=25&&state.health>=75&&(state.mistakes||0)<=2&&(state.lifeData?.goodDays||0)>=7)return "lumia";
  if(primary==="foudre"&&state.wins>=7&&s.vitesse>=28&&s.precision>=25)return "nebula";
+ // On older saves, a mismatched Rookie joins its original egg family at Ultimate.
+ if(primary&&typing?.BASE[primary]&&typing.nativeType(state.form)!==primary)return typing.BASE[primary]+"2";
  return state.form+"2";
 }
 function fighter(state){
