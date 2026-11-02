@@ -911,7 +911,7 @@
     $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
     renderDaily();renderDex();renderGenealogy();
     $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=LifeV20.phase(state);$('creatureDesc').textContent=desc[state.form];
-    $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=['EGG','BABY','ROOKIE','ULTIMATE'][state.stage]+' / '+String(state.generation).padStart(2,'0');
+    $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=(state.lifeOutcome?'MEMORIAL':['EGG','BABY','ROOKIE','ULTIMATE'][state.stage])+' / '+String(state.generation).padStart(2,'0');
     $('age').textContent=state.stage>0?'J'+LifeV20.ageDays(state):'—';$('lcdTime').textContent=state.stage>0?'J'+LifeV20.ageDays(state):timeString(state.age);$('bits').textContent=state.bits;$('wins').textContent=state.wins;$('gen').textContent=String(state.generation).padStart(2,'0');$('lcdInfo').textContent='GEN '+String(state.generation).padStart(2,'0');
     const well=state.stage===0?'EN ATTENTE':state.health<25?'DANGER':state.health<55?'FRAGILE':state.sleeping?'ENDORMI':state.health>=80?'EN FORME':'À SURVEILLER';$('wellnessTag').textContent=well;
     $('statList').innerHTML=metrics.map(([key,label])=>{const val=Math.round(state[key]);return `<div class="stat-row"><span class="stat-label">${label}</span><div class="bar" role="progressbar" aria-label="${label}" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="100"><div class="fill ${val<28?'low':val<51?'medium':''}" style="width:${val}%"></div></div><span class="stat-value">${val}%</span></div>`}).join('');
@@ -1346,15 +1346,15 @@
   }
   document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>showScreen(el.dataset.view)));
   $('menuHelp').addEventListener('click',()=>$('helpOverlay').classList.add('visible'));
-  $('hatchHome').addEventListener('click',()=>{if(state.stage===0)hatch();else showScreen('care')});
+  $('hatchHome').addEventListener('click',()=>{if(state.lifeOutcome)showScreen('lab');else if(state.stage===0)hatch();else showScreen('care')});
   function syncConsole(){
-    $('homeName').textContent=state.petName||names[state.form];
+    $('homeName').textContent=state.lifeOutcome?'CYCLE DE VIE TERMINÉ':(state.petName||names[state.form]);
     $('homeLevel').textContent=`LV.${state.level} • GÉN.${String(state.generation).padStart(2,'0')}`;
     $('homeHealth').innerHTML=pixelIcon('heart')+' SANTÉ '+Math.round(state.health)+'%';
     $('homeBits').innerHTML=pixelIcon('star')+' '+state.bits+' BITS';
-    $('homeEvolution').textContent=['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
+    $('homeEvolution').textContent=state.lifeOutcome?'MÉMORIAL':['ŒUF','BÉBÉ','ROOKIE','ULTIME'][state.stage];
     $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
-    $('hatchHome').style.display=state.stage===0&&!state.lifeOutcome?'':'none';
+    $('hatchHome').style.display=state.stage===0?'':'none';$('hatchHome').innerHTML=pixelIcon(state.lifeOutcome?'star':'egg')+(state.lifeOutcome?' LIVRE DES GÉNÉRATIONS':' FAIRE ÉCLORE');
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
     $('lcdViewHeading').lastElementChild.textContent=`V0.20 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
