@@ -1107,7 +1107,7 @@
   const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer','explore',...(DEV_MODE?['dev']:[])];
   const headings={home:'MON COMPAGNON',stats:'ÉTAT DU MONSTRE',care:'PRENDRE SOIN',arena:'ARÈNE TACTIQUE',evolution:'ÉVOLUTION',missions:'MISSIONS DU JOUR',lab:'SANCTUAIRE & GÉNÉRATIONS',dex:'BESTIAIRE',journal:'JOURNAL & OPTIONS',settings:'SON & ALERTES',vs:'VS DRESSEURS',trainer:'MON DRESSEUR',explore:'EXPLORATION',dev:'LABO DE TEST',menu:'MENU PRINCIPAL'};
   const orderedScreens=['home','stats','care','arena','evolution','missions','lab','explore','dex','journal','settings','vs',...(DEV_MODE?['dev']:['trainer']),'menu'];
-  if(DEV_MODE){document.querySelectorAll('[data-view="trainer"]').forEach(el=>el.hidden=true);document.querySelector('.edition').textContent='DEV LIFE SIMULATOR / V0.21';document.querySelector('.v02-ribbon strong').textContent='MODE TEST / V0.21';}
+  if(DEV_MODE){document.querySelectorAll('[data-view="trainer"]').forEach(el=>{el.hidden=true;el.style.display='none'});document.querySelector('.edition').textContent='DEV LIFE SIMULATOR / V0.21';document.querySelector('.v02-ribbon strong').textContent='MODE TEST / V0.21';}
   let activeScreen='home';
   app.appendChild(dashboard);
   // Move existing dialogs inside the handheld; original game handlers stay intact.
