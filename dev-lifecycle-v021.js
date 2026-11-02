@@ -48,7 +48,7 @@ function step(n){
  for(let d=age+1;d<=age+days;d++){
   if(ideal){
    // Ideal care and objective shortcuts exist only in this disposable developer save.
-   if(d%2===0)st.lifeData.goodDays=Math.min(30,(st.lifeData.goodDays||0)+1);
+   if(d%2===1)st.lifeData.goodDays=Math.min(30,(st.lifeData.goodDays||0)+1);
    st.care=Math.max(24,st.care||0);
    st.wins=Math.max(3,st.wins||0);
    st.train=Math.max(1,st.train||0);
