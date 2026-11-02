@@ -45,7 +45,7 @@ function render(){
    $("v11Name"+i).textContent="J"+(i+1)+" "+(names[p.form]||p.form)+" · "+(p.type||"NEUTRE").toUpperCase()+(p.secondaryType?" / "+p.secondaryType.toUpperCase():"");
    $("v11Hp"+i).textContent=p.hp+"/"+p.maxHp+" PV · EN "+p.energy;
    $("v11Bar"+i).style.width=(p.hp/p.maxHp*100)+"%";
-   api.draw($("v11Sprite"+i),p.form);
+   api.draw($("v11Sprite"+i),p.form,p);
  }
  $("v11Actions").hidden=phase!=="pick";
  $("v11Next").hidden=phase==="pick";
