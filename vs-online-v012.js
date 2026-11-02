@@ -46,7 +46,7 @@ function render(){
    $("onlineName"+i).textContent="J"+(i+1)+" "+(roomNames[p.form]||p.form)+" · "+(p.type||"NEUTRE").toUpperCase()+(p.secondaryType?" / "+p.secondaryType.toUpperCase():"");
    $("onlineVitals"+i).textContent=p.hp+"/"+p.maxHp+" PV · EN "+p.energy;
    $("onlineHP"+i).style.width=Math.min(100,Math.max(0,p.hp/p.maxHp*100))+"%";
-   api?.draw($("onlineSprite"+i),p.form);
+   api?.draw($("onlineSprite"+i),p.form,p);
   });
  }
  const waiting=!room, finished=room?.phase==="ended", result=phase==="result";
