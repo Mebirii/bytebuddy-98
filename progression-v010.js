@@ -72,36 +72,21 @@ function babyStatus(state,now=Date.now()){
 }
 function rookie(state){
  initialize(state);
- const s=state.attributes,d=state.diet;
- const scores={
-  ember:s.force*2+s.endurance*.35+(d.viande||0)*.9,
-  verd:s.vitalite+s.defense*.8+(d.fruits||0)*1.3+(d.legumes||0),
-  volt:s.vitesse*1.4+s.precision*1.25+(d.fruits||0)*.5,
-  aqua:s.defense*1.35+s.precision*.85+(d.poisson||0)*1.5+(d.legumes||0)*.6,
-  shade:s.esprit*1.4+s.precision*.8+(d.baies||0)*1.8+(state.wins||0)*3
- };
- if(state.genetics?.affinity){
-  const typeForm={flamme:'ember',nature:'verd',foudre:'volt',eau:'aqua',ombre:'shade'};
-  const inherited=typeForm[state.genetics.affinity];
-  if(inherited)scores[inherited]+=6;
- }
- const base=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
- // A distinct rookie family is earned by specialization, not random chance.
- // Conditions are compatible with the 20-minute baby stage and six training games.
- if((base==='ember'||state.genetics?.affinity==='flamme')&&s.force>=20&&s.precision>=16&&(d.viande||0)>=2)return 'cindr';
- if((base==='verd'||state.genetics?.affinity==='nature')&&s.defense>=20&&(d.legumes||0)>=2)return 'bramble';
- if((base==='aqua'||state.genetics?.affinity==='eau')&&s.esprit>=18&&(d.poisson||0)>=2)return 'tide';
- if((base==='volt'||state.genetics?.affinity==='foudre')&&s.vitesse>=20&&s.endurance>=16)return 'surge';
- return base;
+ const typing=window.ByteBuddyTypingV23;
+ const family=typing?.specialRookie(state);
+ if(family)return family;
+ const type=typing?.nativeType(state.form);
+ return typing?.BASE[type]||"ember";
 }
 function adult(state){
- initialize(state);const s=state.attributes;
- // The hidden forms can be earned through long-term stat investment.
- if(state.genetics?.mutation==='prisme'&&state.wins>=5&&s.esprit>=25)return 'prism';
- if(state.genetics?.mutation==='aurore'&&state.wins>=5&&s.vitesse>=25)return 'auror';
- if(state.wins>=5&&s.defense>=25&&s.esprit>=25&&state.health>=70&&state.mistakes<=1)return 'lumia';
- if(state.wins>=7&&s.vitesse>=28&&s.precision>=25)return 'nebula';
- return state.form+'2';
+ initialize(state);
+ const s=state.attributes,typing=window.ByteBuddyTypingV23;
+ const primary=typing?.lineage(state);
+ if(state.genetics?.mutation==="prisme"&&state.wins>=5&&s.esprit>=25)return "prism";
+ if(state.genetics?.mutation==="aurore"&&primary!=="foudre"&&state.wins>=5&&s.vitesse>=25)return "auror";
+ if(primary==="nature"&&state.wins>=5&&s.defense>=25&&s.esprit>=25&&state.health>=75&&(state.mistakes||0)<=2&&(state.lifeData?.goodDays||0)>=7)return "lumia";
+ if(primary==="foudre"&&state.wins>=7&&s.vitesse>=28&&s.precision>=25)return "nebula";
+ return state.form+"2";
 }
 function fighter(state){
  initialize(state);const s=state.attributes;
@@ -117,16 +102,22 @@ function fighter(state){
 }
 function snapshot(state){
  initialize(state);
+ const p=window.ByteBuddyTypingV23?.profile(state)||{};
  return {kind:'bytebuddy-vs-preview',ruleset:'v010',form:String(state.form),
   stage:Math.min(3,Math.max(0,Number(state.stage)||0)),
   level:Math.min(99,Math.max(1,Number(state.level)||1)),
-  type:'pixel-monster',attributes:{...state.attributes}};
+  type:'pixel-monster',primaryType:p.primary||null,secondaryType:p.secondary||null,
+  attributes:{...state.attributes}};
 }
 function validateSnapshot(raw){
  if(!raw||raw.kind!=='bytebuddy-vs-preview'||raw.ruleset!=='v010')throw Error('Code VS incompatible');
  if(!['baby','ember','verd','volt','aqua','shade','ember2','verd2','volt2','aqua2','shade2','lumia','nebula','prism','auror','cindr','cindr2','bramble','bramble2','tide','tide2','surge','surge2'].includes(raw.form))throw Error('Créature invalide');
  if(!Number.isInteger(raw.stage)||raw.stage<1||raw.stage>3 || !Number.isInteger(raw.level)||raw.level<1||raw.level>99)throw Error('Fiche invalide');
  if(!raw.attributes||keys.some(k=>!Number.isInteger(raw.attributes[k])||raw.attributes[k]<1||raw.attributes[k]>99))throw Error('Statistiques invalides');
+ const typing=window.ByteBuddyTypingV23;
+ if(raw.primaryType!=null&&!typing?.validPrimary(raw.primaryType))throw Error('Type principal invalide');
+ if(raw.secondaryType!=null&&!typing?.validSecondary(raw.primaryType||typing.nativeType(raw.form),raw.secondaryType))throw Error('Double type invalide');
+ if(raw.secondaryType&&raw.stage!==3)throw Error('Double type réservé aux formes ultimes');
  return raw;
 }
 window.ByteBuddyV10=Object.freeze({keys,labels,FOOD,TRAINING,initialize,diversity,meal,workout,babyStatus,rookie,adult,fighter,snapshot,validateSnapshot});
