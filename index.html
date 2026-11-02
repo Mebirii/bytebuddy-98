@@ -446,6 +446,7 @@
   </div>
 </div>
 <div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button" aria-label="Fermer l'aide"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg></button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, joue, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> le bébé grandit après 20 minutes, 12 soins, 2 aliments différents et un entraînement réussi. La forme ultime demande ensuite 24 soins et 3 victoires. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Jouer / Pixel Catch :</strong> déplace ta créature à gauche ou à droite pour attraper les étoiles et éviter les bugs. Utilise OK pour le bouclier. Termine les 12 objets pour gagner des Bits, du moral et de l’XP selon ton score ; abandonner ne rapporte rien.</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme &gt; Nature &gt; Eau &gt; Flamme ; Foudre &gt; Eau ; Lumière / Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (OK). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>Élevage :</strong> Découvre les 16 entrées du bestiaire, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
+<script>window.ByteBuddyDevMode = new URLSearchParams(window.location.search).get("dev") === "1";</script>
 <script src="./bestiary-v018.js?v=018"></script>
 <script src="./bestiary-ui-v018.js?v=0181"></script>
 <script src="./progression-v010.js?v=0182"></script>
@@ -464,6 +465,7 @@
 <script src="./play-v017.js?v=0172"></script>
 <script src="./explore-v019.js?v=0201"></script>
 <script src="./lifecycle-v020.js?v=0201"></script>
+<script src="./dev-lifecycle-v021.js?v=021"></script>
 <script>
 (() => {
   'use strict';
@@ -475,9 +477,9 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20;
-  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20)throw Error('Modules de jeu, versus ou dresseur indisponibles');
-  const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
+  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
+  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const KEY = DEV_MODE ? 'bytebuddy98-save-dev-v021' : 'bytebuddy98-save-v1'; // Developer save is isolated; normal key remains unchanged.
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.name]))};
   const order=['egg','baby','ember','verd','volt','aqua','shade','cindr','bramble','tide','surge','ember2','verd2','volt2','aqua2','shade2','cindr2','bramble2','tide2','surge2','lumia','nebula','prism','auror'];
@@ -499,7 +501,8 @@
       ? {...base(),...saved,version:4}:base();
   }catch(_){state=base();}
   // Never interrupt legacy saves or an existing trainer with a new onboarding.
-  if(firstInstall)state.onboarding={step:'trainer',startedAt:Date.now()};
+  if(firstInstall)state.onboarding=DEV_MODE?{step:'done'}:{step:'trainer',startedAt:Date.now()};
+  if(DEV_MODE&&firstInstall){state.trainerName='dev_tester';state.starterEgg='leaf';state.genetics={affinity:'nature',talent:'garde',mutation:null,parent:'baby',partner:'baby'};}
   const talents={force:{name:'FORCE',detail:'Dégâts directs +12 %.'},garde:{name:'GARDE',detail:'Dégâts reçus −15 %.'},esprit:{name:'ESPRIT',detail:'Pouvoir élémentaire +20 %.'}};
   const travelers=[{id:'ember',label:'EMBERIX — flamme',type:'flamme',talent:'force'},{id:'verd',label:'VERDIX — nature',type:'nature',talent:'garde'},{id:'aqua',label:'AQUARI — eau',type:'eau',talent:'esprit'}];
   const knownType=t=>['flamme','nature','eau','foudre','ombre','lumière','neutre'].includes(t);
@@ -507,7 +510,7 @@
   const normalizeEgg=e=>e&&typeof e==='object'&&Number.isFinite(e.id)&&normalizeGenetics(e.genetics)?{id:e.id,genetics:normalizeGenetics(e.genetics),generation:Math.max(1,Math.min(999,Number(e.generation)||1))}:null;
   state.genetics=normalizeGenetics(state.genetics);
   state.eggs=Array.isArray(state.eggs)?state.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];
-  state.family=Array.isArray(state.family)?state.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];
+  state.family=Array.isArray(state.family)?state.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-60):[];
   state.dex=state.dex&&typeof state.dex==='object'&&!Array.isArray(state.dex)?state.dex:{};
   state.dex.egg=true;if(state.stage>=1)state.dex.baby=true;if(names[state.form])state.dex[state.form]=true;
   state.record=state.record&&typeof state.record==='object'?state.record:{};
@@ -526,9 +529,9 @@
   function progressDaily(field){if(state.daily.day!==today())state.daily=blankDaily();state.daily[field]=Math.min(99,(state.daily[field]||0)+1)}
   const dailyTasks=()=>[{name:'Deux bons repas',note:'Nourrir 2 fois',count:state.daily.feed,goal:2},{name:'Deux jeux ensemble',note:'Jouer 2 fois',count:state.daily.play,goal:2},{name:'Une victoire',note:'Gagner un combat',count:state.daily.win,goal:1}];
   function claimDaily(){if(state.daily.day!==today())state.daily=blankDaily();if(state.daily.claimed||!dailyTasks().every(m=>m.count>=m.goal))return;state.daily.claimed=true;state.bits+=25;log('Missions quotidiennes terminées : +25 Bits !');notify('+25 BITS ! Missions accomplies.');save();render()}
-  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-12):[];next.petName=typeof data.petName==='string'?data.petName.replace(/[^\p{L}\p{N} _'-]/gu,'').replace(/\s+/g,' ').trim().slice(0,18):'';next.trainerName=typeof data.trainerName==='string'&&/^[a-z][a-z0-9_]{2,19}$/.test(data.trainerName)?data.trainerName:'';next.lastDate=Date.now();LifeV20.normalize(next);return next}
-  const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download='bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-  const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent='SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
+  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-60):[];next.petName=typeof data.petName==='string'?data.petName.replace(/[^\p{L}\p{N} _'-]/gu,'').replace(/\s+/g,' ').trim().slice(0,18):'';next.trainerName=typeof data.trainerName==='string'&&/^[a-z][a-z0-9_]{2,19}$/.test(data.trainerName)?data.trainerName:'';next.lastDate=Date.now();LifeV20.normalize(next);return next}
+  const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download=DEV_MODE?'bytebuddy98-sauvegarde-test.json':'bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+  const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent=DEV_MODE?'SAUVEGARDE TEST ISOLÉE':'SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
   const timeString = secs => {const n=Math.max(0,Math.floor(secs));return String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n%3600/60)).padStart(2,'0')};
   function tickAutoSleep(){
     if(state.stage===0||fight)return;
@@ -922,7 +925,7 @@
     $('lcdMood').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':'heart')+' '+(state.stage===0?'PRÊT':state.sleeping?'ZZZ':state.health<25?'SOS':state.joy<30?'TRISTE':'CONTENT');
     $('displayNote').textContent=state.lifeOutcome?'VOIR LE LIVRE DES GÉNÉRATIONS':state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
     document.querySelectorAll('[data-action]').forEach(btn=>{const a=btn.dataset.action;btn.disabled=state.stage===0 || (state.sleeping&&a!=='sleep') || (state.health<=0&&a!=='sleep'&&a!=='heal')});
-    $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();
+    $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();if(DEV_MODE)DevV21.refresh();
   }
   const escapeHtml = str=>String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   // V0.4 / Tour par tour et talents héréditaires.
@@ -1101,9 +1104,10 @@
   const app=$('lcdApp');
   const dashboard=document.querySelector('.right');
   const sections=Array.from(dashboard.querySelectorAll(':scope > .panel'));
-  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer','explore'];
-  const headings={home:'MON COMPAGNON',stats:'ÉTAT DU MONSTRE',care:'PRENDRE SOIN',arena:'ARÈNE TACTIQUE',evolution:'ÉVOLUTION',missions:'MISSIONS DU JOUR',lab:'SANCTUAIRE & GÉNÉRATIONS',dex:'BESTIAIRE',journal:'JOURNAL & OPTIONS',settings:'SON & ALERTES',vs:'VS DRESSEURS',trainer:'MON DRESSEUR',explore:'EXPLORATION',menu:'MENU PRINCIPAL'};
-  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','explore','dex','journal','settings','vs','trainer','menu'];
+  const moduleKeys=['stats','care','arena','evolution','missions','lab','dex','journal','settings','vs','trainer','explore',...(DEV_MODE?['dev']:[])];
+  const headings={home:'MON COMPAGNON',stats:'ÉTAT DU MONSTRE',care:'PRENDRE SOIN',arena:'ARÈNE TACTIQUE',evolution:'ÉVOLUTION',missions:'MISSIONS DU JOUR',lab:'SANCTUAIRE & GÉNÉRATIONS',dex:'BESTIAIRE',journal:'JOURNAL & OPTIONS',settings:'SON & ALERTES',vs:'VS DRESSEURS',trainer:'MON DRESSEUR',explore:'EXPLORATION',dev:'LABO DE TEST',menu:'MENU PRINCIPAL'};
+  const orderedScreens=['home','stats','care','arena','evolution','missions','lab','explore','dex','journal','settings','vs',...(DEV_MODE?['dev']:['trainer']),'menu'];
+  if(DEV_MODE){document.querySelectorAll('[data-view="trainer"]').forEach(el=>el.hidden=true);document.querySelector('.edition').textContent='DEV LIFE SIMULATOR / V0.21';document.querySelector('.v02-ribbon strong').textContent='MODE TEST / V0.21';}
   let activeScreen='home';
   app.appendChild(dashboard);
   // Move existing dialogs inside the handheld; original game handlers stay intact.
@@ -1332,7 +1336,7 @@
   },true);
 
   function showScreen(name){
-    if(!orderedScreens.includes(name)||DexV18.active()||activitySceneState||miniState||PlayV17.active()||V10UI.isFoodOpen()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
+    if((DEV_MODE&&name==='trainer')||!orderedScreens.includes(name)||DexV18.active()||activitySceneState||miniState||PlayV17.active()||V10UI.isFoodOpen()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
@@ -1451,7 +1455,7 @@
     $('soundVolume').value=Math.round(avPrefs.volume*100);
   }
   let swRegistrationPromise=null;
-  if('serviceWorker' in navigator&&isSecureContext){
+  if(!DEV_MODE&&'serviceWorker' in navigator&&isSecureContext){
     swRegistrationPromise=navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(err=>{console.warn('Service worker indisponible',err);return null});
   }
   async function showSystemNotification(title,body,tag='needs',force=false){
@@ -1469,7 +1473,7 @@
   }
   const lastAlerts={};let lastOverallAlert=0;
   async function checkPetAlerts(){
-    if(window.ByteBuddyCloudPushEnabled||!avPrefs.notifications||!document.hidden||state.stage===0||state.sleeping)return;
+    if(DEV_MODE||window.ByteBuddyCloudPushEnabled||!avPrefs.notifications||!document.hidden||state.stage===0||state.sleeping)return;
     const issues=[
       {key:'health',when:state.health<27,title:'ByteBuddy a besoin de soins !',body:'La santé de ta créature est faible. Viens la soigner.'},
       {key:'fullness',when:state.fullness<27,title:'Ton ByteBuddy a faim !',body:'Son ventre gargouille. Viens lui donner à manger !'},
@@ -1518,7 +1522,7 @@
   V10UI.setup({state:()=>state,feed:v10Feed});
   V11UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true})});
   V12UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true}),openDuel:()=>showScreen("vs")});
-  TrainerV13.setup({
+  if(!DEV_MODE)TrainerV13.setup({
     snapshot:()=>{save();return JSON.parse(JSON.stringify(state));},
     validate:data=>restoreSave(JSON.stringify(data)),
     restore:data=>{
@@ -1558,7 +1562,8 @@
       notify('PIXEL CATCH : '+points+'/'+total+' · +'+bits+' BITS !');
     }
   });
-  render();syncConsole();save();requestAnimationFrame(paint);
+  if(DEV_MODE){DevV21.setup({state:()=>state,save,render,hatch,evolve,newGame,reset:()=>{localStorage.removeItem(KEY);window.location.reload();}});}
+  render();syncConsole();save();if(DEV_MODE)showScreen('dev');requestAnimationFrame(paint);
 })();
 </script>
 <script src="./push-config.js?v=014"></script>
