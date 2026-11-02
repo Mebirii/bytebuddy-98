@@ -300,9 +300,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">LIFE & GENERATIONS / 0.20</div>
+    <div class="edition">PIXEL MEMORIES / 0.22</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.20</strong> — 1 créature · cycle de vie · sanctuaire · générations</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.22</strong> — hommage pixel · État rapide · souvenirs · LCD rétro</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -370,7 +370,7 @@
               <button type="button" data-view="home" class="active" aria-pressed="true"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-home"/></svg></span>MONSTRE</button>
               <button type="button" data-view="care" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>SOINS</button>
               <button type="button" data-view="arena" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>ARÈNE</button>
-              <button type="button" data-view="lab" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span>SANCTUAIRE</button>
+              <button type="button" data-view="stats" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>ÉTAT</button>
               <button type="button" data-view="menu" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-menu"/></svg></span>MENU</button>
             </nav>
           </div>
@@ -392,7 +392,7 @@
       <p class="description" id="creatureDesc">Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.</p>
       <div class="pill-row"><span class="type-pill" id="elementBadge"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> MYSTÈRE</span><span class="type-pill" id="levelBadge">LV. 1 · 0 XP</span><span class="type-pill" id="disciplineBadge">SOINS : 0</span><span class="type-pill" id="geneBadge"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> PREMIÈRE LIGNÉE</span></div>
       <div class="creature-signature"><span class="signature-symbol" id="sigSymbol"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span><div><b id="sigMove">POUVOIR MYSTÈRE</b><div id="sigTrait">Un destin à découvrir.</div></div></div><div class="currency"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> BITS <b id="bits">20</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-trophy"/></svg> VICTOIRES <b id="wins">0</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> ÂGE <b id="age">00:00</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> GÉN. <b id="gen">01</b></span></div>
-      <section class="panel"><div class="panel-header"><h2>01 / ÉTAT DE TON COMPAGNON</h2><span class="section-number" id="wellnessTag">EN ATTENTE</span></div><div class="stats" id="statList"></div></section>
+      <section class="panel"><div class="panel-header"><h2>01 / ÉTAT DE TON COMPAGNON</h2><span class="section-number" id="wellnessTag">EN ATTENTE</span></div><div class="genetic-summary" style="margin:10px 0"><span>ÉTAPE DE VIE</span><b id="quickLifeState">ŒUF</b><small id="quickLifeDetails">Ton compagnon attend sa naissance.</small></div><div class="stats" id="statList"></div></section>
       <section class="panel"><div class="panel-header"><h2>02 / PRENDS SOIN DE LUI</h2><span class="section-number">6 ACTIONS</span></div><div class="actions">
         <button type="button" class="action" data-action="feed"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-food"/></svg></span><strong>NOURRIR</strong><small>+ satiété</small></button>
         <button type="button" class="action" data-action="play"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-play"/></svg></span><strong>JOUER</strong><small>+ moral</small></button>
@@ -464,7 +464,8 @@
 <script src="./onboarding-v016.js?v=0161"></script>
 <script src="./play-v017.js?v=0172"></script>
 <script src="./explore-v019.js?v=0201"></script>
-<script src="./lifecycle-v020.js?v=0201"></script>
+<script src="./lifecycle-v020.js?v=022"></script>
+<script src="./farewell-v022.js?v=022"></script>
 <script src="./dev-lifecycle-v021.js?v=021"></script>
 <script>
 (() => {
@@ -477,8 +478,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
-  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,FarewellV22=window.ByteBuddyFarewellV22,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
+  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!FarewellV22||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = DEV_MODE ? 'bytebuddy98-save-dev-v021' : 'bytebuddy98-save-v1'; // Developer save is isolated; normal key remains unchanged.
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.name]))};
@@ -591,7 +592,7 @@
   function hatch(){if(state.stage!==0||state.lifeOutcome)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);LifeV20.onHatch(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render();if(IntroV16.isActive())IntroV16.onHatch();else openNaming(true)}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
-    if(activitySceneState||miniState||V10UI.isFoodOpen()||namingOpen||PlayV17.active()||IntroV16.isShown())return;
+    if(FarewellV22.active()||activitySceneState||miniState||V10UI.isFoodOpen()||namingOpen||PlayV17.active()||IntroV16.isShown())return;
     if(state.stage===0){if(state.lifeOutcome){notify('Ouvre le sanctuaire pour commencer une nouvelle génération.');return;}if(type==='ok'){hatch();return}notify('Commence par faire éclore ton œuf !');return}
     if(type==='sleep'){
       state.sleeping=!state.sleeping;state.lifeAutoSleep=false;lifeReact(state.sleeping?'sleep':'wake');log(state.sleeping?`${names[state.form]} fait une petite sieste…`:`${names[state.form]} se réveille plein d'espoir !`);notify(state.sleeping?'Zzz… sommeil réparateur':'REVEIL Ton compagnon est réveillé !');save();render();playSound('sleep');return;
@@ -619,11 +620,20 @@
   }
   function renderGenealogy(){LifeV20.render(state,names);}
   function newGame(){
-    if(state.stage>0&&!confirm('Confier définitivement '+(state.petName||names[state.form])+' au sanctuaire ? Sa fiche restera dans le Livre des générations. Tu ne pourras pas le récupérer.'))return;
-    if(state.stage===0&&!state.lifeOutcome&&!confirm('Recommencer avec un nouvel œuf ?'))return;
+    if(FarewellV22.active())return;
+    if(state.stage>0){
+      const name=state.petName||names[state.form];
+      if(!confirm('Confier définitivement '+name+' au sanctuaire ? Tu conserveras son hommage et ses statistiques dans le Livre des générations. Ce départ est irréversible.'))return;
+      ExploreV19.stop('EXPLORATION EN PAUSE : DÉPART AU SANCTUAIRE.');
+      if(!LifeV20.archive(state,'sanctuary'))return;
+      const record=state.family[state.family.length-1];
+      save();render();
+      FarewellV22.start(record,'sanctuary');
+      return;
+    }
+    if(!state.lifeOutcome&&!confirm('Recommencer avec un nouvel œuf ?'))return;
     ExploreV19.stop('EXPLORATION EN PAUSE : NOUVELLE GÉNÉRATION.');
     const old=state;
-    if(old.stage>0)LifeV20.archive(old,'sanctuary');
     state=LifeV20.newGeneration(old,base,$('nextAffinity').value);
     V10.initialize(state);fight=null;closeBattle();save();render();
     notify('NOUVELLE GÉNÉRATION ! Fais éclore ton unique œuf.');
@@ -905,10 +915,13 @@
   $('petNamingCancel').addEventListener('click',closeNaming);
   $('petNamingInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();savePetName();}else if(e.key==='Escape'){e.stopPropagation();closeNaming();}});
   function render(){
-    if(!fight&&LifeV20.evaluate(state))ExploreV19.stop('FIN DE VIE : EXPLORATION ARRÊTÉE.');
+    const naturalPassing=!fight&&LifeV20.evaluate(state);
+    if(naturalPassing)ExploreV19.stop('FIN DE VIE : EXPLORATION ARRÊTÉE.');
     V10UI.render(state);
     ExploreV19.refresh();
     if(state.daily.day!==today())state.daily=blankDaily();
+    $('quickLifeState').textContent=LifeV20.phase(state)+(state.stage>0?' · JOUR '+LifeV20.ageDays(state):'');
+    $('quickLifeDetails').textContent=state.stage>0?'ESPÉRANCE : '+LifeV20.longevity(state)+' JOURS · AFFINITÉ : '+(state.genetics?.affinity||types[state.form]||'NEUTRE').toUpperCase()+' · OBJECTIF : '+(state.stage===3?'FORME ULTIME':state.stage===2?'ULTIME AU JOUR 16':'PREMIÈRE ÉVOLUTION AU JOUR 3'):state.lifeOutcome?'SON SOUVENIR RESTE DANS LE LIVRE DES GÉNÉRATIONS.':'TON COMPAGNON ATTEND SON ÉCLOSION.';
     $('elementBadge').innerHTML=pixelIcon(symbols[types[state.form]]||'egg')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
     $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
@@ -926,6 +939,7 @@
     $('displayNote').textContent=state.lifeOutcome?'VOIR LE LIVRE DES GÉNÉRATIONS':state.stage===0?'PRESSE LE BOUTON CENTRAL POUR ÉCLORE':state.sleeping?'CHUUUT… IL DORT':state.health<25?'IL A BESOIN DE SOINS !':state.poops>0?'IL FAUT FAIRE LE MÉNAGE !':state.stage===3?'COMPAGNON LÉGENDAIRE !':'PRENDS SOIN DE TON AMI PIXEL';
     document.querySelectorAll('[data-action]').forEach(btn=>{const a=btn.dataset.action;btn.disabled=state.stage===0 || (state.sleeping&&a!=='sleep') || (state.health<=0&&a!=='sleep'&&a!=='heal')});
     $('battleStart').disabled=state.stage===0 || state.sleeping || state.health<=5 || state.energy<10;syncConsole();if(DEV_MODE)DevV21.refresh();
+    if(naturalPassing){save();FarewellV22.start(state.family[state.family.length-1],'natural');}
   }
   const escapeHtml = str=>String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   // V0.4 / Tour par tour et talents héréditaires.
@@ -1336,11 +1350,11 @@
   },true);
 
   function showScreen(name){
-    if((DEV_MODE&&name==='trainer')||!orderedScreens.includes(name)||DexV18.active()||activitySceneState||miniState||PlayV17.active()||V10UI.isFoodOpen()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
+    if(FarewellV22.active()||(DEV_MODE&&name==='trainer')||!orderedScreens.includes(name)||DexV18.active()||activitySceneState||miniState||PlayV17.active()||V10UI.isFoodOpen()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.20 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.22 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1350,7 +1364,7 @@
   }
   document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>showScreen(el.dataset.view)));
   $('menuHelp').addEventListener('click',()=>$('helpOverlay').classList.add('visible'));
-  $('hatchHome').addEventListener('click',()=>{if(state.lifeOutcome)showScreen('lab');else if(state.stage===0)hatch();else showScreen('care')});
+  $('hatchHome').addEventListener('click',()=>{if(state.lifeOutcome)showScreen('lab');else if(state.stage===0)hatch();else showScreen('stats')});
   function syncConsole(){
     $('homeName').textContent=state.lifeOutcome?'CYCLE DE VIE TERMINÉ':(state.petName||names[state.form]);
     $('homeLevel').textContent=`LV.${state.level} • GÉN.${String(state.generation).padStart(2,'0')}`;
@@ -1360,7 +1374,7 @@
     $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';$('hatchHome').innerHTML=pixelIcon(state.lifeOutcome?'star':'egg')+(state.lifeOutcome?' LIVRE DES GÉNÉRATIONS':' FAIRE ÉCLORE');
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.20 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.22 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
@@ -1373,16 +1387,17 @@
   $('middleBtn').replaceWith($('middleBtn').cloneNode(true));
   $('rightBtn').replaceWith($('rightBtn').cloneNode(true));
   const navigate=delta=>showScreen(orderedScreens[(orderedScreens.indexOf(activeScreen)+delta+orderedScreens.length)%orderedScreens.length]);
-  $('leftBtn').addEventListener('click',()=>DexV18.active()?DexV18.close():PlayV17.active()?PlayV17.hardware('left'):(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
-  $('rightBtn').addEventListener('click',()=>DexV18.active()?DexV18.close():PlayV17.active()?PlayV17.hardware('right'):(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
+  $('leftBtn').addEventListener('click',()=>FarewellV22.active()?undefined:DexV18.active()?DexV18.close():PlayV17.active()?PlayV17.hardware('left'):(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('left'):activitySceneState?finishActivityScene():navigate(-1));
+  $('rightBtn').addEventListener('click',()=>FarewellV22.active()?undefined:DexV18.active()?DexV18.close():PlayV17.active()?PlayV17.hardware('right'):(V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())?undefined:V10UI.isFoodOpen()?V10UI.closeFood():miniState?miniHardware('right'):activitySceneState?finishActivityScene():navigate(1));
   $('middleBtn').addEventListener('click',()=>{
+    if(FarewellV22.active())return;
     if(DexV18.active()){DexV18.close();return;}
     if(PlayV17.active()){PlayV17.hardware('middle');return;}
-    if(PlayV17.active()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
+    if(FarewellV22.active()||PlayV17.active()||V11UI.isActive()||V12UI.active()||namingOpen||IntroV16.isShown())return;
     if(V10UI.isFoodOpen()){V10UI.closeFood();return;}
     if(miniState){miniHardware('middle');return;}
     if(activitySceneState){finishActivityScene();return;}
-    if(activeScreen==='home'){if(state.stage===0)hatch();else showScreen('care')}
+    if(activeScreen==='home'){if(state.lifeOutcome)showScreen('lab');else if(state.stage===0)hatch();else showScreen('stats')}
     else if(activeScreen==='menu')showScreen('stats');
     else if(activeScreen==='arena')startBattle();
     else if(activeScreen==='care'){action('feed')}
@@ -1562,6 +1577,7 @@
       notify('PIXEL CATCH : '+points+'/'+total+' · +'+bits+' BITS !');
     }
   });
+  FarewellV22.setup({draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true}),names,book:()=>showScreen('lab'),canNew:()=>state.stage===0&&!!state.lifeOutcome,next:()=>newGame()});
   if(DEV_MODE){DevV21.setup({state:()=>state,save,render,hatch,evolve,newGame,reset:()=>{localStorage.removeItem(KEY);window.location.reload();}});}
   render();syncConsole();save();if(DEV_MODE)showScreen('dev');requestAnimationFrame(paint);
 })();
