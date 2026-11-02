@@ -19,7 +19,10 @@ function normalize(s){
  if(!V)throw Error("Statistiques du jeu indisponibles");
  const v=V.validateSnapshot(s);
  const stats={...v.attributes},combat=V.fighter({attributes:stats,form:v.form});
- return {form:v.form,type:TYPES[v.form]||"neutre",trait:combat.trait||null,level:v.level,stage:v.stage,stats,
+  const typing=window.ByteBuddyTypingV23;
+  const primary=v.primaryType||TYPES[v.form]||"neutre";
+  const secondary=v.secondaryType&&v.secondaryType!==primary?v.secondaryType:null;
+ return {form:v.form,type:primary,secondaryType:secondary,trait:combat.trait||null,level:v.level,stage:v.stage,stats,
    maxHp:combat.maxPV,hp:combat.maxPV,maxEnergy:Math.min(100,48+Math.round(stats.endurance*.55)),
    energy:Math.min(100,48+Math.round(stats.endurance*.55)),focus:0,guard:false};
 }
@@ -38,7 +41,9 @@ function choose(room,index,action){
  room.choices[index]=action;
  return {ready:room.choices.every(Boolean),player:index};
 }
-function chanceType(at,def){
+function chanceType(at,def,secondary=null){
+ const typing=window.ByteBuddyTypingV23;
+ if(typing)return typing.ratio(at,[def,secondary]);
  if(ADVANTAGES[at]===def)return 1.25;
  if(ADVANTAGES[def]===at)return .86;
  return 1;
@@ -70,7 +75,8 @@ function resolve(room){
    const critical=roll(room)<clamp(.035+atk.stats.precision*.0017+(atk.trait==='precision'?.025:0),.04,.25);
    const power=action==="special"?(11+atk.stats.esprit*.44+atk.level*.5):(8+atk.stats.force*.4+atk.level*.38);
    const resist=Math.max(.52,1-def.stats.defense*.0045)*(def.trait==='defense'?.93:1);
-   const element=chanceType(atk.type,def.type);
+   const moveType=action==="special"&&atk.secondaryType?atk.secondaryType:atk.type;
+    const element=chanceType(moveType,def.type,def.secondaryType);
    const specialBoost=action==='special'&&atk.trait==='esprit'?1.1:1;
    let dmg=Math.max(1,Math.round((power+roll(room)*4)*resist*element*specialBoost*(critical?1.45:1)));
    if(def.guard)dmg=Math.max(1,Math.round(dmg*(action==="special"?.62:.32)));
@@ -104,7 +110,7 @@ function botChoice(room){
 }
 function replay(room){
  return {ruleset:"v011",seed:room.seed,players:room.players.map(p=>({
-  kind:'bytebuddy-vs-preview',ruleset:'v010',form:p.form,level:p.level,stage:p.stage,attributes:{...p.stats}
+  kind:'bytebuddy-vs-preview',ruleset:'v010',form:p.form,level:p.level,stage:p.stage,primaryType:p.type,secondaryType:p.secondaryType||null,attributes:{...p.stats}
  })),rounds:room.history.map(h=>({actions:h.actions})),winner:room.winner};
 }
 function verifyReplay(rep){
