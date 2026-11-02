@@ -50,7 +50,8 @@ function buildMemory(r){
   ["VICTOIRES",r.wins||0],
   ["SOINS",r.care||0],
   ["JOURS EXEMPLAIRES",r.goodDays||0],
-  ["AFFINITÉ",(r.affinity||"INCONNUE").toUpperCase()],
+  ["TYPE PRINCIPAL",(r.primaryType||r.affinity||"INCONNU").toUpperCase()],
+  ["SECOND TYPE",(r.secondaryType||"AUCUN").toUpperCase()],
   ["TALENT",(r.trait||"NON DÉFINI").toUpperCase()],
   ["STAT DOMINANTE",dominant(r)]
  ])$("bbFarewellStats").appendChild(statLine(label,value));
