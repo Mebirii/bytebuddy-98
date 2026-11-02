@@ -105,8 +105,7 @@ function open(r,kind,animate){
  $("bbFarewellScene").hidden=false;$("bbFarewellBottom").hidden=false;
  $("bbFarewellHeading").textContent=mode==="sanctuary"?"LE SANCTUAIRE":"UN DERNIER HOMMAGE";
  if(animate&&!reduced?.matches){
-  startAt=performance.now();frameId=requestAnimationFrame(drawScene);
-  drawScene(startAt);$("bbFarewellSkip").focus();
+  startAt=performance.now();drawScene(startAt);$("bbFarewellSkip").focus();
  }else{showMemory();}
  return true;
 }
