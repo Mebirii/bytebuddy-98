@@ -308,9 +308,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">PIXEL MEMORIES / 0.22.1</div>
+    <div class="edition">DUAL TYPES / 0.23</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.22.1</strong> — lisibilité LCD · icônes distinctes · souvenirs</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.23</strong> — type de l'œuf fixe · évolutions · doubles types rares</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -460,7 +460,7 @@
 <script src="./progression-v010.js?v=023"></script>
 <script src="./typing-v023.js?v=023"></script>
 <script src="./ui-v010.js?v=0172"></script>
-<script src="./vs-engine-v011.js?v=0182"></script>
+<script src="./vs-engine-v011.js?v=023"></script>
 <script src="./vs-ui-v011.js?v=0182"></script>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script src="./vs-online-v012.js?v=0182"></script>
@@ -1397,7 +1397,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.22.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.23 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
