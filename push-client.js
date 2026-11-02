@@ -1,6 +1,7 @@
 /* ByteBuddy cloud push: opt-in, per-device subscription, no account required. */
 (() => {
   "use strict";
+  if(window.ByteBuddyDevMode)return; // Never read or sync production push state in the developer sandbox.
   const API = String(window.BYTEBUDDY_PUSH_API || "").replace(/\/+$/, "");
   const KEY = "bytebuddy98-push-device-v1";
   const ENABLED = "bytebuddy98-push-enabled-v1";
