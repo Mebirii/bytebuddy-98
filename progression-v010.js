@@ -108,7 +108,7 @@ function snapshot(state){
  return {kind:'bytebuddy-vs-preview',ruleset:'v010',form:String(state.form),
   stage:Math.min(3,Math.max(0,Number(state.stage)||0)),
   level:Math.min(99,Math.max(1,Number(state.level)||1)),
-  type:'pixel-monster',primaryType:p.primary||null,secondaryType:p.secondary||null,
+  type:'pixel-monster',primaryType:window.ByteBuddyTypingV23?.validPrimary(p.primary)?p.primary:null,secondaryType:p.secondary||null,
   attributes:{...state.attributes}};
 }
 function validateSnapshot(raw){
