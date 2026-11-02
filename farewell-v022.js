@@ -56,7 +56,7 @@ function buildMemory(r){
   ["STAT DOMINANTE",dominant(r)]
  ])$("bbFarewellStats").appendChild(statLine(label,value));
  const portrait=$("bbFarewellPortrait");portrait.getContext("2d").clearRect(0,0,100,100);
- if(bridge?.draw)bridge.draw(portrait,r.form);
+ if(bridge?.draw)bridge.draw(portrait,r.form,r);
  $("bbFarewellNext").hidden=!bridge?.canNew?.();
 }
 function drawScene(t){
@@ -79,7 +79,7 @@ function drawScene(t){
  else if(progress<.65){x=34+(progress-.21)/.44*125;y=49+Math.abs(Math.sin(t/225))*3;}
  else{x=159+(progress-.65)/.35*30;y=53+(progress-.65)/.35*22;}
  const fade=progress<.67?1:Math.max(0,1-(progress-.67)/.29);
- if(fade>0&&bridge.draw){bridge.draw(sprite,current.form);ctx.save();ctx.globalAlpha=fade;ctx.drawImage(sprite,0,0,100,100,Math.round(x),Math.round(y),94,94);ctx.restore();}
+ if(fade>0&&bridge.draw){bridge.draw(sprite,current.form,current);ctx.save();ctx.globalAlpha=fade;ctx.drawImage(sprite,0,0,100,100,Math.round(x),Math.round(y),94,94);ctx.restore();}
  // Four small ascending pixels, deterministic and not CPU-heavy.
  for(let i=0;i<7;i++){const drift=(elapsed/70+i*19)%80,px=170+(i*13%38),py=118-drift;tile(px,py,3+i%2,3+i%2,i%2?colors.ink:colors.light);}
  const text=progress<.2?(mode==="sanctuary"?"LE SANCTUAIRE T'ACCUEILLE...":"UNE VIE S'ACHÈVE PAISIBLEMENT...")
