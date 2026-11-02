@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id),cfg=window.BYTEBUDDY_ACCOUNT_CONFIG||{};
 const endpoint=String(cfg.url||"").trim().replace(/\/$/,""),key=String(cfg.publishableKey||"").trim();
 const configured=/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(endpoint)&&key.length>30;
-const usable=configured&&!!window.supabase?.createClient;
+const usable=!window.ByteBuddyDevMode&&configured&&!!window.supabase?.createClient;
 const style=document.createElement("style");style.textContent="\n.bb-trainer{font:10px/1.5 monospace;color:#38583b;display:flex;flex-direction:column;gap:8px}\n.bb-trainer h3{font:900 13px monospace;margin:5px 0}\n.bb-trainer label{font:900 10px monospace;display:block}\n.bb-trainer input{width:100%;display:block;margin:3px 0 8px;padding:9px;background:#ecf5d6;color:#355439;border:2px solid #819d76;border-radius:4px;font:11px monospace}\n.bb-trainer button{background:#396145;border:2px solid #759475;border-radius:5px;padding:9px 5px;min-height:43px;color:#f2fade;font:900 10px monospace}\n.bb-trainer button:disabled{opacity:.4}\n.bb-trainer-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}\n.bb-trainer-status{border:1px dashed #809b73;padding:8px;min-height:42px;border-radius:5px;font:10px/1.5 monospace}\n.bb-trainer-info{padding:8px;background:#dceac2;border:1px solid #819875;border-radius:4px}\n.bb-trainer p{font:10px/1.6 monospace;margin:0 0 6px}\n.bb-trainer [hidden]{display:none!important}\n";document.head.appendChild(style);
 const nav=document.createElement("button");nav.type="button";nav.dataset.view="trainer";nav.innerHTML='<span><svg class="px-icon" aria-hidden="true"><use href="#px-home"/></svg></span>DRESSEUR';
 $("lcdMenu").querySelector(".lcd-menu-grid").appendChild(nav);
@@ -200,7 +200,7 @@ if(usable){
  info("Inscris-toi ou connecte-toi.");
  updateAuth().catch(e=>info("Session : "+(e.message||"erreur")));
 }else{
- info(configured?"Module de connexion temporairement inaccessible. Recharge la page.":
+ info(window.ByteBuddyDevMode?"Mode test : comptes et transferts cloud désactivés.":configured?"Module de connexion temporairement inaccessible. Recharge la page.":
    "Serveur ByteBuddy dédié non activé. Le jeu et les sauvegardes locales restent disponibles.");
  for(const id of ["trainerSignup","trainerSignin","trainerReset"])$(id).disabled=true;
 }
