@@ -42,7 +42,7 @@ function render(){
  $("v11Round").textContent="MANCHE "+String(Math.min(room.round,24)).padStart(2,"0");
  for(let i=0;i<2;i++){
    const p=room.players[i];
-   $("v11Name"+i).textContent="J"+(i+1)+" "+(names[p.form]||p.form);
+   $("v11Name"+i).textContent="J"+(i+1)+" "+(names[p.form]||p.form)+" · "+(p.type||"NEUTRE").toUpperCase()+(p.secondaryType?" / "+p.secondaryType.toUpperCase():"");
    $("v11Hp"+i).textContent=p.hp+"/"+p.maxHp+" PV · EN "+p.energy;
    $("v11Bar"+i).style.width=(p.hp/p.maxHp*100)+"%";
    api.draw($("v11Sprite"+i),p.form);
