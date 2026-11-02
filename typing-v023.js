@@ -25,11 +25,12 @@ const validSecondary=(primary,secondary)=>secondary===null||secondary===undefine
  (TYPES.has(secondary)&&secondary!=="neutre"&&secondary!==primary);
 function lineage(st){
  if(!st||typeof st!=="object")return null;
+ // The chosen egg is authoritative, including for migrated old saves.
+ const egg=EGGS[st.starterEgg];
+ if(egg)return egg;
  if(validPrimary(st.primaryType))return st.primaryType;
  const affinity=st.genetics?.affinity;
  if(validPrimary(affinity))return affinity;
- const egg=EGGS[st.starterEgg];
- if(egg)return egg;
  const form=nativeType(st.form);
  if(validPrimary(form))return form;
  return null;
@@ -47,9 +48,9 @@ function normalize(st){
  if(!st||typeof st!=="object")return;
  const primary=lineage(st);
  st.primaryType=primary;
- if(primary&&!validPrimary(st.genetics?.affinity)){
+ if(primary&&st.genetics?.affinity!==primary){
   st.genetics={...st.genetics,affinity:primary,
-   talent:st.genetics?.talent||({flamme:"force",nature:"garde",eau:"esprit",foudre:"force"})[primary],
+   talent:st.genetics?.talent||({flamme:"force",nature:"garde",eau:"esprit",foudre:"force",ombre:"esprit",lumière:"garde"})[primary],
    mutation:st.genetics?.mutation||null,parent:st.genetics?.parent||"baby",partner:st.genetics?.partner||"baby"};
  }
  if(st.stage<3)st.secondaryType=null;
