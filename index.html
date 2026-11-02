@@ -308,9 +308,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">DUAL TYPES / 0.23</div>
+    <div class="edition">DUAL SPRITES / 0.24</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.23</strong> — type de l'œuf fixe · évolutions · doubles types rares</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.24</strong> — 5 apparences rares · sprites LCD · doubles types</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -459,6 +459,7 @@
 <script src="./bestiary-ui-v018.js?v=0181"></script>
 <script src="./progression-v010.js?v=0232"></script>
 <script src="./typing-v023.js?v=0231"></script>
+<script src="./dual-sprites-v024.js?v=024"></script>
 <script src="./ui-v010.js?v=0172"></script>
 <script src="./vs-engine-v011.js?v=023"></script>
 <script src="./vs-ui-v011.js?v=023"></script>
@@ -487,8 +488,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,TypingV23=window.ByteBuddyTypingV23,FarewellV22=window.ByteBuddyFarewellV22,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
-  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!TypingV23||!FarewellV22||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,TypingV23=window.ByteBuddyTypingV23,DualV24=window.ByteBuddyDualSpritesV24,FarewellV22=window.ByteBuddyFarewellV22,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
+  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!TypingV23||!DualV24||!FarewellV22||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = DEV_MODE ? 'bytebuddy98-save-dev-v021' : 'bytebuddy98-save-v1'; // Developer save is isolated; normal key remains unchanged.
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.name]))};
@@ -662,11 +663,20 @@
     const spriteW=24, spriteH=24;
     const startX=Math.floor((cw-spriteW*scale)/2)+(options.pose==='attack'?2*scale:0),startY=Math.floor((ch-spriteH*scale)/2)+(options.still?0:jump*scale);
     const pix=(x,y,w=1,h=1,color=dark)=>{ctx.fillStyle=color;ctx.fillRect(startX+x*scale,startY+y*scale,w*scale,h*scale)};
+    // Live variant throughout the game; explicit remote/memorial profiles override it.
+    const drawProfile=options.profile===undefined?(form===state.form&&state.stage===3?state:null):options.profile;
+    const variantPrimary=drawProfile?.primaryType||drawProfile?.type||null;
+    const variantSecondary=drawProfile?.secondaryType||null;
+    const drawDual=()=>{
+      if(form==='egg'||form==='baby'||!variantPrimary||!variantSecondary)return;
+      DualV24.draw(variantPrimary,variantSecondary,pix,{dark,mid,light,pale},t,!!options.still);
+    };
     const row=(y,x,w,color=dark)=>pix(x,y,w,1,color);
     const eye=(x,y)=>{if(blink)pix(x,y,2,1,dark);else {pix(x,y,2,2,dark);pix(x,y,1,1,pale)}};
     const outlineBox=(x,y,w,h)=>{pix(x,y,w,h,dark);pix(x+1,y+1,w-2,h-2,mid)};
     // The new 24x24 sprites share the same fixed four-tone LCD palette and scaling.
     if(BestiaryV18.draw(form,pix,eye,{dark,mid,light,pale})){
+      drawDual();
       if(options.ill)pix(23,3,2,2,dark);
       return;
     }
@@ -759,6 +769,7 @@
     // Extra halos for the two secret forms.
     if(form==='lumia'){[[6,3],[8,2],[10,1],[12,1],[14,2],[16,3],[4,6],[18,5]].forEach(([x,y])=>pix(x,y,2,1,pale));pix(9,0,6,1,dark)}
     if(form==='nebula'){[[1,4],[22,3],[2,8],[21,9],[1,16],[22,17],[5,1],[18,1]].forEach(([x,y])=>pix(x,y,1,1,pale))}
+    drawDual();
     if(options.ill) {ctx.fillStyle=dark;ctx.fillRect(startX+23*scale,startY+3*scale,2*scale,2*scale)}
     if(options.still)return;
   }
@@ -967,7 +978,7 @@
     const petTypes=TypingV23.profile(state),combatType=petTypes.primary;
     $('elementBadge').innerHTML=pixelIcon(symbols[combatType]||'egg')+' '+TypingV23.typeLabel(state);$('elementBadge').classList.toggle('legend',isRare(state.form));
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
-    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[combatType]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[combatType]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
+    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[combatType]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[combatType]||'egg');$('sigMove').textContent=petTypes.secondary?'VARIANTE : '+DualV24.label(petTypes.primary,petTypes.secondary):(BestiaryV18.species[state.form]?.trait||sig[1]);$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
     renderDaily();renderDex();renderGenealogy();
     $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=LifeV20.phase(state);$('creatureDesc').textContent=desc[state.form];
     $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=(state.lifeOutcome?'MEMORIAL':['EGG','BABY','ROOKIE','ULTIMATE'][state.stage])+' / '+String(state.generation).padStart(2,'0');
@@ -975,7 +986,7 @@
     const well=state.stage===0?'EN ATTENTE':state.health<25?'DANGER':state.health<55?'FRAGILE':state.sleeping?'ENDORMI':state.health>=80?'EN FORME':'À SURVEILLER';$('wellnessTag').textContent=well;
     $('statList').innerHTML=metrics.map(([key,label])=>{const val=Math.round(state[key]);return `<div class="stat-row"><span class="stat-label">${label}</span><div class="bar" role="progressbar" aria-label="${label}" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="100"><div class="fill ${val<28?'low':val<51?'medium':''}" style="width:${val}%"></div></div><span class="stat-value">${val}%</span></div>`}).join('');
     const ev=evoConfig();$('evoTarget').textContent=ev.target;$('evoRequirement').textContent=ev.detail;$('evoPercent').textContent=Math.round(ev.fraction*100)+' %';$('evoBar').style.width=Math.round(ev.fraction*100)+'%';
-    $('evoHint').textContent=state.stage===0?'Choisis ton œuf : son type principal restera fixe toute sa vie.':state.stage===1?'Ton œuf '+(combatType||'neutre').toUpperCase()+' évoluera dans sa famille. Les entraînements débloquent une branche spécialisée.':state.stage===2?'Une forme ultime rare peut ajouter un deuxième type selon tes soins, stats, combats et alimentation.':'Forme ultime atteinte : '+TypingV23.typeLabel(state)+(petTypes.secondary?' · DOUBLE TYPE RARE !':' · Un seul type.');
+    $('evoHint').textContent=state.stage===0?'Choisis ton œuf : son type principal restera fixe toute sa vie.':state.stage===1?'Ton œuf '+(combatType||'neutre').toUpperCase()+' évoluera dans sa famille. Les entraînements débloquent une branche spécialisée.':state.stage===2?'Une forme ultime rare peut ajouter un deuxième type selon tes soins, stats, combats et alimentation.':'Forme ultime atteinte : '+TypingV23.typeLabel(state)+(petTypes.secondary?' · APPARENCE RARE : '+DualV24.label(petTypes.primary,petTypes.secondary):' · Un seul type.');
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
     $('lcdMood').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':'heart')+' '+(state.stage===0?'PRÊT':state.sleeping?'ZZZ':state.health<25?'SOS':state.joy<30?'TRISTE':'CONTENT');
@@ -1397,7 +1408,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.23 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.24 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1578,8 +1589,8 @@
     evolve();save();render();
   }
   V10UI.setup({state:()=>state,feed:v10Feed});
-  V11UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true})});
-  V12UI.setup({state:()=>state,draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true}),openDuel:()=>showScreen("vs")});
+  V11UI.setup({state:()=>state,draw:(canvas,form,profile)=>drawPixelCreature(canvas,form,performance.now(),{still:true,profile:profile||null})});
+  V12UI.setup({state:()=>state,draw:(canvas,form,profile)=>drawPixelCreature(canvas,form,performance.now(),{still:true,profile:profile||null}),openDuel:()=>showScreen("vs")});
   if(!DEV_MODE)TrainerV13.setup({
     snapshot:()=>{save();return JSON.parse(JSON.stringify(state));},
     validate:data=>restoreSave(JSON.stringify(data)),
@@ -1620,7 +1631,7 @@
       notify('PIXEL CATCH : '+points+'/'+total+' · +'+bits+' BITS !');
     }
   });
-  FarewellV22.setup({draw:(canvas,form)=>drawPixelCreature(canvas,form,performance.now(),{still:true}),names,book:()=>showScreen('lab'),canNew:()=>state.stage===0&&!!state.lifeOutcome,next:()=>newGame()});
+  FarewellV22.setup({draw:(canvas,form,record)=>drawPixelCreature(canvas,form,performance.now(),{still:true,profile:record||null}),names,book:()=>showScreen('lab'),canNew:()=>state.stage===0&&!!state.lifeOutcome,next:()=>newGame()});
   if(DEV_MODE){DevV21.setup({state:()=>state,save,render,hatch,evolve,newGame,reset:()=>{localStorage.removeItem(KEY);window.location.reload();}});}
   render();syncConsole();save();if(DEV_MODE)showScreen('dev');requestAnimationFrame(paint);
 })();
