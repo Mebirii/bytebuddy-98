@@ -146,6 +146,14 @@
     .lcd-app .mode-select{max-width:100%;background:#f0f6d8;border:2px solid #8ca77f;color:#2c4d35}
     .lcd-app .progress-area{color:#425b43}.lcd-app .progress-track>div{background:#52754a}
     .lcd-app .mission small,.lcd-app .family-member span,.lcd-app .genetic-summary small,.lcd-app .lab-status,.lcd-app .nest-heading{color:#48684b}
+    /* V0.22.1 — Accessible contrast on the original green pixel-LCD, including narrow screens. */
+    .lcd-app .genetic-summary{background:#dbe8c0;border:2px solid #8aa27f;color:#2f4835}
+    .lcd-app .genetic-summary>span{display:block;color:#2d4934;font-size:11px;font-weight:900;letter-spacing:.55px;line-height:1.45;text-transform:uppercase}
+    .lcd-app .genetic-summary>b{color:#243d2d;font-size:15px;font-weight:900;line-height:1.3;overflow-wrap:anywhere}
+    .lcd-app .genetic-summary>small{display:block;color:#405b43;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+    .lcd-app .quick-life-summary{margin:10px 0;padding:11px 12px;gap:5px}
+    .lcd-app #quickLifeState{display:block;color:#243d2d}
+    .lcd-app #quickLifeDetails{display:block;color:#405b43}
     .lcd-app .egg-list{grid-template-columns:repeat(2,minmax(0,1fr))}
     .lcd-app .egg-card{background:#d2e5b9;color:#325238;border-color:#83a37c;min-height:118px}
     .lcd-app .egg-card small{color:#4d6a4b}.lcd-app .egg-card.rare{background:#f1e6b3}
@@ -300,9 +308,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">PIXEL MEMORIES / 0.22</div>
+    <div class="edition">PIXEL MEMORIES / 0.22.1</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.22</strong> — hommage pixel · État rapide · souvenirs · LCD rétro</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.22.1</strong> — lisibilité LCD · icônes distinctes · souvenirs</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -354,8 +362,8 @@
             <section id="lcdMenu" class="lcd-menu" aria-label="Menu du jeu">
               <div class="lcd-menu-top"><b>MENU PRINCIPAL</b><span>CHOISIS UN MODE</span></div>
               <div class="lcd-menu-grid">
-                <button type="button" data-view="stats"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>ÉTAT</button>
-                <button type="button" data-view="care"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-food"/></svg></span>SOINS</button>
+                <button type="button" data-view="stats"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></span>ÉTAT</button>
+                <button type="button" data-view="care"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>SOINS</button>
                 <button type="button" data-view="arena"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>COMBAT</button>
                 <button type="button" data-view="evolution"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></span>ÉVOLUTION</button>
                 <button type="button" data-view="missions"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-target"/></svg></span>MISSIONS</button>
@@ -370,7 +378,7 @@
               <button type="button" data-view="home" class="active" aria-pressed="true"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-home"/></svg></span>MONSTRE</button>
               <button type="button" data-view="care" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>SOINS</button>
               <button type="button" data-view="arena" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg></span>ARÈNE</button>
-              <button type="button" data-view="stats" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-heart"/></svg></span>ÉTAT</button>
+              <button type="button" data-view="stats" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></span>ÉTAT</button>
               <button type="button" data-view="menu" aria-pressed="false"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-menu"/></svg></span>MENU</button>
             </nav>
           </div>
@@ -392,7 +400,7 @@
       <p class="description" id="creatureDesc">Un tout nouveau compagnon t'attend à l'intérieur de cet œuf. Appuie sur ÉCLORE pour commencer son histoire.</p>
       <div class="pill-row"><span class="type-pill" id="elementBadge"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg> MYSTÈRE</span><span class="type-pill" id="levelBadge">LV. 1 · 0 XP</span><span class="type-pill" id="disciplineBadge">SOINS : 0</span><span class="type-pill" id="geneBadge"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> PREMIÈRE LIGNÉE</span></div>
       <div class="creature-signature"><span class="signature-symbol" id="sigSymbol"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-egg"/></svg></span><div><b id="sigMove">POUVOIR MYSTÈRE</b><div id="sigTrait">Un destin à découvrir.</div></div></div><div class="currency"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> BITS <b id="bits">20</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-trophy"/></svg> VICTOIRES <b id="wins">0</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> ÂGE <b id="age">00:00</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-clock"/></svg> GÉN. <b id="gen">01</b></span></div>
-      <section class="panel"><div class="panel-header"><h2>01 / ÉTAT DE TON COMPAGNON</h2><span class="section-number" id="wellnessTag">EN ATTENTE</span></div><div class="genetic-summary" style="margin:10px 0"><span>ÉTAPE DE VIE</span><b id="quickLifeState">ŒUF</b><small id="quickLifeDetails">Ton compagnon attend sa naissance.</small></div><div class="stats" id="statList"></div></section>
+      <section class="panel"><div class="panel-header"><h2>01 / ÉTAT DE TON COMPAGNON</h2><span class="section-number" id="wellnessTag">EN ATTENTE</span></div><div class="genetic-summary quick-life-summary"><span>PHASE DE VIE</span><b id="quickLifeState">ŒUF</b><small id="quickLifeDetails">Ton compagnon attend sa naissance.</small></div><div class="stats" id="statList"></div></section>
       <section class="panel"><div class="panel-header"><h2>02 / PRENDS SOIN DE LUI</h2><span class="section-number">6 ACTIONS</span></div><div class="actions">
         <button type="button" class="action" data-action="feed"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-food"/></svg></span><strong>NOURRIR</strong><small>+ satiété</small></button>
         <button type="button" class="action" data-action="play"><span class="action-icon"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-play"/></svg></span><strong>JOUER</strong><small>+ moral</small></button>
@@ -1386,7 +1394,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.22 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.22.1 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1406,7 +1414,7 @@
     $('homeFeeling').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':state.joy<30?'bell':'heart')+' '+lifeMoodLabel();$('lcdMood').innerHTML=pixelIcon('heart')+' '+lifeMoodLabel();
     $('hatchHome').style.display=state.stage===0?'':'none';$('hatchHome').innerHTML=pixelIcon(state.lifeOutcome?'star':'egg')+(state.lifeOutcome?' LIVRE DES GÉNÉRATIONS':' FAIRE ÉCLORE');
     $('lcdTitle').textContent=activeScreen==='home'?(state.stage===0?'NEW LIFE':names[state.form]):headings[activeScreen].replace(/^[^A-ZÀ-Ÿ]+/u,'');
-    $('lcdViewHeading').lastElementChild.textContent=`V0.22 / GEN ${String(state.generation).padStart(2,'0')}`;
+    $('lcdViewHeading').lastElementChild.textContent=`V0.22.1 / GEN ${String(state.generation).padStart(2,'0')}`;
   }
   // A gentle pat is an actual game interaction; each bonus has a cooldown.
   $('gameCanvas').addEventListener('click',petCompanion);
