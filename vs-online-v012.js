@@ -43,7 +43,7 @@ function render(){
  $("onlineRound").textContent=room?"MANCHE "+room.round+" · CONNECTÉ":"SALON "+code;
  if(room?.players){
   room.players.forEach((p,i)=>{
-   $("onlineName"+i).textContent="J"+(i+1)+" "+(roomNames[p.form]||p.form);
+   $("onlineName"+i).textContent="J"+(i+1)+" "+(roomNames[p.form]||p.form)+" · "+(p.type||"NEUTRE").toUpperCase()+(p.secondaryType?" / "+p.secondaryType.toUpperCase():"");
    $("onlineVitals"+i).textContent=p.hp+"/"+p.maxHp+" PV · EN "+p.energy;
    $("onlineHP"+i).style.width=Math.min(100,Math.max(0,p.hp/p.maxHp*100))+"%";
    api?.draw($("onlineSprite"+i),p.form);
