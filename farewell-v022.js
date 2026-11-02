@@ -52,6 +52,7 @@ function buildMemory(r){
   ["JOURS EXEMPLAIRES",r.goodDays||0],
   ["TYPE PRINCIPAL",(r.primaryType||r.affinity||"INCONNU").toUpperCase()],
   ["SECOND TYPE",(r.secondaryType||"AUCUN").toUpperCase()],
+  ...(r.secondaryType?[["APPARENCE RARE",window.ByteBuddyDualSpritesV24?.label(r.primaryType||r.affinity,r.secondaryType)||"VARIANTE RARE"]]:[]),
   ["TALENT",(r.trait||"NON DÉFINI").toUpperCase()],
   ["STAT DOMINANTE",dominant(r)]
  ])$("bbFarewellStats").appendChild(statLine(label,value));
