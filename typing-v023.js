@@ -20,7 +20,7 @@ const SECOND=Object.freeze({flamme:"ombre",nature:"lumière",eau:"foudre",foudre
 const ADVANTAGE=Object.freeze({flamme:"nature",nature:"eau",eau:"flamme",foudre:"eau",ombre:"lumière",lumière:"ombre"});
 const TYPES=new Set(ELEMENTS);
 const nativeType=form=>FORMS[form]||"neutre";
-const validPrimary=t=>PRIMARY.includes(t);
+const validPrimary=t=>PRIMARY.includes(t)||t==="ombre"||t==="lumière"; // Legacy pets may carry these.
 const validSecondary=(primary,secondary)=>secondary===null||secondary===undefined||secondary===""||
  (TYPES.has(secondary)&&secondary!=="neutre"&&secondary!==primary);
 function lineage(st){
@@ -61,6 +61,7 @@ function specialRookie(st){
  if(primary==="nature")return s.defense>=20&&(d.legumes||0)>=2?SPECIAL[primary]:BASE[primary];
  if(primary==="eau")return s.esprit>=18&&(d.poisson||0)>=2?SPECIAL[primary]:BASE[primary];
  if(primary==="foudre")return s.vitesse>=20&&s.endurance>=16?SPECIAL[primary]:BASE[primary];
+ if(primary==="ombre")return "shade";
  return null;
 }
 function rareSecondary(st,form){
