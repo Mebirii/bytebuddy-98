@@ -955,6 +955,7 @@
       target.innerHTML=order.map(id=>`<div class="dex-item" id="dex-${id}"><canvas id="sprite-${id}" width="88" height="88" aria-hidden="true"></canvas><strong id="label-${id}"></strong><small id="kind-${id}"></small></div>`).join('');
       for(const id of order)drawPixelCreature($('sprite-'+id),id,0,{still:true});
     }
+    if(state.stage===3&&state.secondaryType&&$('sprite-'+state.form))drawPixelCreature($('sprite-'+state.form),state.form,0,{still:true});
     for(const id of order){const seen=!!state.dex[id],el=$('dex-'+id);el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label',seen?'Voir la fiche '+names[id]:'Voir un indice de découverte numéro '+(order.indexOf(id)+1));el.classList.toggle('locked',!seen);el.classList.toggle('new',id===state.form);$('label-'+id).textContent=seen?names[id]:'???';$('kind-'+id).textContent=seen?(isRare(id)?'SECRET':(id.endsWith('2')?'ULTIME':id==='egg'?'ŒUF':id==='baby'?'BÉBÉ':id==='lumia'||id==='nebula'?'SECRET':'ROOKIE')):'NON DÉCOUVERT';}
   }
   function openNaming(automatic=false){
