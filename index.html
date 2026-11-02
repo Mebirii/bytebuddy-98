@@ -457,7 +457,8 @@
 <script>window.ByteBuddyDevMode = new URLSearchParams(window.location.search).get("dev") === "1";</script>
 <script src="./bestiary-v018.js?v=018"></script>
 <script src="./bestiary-ui-v018.js?v=0181"></script>
-<script src="./progression-v010.js?v=0182"></script>
+<script src="./progression-v010.js?v=023"></script>
+<script src="./typing-v023.js?v=023"></script>
 <script src="./ui-v010.js?v=0172"></script>
 <script src="./vs-engine-v011.js?v=0182"></script>
 <script src="./vs-ui-v011.js?v=0182"></script>
@@ -486,8 +487,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,FarewellV22=window.ByteBuddyFarewellV22,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
-  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!FarewellV22||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20,TypingV23=window.ByteBuddyTypingV23,FarewellV22=window.ByteBuddyFarewellV22,DevV21=window.ByteBuddyDevV21,DEV_MODE=window.ByteBuddyDevMode;
+  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20||!TypingV23||!FarewellV22||!DevV21)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = DEV_MODE ? 'bytebuddy98-save-dev-v021' : 'bytebuddy98-save-v1'; // Developer save is isolated; normal key remains unchanged.
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.name]))};
@@ -528,6 +529,7 @@
   state.bond=CLAMP(Number(state.bond)||0);state.lifeAutoSleep=state.lifeAutoSleep===true;
    V10.initialize(state);
   LifeV20.normalize(state);
+  TypingV23.normalize(state);
   let fight=null;
   let toastTimer=null;
   let actionFx={type:'',until:0};
@@ -538,7 +540,7 @@
   function progressDaily(field){if(state.daily.day!==today())state.daily=blankDaily();state.daily[field]=Math.min(99,(state.daily[field]||0)+1)}
   const dailyTasks=()=>[{name:'Deux bons repas',note:'Nourrir 2 fois',count:state.daily.feed,goal:2},{name:'Deux jeux ensemble',note:'Jouer 2 fois',count:state.daily.play,goal:2},{name:'Une victoire',note:'Gagner un combat',count:state.daily.win,goal:1}];
   function claimDaily(){if(state.daily.day!==today())state.daily=blankDaily();if(state.daily.claimed||!dailyTasks().every(m=>m.count>=m.goal))return;state.daily.claimed=true;state.bits+=25;log('Missions quotidiennes terminées : +25 Bits !');notify('+25 BITS ! Missions accomplies.');save();render()}
-  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-60):[];next.petName=typeof data.petName==='string'?data.petName.replace(/[^\p{L}\p{N} _'-]/gu,'').replace(/\s+/g,' ').trim().slice(0,18):'';next.trainerName=typeof data.trainerName==='string'&&/^[a-z][a-z0-9_]{2,19}$/.test(data.trainerName)?data.trainerName:'';next.lastDate=Date.now();LifeV20.normalize(next);return next}
+  function restoreSave(raw){const data=JSON.parse(raw);if(!data||![1,2,3,4].includes(data.version)||!names[data.form]||![0,1,2,3].includes(data.stage)||!Number.isFinite(data.bits)||data.bits<0)throw Error('Fichier de sauvegarde invalide');const next={...base(),...data,version:4};V10.initialize(next);next.log=Array.isArray(data.log)?data.log.filter(s=>typeof s==='string').slice(0,7):[];next.dex=data.dex&&typeof data.dex==='object'&&!Array.isArray(data.dex)?data.dex:{};next.dex.egg=true;next.dex[data.form]=true;next.daily=data.daily&&data.daily.day===today()?data.daily:blankDaily();next.level=Math.max(1,Math.floor(Number(data.level)||1));next.mistakes=Math.max(0,Math.floor(Number(data.mistakes)||0));next.genetics=normalizeGenetics(data.genetics);next.eggs=Array.isArray(data.eggs)?data.eggs.map(normalizeEgg).filter(Boolean).slice(0,3):[];next.family=Array.isArray(data.family)?data.family.filter(x=>x&&Object.hasOwn(names,x.form)&&Number.isFinite(x.generation)).slice(-60):[];next.petName=typeof data.petName==='string'?data.petName.replace(/[^\p{L}\p{N} _'-]/gu,'').replace(/\s+/g,' ').trim().slice(0,18):'';next.trainerName=typeof data.trainerName==='string'&&/^[a-z][a-z0-9_]{2,19}$/.test(data.trainerName)?data.trainerName:'';next.lastDate=Date.now();LifeV20.normalize(next);TypingV23.normalize(next);return next}
   const exportSave=()=>{save();const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const url=URL.createObjectURL(b);a.href=url;a.download=DEV_MODE?'bytebuddy98-sauvegarde-test.json':'bytebuddy98-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
   const save = () => {state.lastDate=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state));$('statusOnline').textContent=DEV_MODE?'SAUVEGARDE TEST ISOLÉE':'SAUVEGARDE AUTO ACTIVE'}catch(_){$('statusOnline').textContent='STOCKAGE NON DISPONIBLE'}};
   const timeString = secs => {const n=Math.max(0,Math.floor(secs));return String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n%3600/60)).padStart(2,'0')};
@@ -590,14 +592,14 @@
   }
   function evolve(){
     if(state.stage===1&&LifeV20.ageDays(state)>=3&&V10.babyStatus(state).ready){
-      const next=V10.rookie(state);state.stage=2;state.form=next;discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`ÉVOLUTION : ${names[next]} ! +15 Bits`);playSound('evolve');
+      const next=V10.rookie(state);state.stage=2;state.form=next;state.secondaryType=null;TypingV23.normalize(state);discover(next);state.health=CLAMP(state.health+30);state.energy=CLAMP(state.energy+20);state.bits+=15;actionFx={type:'evolve',until:Date.now()+2800};log(`ÉVOLUTION ! ${names[next]} est né !`);notify(`ÉVOLUTION : ${names[next]} ! +15 Bits`);playSound('evolve');
     }else if(state.stage===2&&LifeV20.ageDays(state)>=16&&state.care>=24&&state.wins>=3){
       let next=V10.adult(state);
-      if(!names[next])next='volt2';
-      state.stage=3;state.form=next;discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
+      if(!names[next])next=state.form+'2';
+      state.stage=3;state.form=next;state.secondaryType=TypingV23.rareSecondary(state,next);TypingV23.normalize(state);discover(next);state.health=100;state.energy=100;state.bits+=50;actionFx={type:'evolve',until:Date.now()+3200};log(`ÉVOLUTION ULTIME ! ${names[next]} !`);notify(`ÉVOLUTION : ${names[next]} ! +50 Bits`);playSound('evolve');
     }
   }
-  function hatch(){if(state.stage!==0||state.lifeOutcome)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);LifeV20.onHatch(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render();if(IntroV16.isActive())IntroV16.onHatch();else openNaming(true)}
+  function hatch(){if(state.stage!==0||state.lifeOutcome)return;state.form='baby';state.stage=1;state.age=0;state.health=100;state.energy=90;state.fullness=85;state.joy=85;state.hygiene=90;state.poops=0;state.babyBornAt=Date.now();V10.initialize(state);TypingV23.normalize(state);LifeV20.onHatch(state);discover('baby');log('CRAC ! BIBI vient de sortir de son œuf !');notify('OEUF* Félicitations ! BIBI est né !');playSound('hatch');actionFx={type:'evolve',until:Date.now()+2200};lifeReact('hatch');save();render();if(IntroV16.isActive())IntroV16.onHatch();else openNaming(true)}
   function action(type){
     // Prevent multiple care actions from starting during an LCD scene.
     if(FarewellV22.active()||activitySceneState||miniState||V10UI.isFoodOpen()||namingOpen||PlayV17.active()||IntroV16.isShown())return;
@@ -643,7 +645,7 @@
     ExploreV19.stop('EXPLORATION EN PAUSE : NOUVELLE GÉNÉRATION.');
     const old=state;
     state=LifeV20.newGeneration(old,base,$('nextAffinity').value);
-    V10.initialize(state);fight=null;closeBattle();save();render();
+    TypingV23.normalize(state);V10.initialize(state);fight=null;closeBattle();save();render();
     notify('NOUVELLE GÉNÉRATION ! Fais éclore ton unique œuf.');
     showScreen('home');
   }
@@ -961,10 +963,11 @@
     ExploreV19.refresh();
     if(state.daily.day!==today())state.daily=blankDaily();
     $('quickLifeState').textContent=LifeV20.phase(state)+(state.stage>0?' · JOUR '+LifeV20.ageDays(state):'');
-    $('quickLifeDetails').textContent=state.stage>0?'ESPÉRANCE : '+LifeV20.longevity(state)+' JOURS · AFFINITÉ : '+(state.genetics?.affinity||types[state.form]||'NEUTRE').toUpperCase()+' · OBJECTIF : '+(state.stage===3?'FORME ULTIME':state.stage===2?'ULTIME AU JOUR 16':'PREMIÈRE ÉVOLUTION AU JOUR 3'):state.lifeOutcome?'SON SOUVENIR RESTE DANS LE LIVRE DES GÉNÉRATIONS.':'TON COMPAGNON ATTEND SON ÉCLOSION.';
-    $('elementBadge').innerHTML=pixelIcon(symbols[types[state.form]]||'egg')+' '+types[state.form].toUpperCase();$('elementBadge').classList.toggle('legend',isRare(state.form));
+    $('quickLifeDetails').textContent=state.stage>0?'ESPÉRANCE : '+LifeV20.longevity(state)+' JOURS · TYPE : '+TypingV23.typeLabel(state)+' · OBJECTIF : '+(state.stage===3?'FORME ULTIME':state.stage===2?'ULTIME AU JOUR 16':'PREMIÈRE ÉVOLUTION AU JOUR 3'):state.lifeOutcome?'SON SOUVENIR RESTE DANS LE LIVRE DES GÉNÉRATIONS.':'TON COMPAGNON ATTEND SON ÉCLOSION.';
+    const petTypes=TypingV23.profile(state),combatType=petTypes.primary;
+    $('elementBadge').innerHTML=pixelIcon(symbols[combatType]||'egg')+' '+TypingV23.typeLabel(state);$('elementBadge').classList.toggle('legend',isRare(state.form));
     $('levelBadge').textContent=`LV.${state.level} · ${Math.floor(state.xp)}/${state.level*14+12} XP`;
-    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[types[state.form]]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[types[state.form]]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
+    $('disciplineBadge').textContent=`SOINS : ${state.care} · ERREURS : ${state.mistakes}`;const sig=signature[combatType]||signature.mystère;$('sigSymbol').innerHTML=pixelIcon(symbols[combatType]||'egg');$('sigMove').textContent=BestiaryV18.species[state.form]?.trait||sig[1];$('sigTrait').textContent=BestiaryV18.species[state.form]?.detail||sig[2];
     renderDaily();renderDex();renderGenealogy();
     $('creatureName').textContent=state.petName||names[state.form];$('phaseLabel').textContent=LifeV20.phase(state);$('creatureDesc').textContent=desc[state.form];
     $('lcdTitle').textContent=state.stage===0?'NEW LIFE':state.petName||names[state.form];$('lcdStage').textContent=(state.lifeOutcome?'MEMORIAL':['EGG','BABY','ROOKIE','ULTIMATE'][state.stage])+' / '+String(state.generation).padStart(2,'0');
@@ -972,7 +975,7 @@
     const well=state.stage===0?'EN ATTENTE':state.health<25?'DANGER':state.health<55?'FRAGILE':state.sleeping?'ENDORMI':state.health>=80?'EN FORME':'À SURVEILLER';$('wellnessTag').textContent=well;
     $('statList').innerHTML=metrics.map(([key,label])=>{const val=Math.round(state[key]);return `<div class="stat-row"><span class="stat-label">${label}</span><div class="bar" role="progressbar" aria-label="${label}" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="100"><div class="fill ${val<28?'low':val<51?'medium':''}" style="width:${val}%"></div></div><span class="stat-value">${val}%</span></div>`}).join('');
     const ev=evoConfig();$('evoTarget').textContent=ev.target;$('evoRequirement').textContent=ev.detail;$('evoPercent').textContent=Math.round(ev.fraction*100)+' %';$('evoBar').style.width=Math.round(ev.fraction*100)+'%';
-    $('evoHint').textContent=state.stage===0?'Ton premier compagnon ne demande qu’à naître.':state.stage===1?'Nouvelles branches : FORCE + PRÉCISION + VIANDE (Flamme), DÉFENSE + LÉGUMES (Nature), ESPRIT + POISSON (Eau), VITESSE + ENDURANCE (Foudre).':state.stage===2?'Pour une évolution secrète, vise 5 à 7 victoires et un niveau élevé avant ton 24e soin !':'Tu as atteint la dernière évolution de cette génération. Explore l’arène ou relance une aventure !';
+    $('evoHint').textContent=state.stage===0?'Choisis ton œuf : son type principal restera fixe toute sa vie.':state.stage===1?'Ton œuf '+(combatType||'neutre').toUpperCase()+' évoluera dans sa famille. Les entraînements débloquent une branche spécialisée.':state.stage===2?'Une forme ultime rare peut ajouter un deuxième type selon tes soins, stats, combats et alimentation.':'Forme ultime atteinte : '+TypingV23.typeLabel(state)+(petTypes.secondary?' · DOUBLE TYPE RARE !':' · Un seul type.');
     $('journal').innerHTML=state.log.map(l=>`<li>${escapeHtml(l)}</li>`).join('');
     $('sleepText').textContent=state.sleeping?'RÉVEILLER':'DORMIR';$('lcdScreen').classList.toggle('sleeping',state.sleeping);
     $('lcdMood').innerHTML=pixelIcon(state.sleeping?'sleep':state.health<25?'heal':'heart')+' '+(state.stage===0?'PRÊT':state.sleeping?'ZZZ':state.health<25?'SOS':state.joy<30?'TRISTE':'CONTENT');
@@ -991,7 +994,7 @@
     {name:'OMBROX',type:'ombre',nature:'Spectre des données',temper:'rusé'}
   ];
   const multipliers={flamme:{nature:1.35,eau:.8},nature:{eau:1.35,flamme:.8},eau:{flamme:1.35,nature:.8},foudre:{eau:1.35,nature:.9},ombre:{lumière:1.35},lumière:{ombre:1.35}};
-  const effectiveness=(a,b)=>(multipliers[a]||{})[b]||1;
+  const effectiveness=(a,b)=>TypingV23.ratio(a,b);
   const intents={attack:{icon:'battle',label:'FRAPPE RAPIDE',detail:'Une attaque classique arrive. Tu peux parer ou riposter.'},heavy:{icon:'alert',label:'COUP PUISSANT',detail:'Gros dégâts annoncés : la parade est conseillée.'},charge:{icon:'star',label:'CONCENTRATION',detail:'L’ennemi reprend son souffle : une ouverture pour attaquer !'},guard:{icon:'guard',label:'GARDE RENFORCÉE',detail:'Les frappes normales sont réduites, mais les pouvoirs traversent sa défense.'}};
   function chooseIntent(previous=''){
     const pool=['attack','attack','attack','heavy','charge','guard'];
@@ -1028,13 +1031,13 @@
   }
   function updateFight(){if(!fight)return;
     $('yourFightName').textContent=names[state.form];$('enemyFightName').textContent=fight.enemyName;
-    $('yourTypeLabel').innerHTML=pixelIcon(symbols[types[state.form]]||'egg')+' '+types[state.form].toUpperCase();
+    $('yourTypeLabel').innerHTML=pixelIcon(symbols[TypingV23.profile(state).primary]||'egg')+' '+TypingV23.typeLabel(state);
     $('enemyTypeLabel').innerHTML=pixelIcon(symbols[fight.enemyType]||'egg')+' '+fight.enemyType.toUpperCase();
     $('ownHpText').textContent=`${fight.ownHp}/${fight.ownMax} PV`;$('enemyHpText').textContent=`${fight.enemyHp}/${fight.enemyMax} PV`;
     $('ownHpBar').style.width=CLAMP(fight.ownHp/fight.ownMax*100)+'%';$('enemyHpBar').style.width=CLAMP(fight.enemyHp/fight.enemyMax*100)+'%';
     for(const id of ['attackBtn','defendBtn','focusBtn','specialBtn'])$(id).disabled=fight.done||fight.busy;
     $('specialBtn').disabled=fight.done||fight.busy||state.energy<10;
-    $('specialLabel').textContent=(signature[types[state.form]]||signature.neutre)[1];
+    $('specialLabel').textContent=(signature[TypingV23.attackType(state,'special')]||signature.neutre)[1];
     $('battleNote').textContent=fight.done?'Combat terminé · Tu peux fermer la fenêtre':`Pouvoir : 10 énergie • Tour ${fight.turn+1} • Niveau ${state.level}`;
     $('focusMeter').textContent=`${fight.focus} / 3`;$('energyMeter').textContent=Math.round(state.energy)+' / 100';
     const intent=intents[fight.intent]||intents.attack;
@@ -1081,7 +1084,7 @@
     const bonus=Math.min(13,Math.floor(state.train*.65)+Math.floor((state.level-1)*1.3));
     const incoming=fight.intent;const fighter=V10.fighter(state);let msg='',defending=move==='defend';
     if(move==='attack'||move==='special'){
-      const eff=effectiveness(types[state.form],fight.enemyType),critical=Math.random()<fighter.crit;
+      const element=TypingV23.attackType(state,move),eff=effectiveness(element,fight.enemyType),critical=Math.random()<fighter.crit;
       const baseDmg=Math.round((atk+bonus+Math.floor(Math.random()*6))*fighter.attack);
       const guardFactor=incoming==='guard'?(move==='special'?.95:.34):1;
       const factor=move==='special'?(1.45+.22*fight.focus):1;
@@ -1090,8 +1093,8 @@
       fight.enemyHp=Math.max(0,fight.enemyHp-dmg);
       if(move==='special'){state.energy=CLAMP(state.energy-10);fight.focus=0}
       else fight.focus=Math.min(3,fight.focus+1);
-      battleFx('enemy',types[state.form]);playSound(move==='special'?'special':'hit');
-      const attackName=move==='special'?(signature[types[state.form]]||signature.neutre)[1]:'FRAPPE PIXEL';
+      battleFx('enemy',element);playSound(move==='special'?'special':'hit');
+      const attackName=move==='special'?(signature[element]||signature.neutre)[1]:'FRAPPE PIXEL';
       const effLabel=eff>1?' • SUPER EFFICACE':eff<1?' • Résistance ennemie':'';
       msg=landed?`${attackName} : -${dmg} PV${critical?' • CRITIQUE':''}${effLabel}${guardFactor<.5?' • Bloqué par la garde':''}`:'ATTAQUE MANQUÉE · entraîne sa précision !';
     }else if(move==='defend'){
@@ -1109,7 +1112,7 @@
       if(incoming==='charge')retaliation=`${fight.enemyName} se concentre : sa prochaine frappe sera lourde !`;
       else if(incoming==='guard')retaliation=`${fight.enemyName} s'est protégé et ne riposte pas.`;
       else{
-        const eff=effectiveness(fight.enemyType,types[state.form]);
+        const ownTypes=TypingV23.profile(state),eff=effectiveness(fight.enemyType,[ownTypes.primary,ownTypes.secondary]);
         let dmg=Math.round((incoming==='heavy'?11:5)+fight.tier*3+(fight.hard?5:0)+Math.random()*5);
         dmg=Math.max(1,Math.round(dmg*eff*V10.fighter(state).defense));
         if(defending){dmg=Math.max(1,Math.floor(dmg/(incoming==='heavy'?5:3)));fight.focus=Math.min(3,fight.focus+1)}
