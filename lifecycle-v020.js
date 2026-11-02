@@ -61,6 +61,9 @@ function archive(st,reason,now=Date.now()){
   trait:st.genetics?.talent||null,affinity:st.genetics?.affinity||null,
   birthAt:l.birthAt||null,endedAt:now,days:ageDays(st,now),
   goodDays:l.goodDays||0,cause:reason,
+  attributes:st.attributes&&typeof st.attributes==="object"
+   ?Object.fromEntries(["vitalite","force","defense","vitesse","precision","endurance","esprit"]
+     .map(key=>[key,Math.max(0,Math.min(99,Math.round(Number(st.attributes[key])||0)))])):null,
   parents:st.genetics?[st.genetics.parent,st.genetics.partner]:[]
  };
  st.family.push(entry);st.family=st.family.slice(-MAX_HISTORY);
@@ -153,7 +156,16 @@ function render(st,names){
   const note=document.createElement("span");
   const cause=x.cause==="natural"?"MÉMORIAL":x.cause==="sanctuary"?"SANCTUAIRE":"ARCHIVES";
   note.textContent=cause+" · J"+(Number.isFinite(x.days)?x.days:"?")+" · LV."+(x.level||1)+" · "+(x.wins||0)+" VICTOIRES";
-  row.append(title,note);tree.appendChild(row);
+  row.append(title,note);
+  if(window.ByteBuddyFarewellV22?.openRecord){
+   row.classList.add("bb-memory-entry");row.setAttribute("role","button");row.tabIndex=0;
+   row.setAttribute("aria-label","Voir l'hommage de "+(x.name||names[x.form]||"compagnon"));
+   row.addEventListener("click",()=>window.ByteBuddyFarewellV22.openRecord(x));
+   row.addEventListener("keydown",event=>{
+    if(event.key==="Enter"||event.key===" "){event.preventDefault();window.ByteBuddyFarewellV22.openRecord(x);}
+   });
+  }
+  tree.appendChild(row);
  }
  if(!entries.length&&st.stage===0){
   const empty=document.createElement("div");empty.className="empty-nest";
