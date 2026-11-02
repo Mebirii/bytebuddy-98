@@ -58,7 +58,8 @@ function archive(st,reason,now=Date.now()){
  const entry={
   generation:st.generation,form:st.form,name:st.petName||"",
   level:st.level||1,wins:st.wins||0,care:st.care||0,
-  trait:st.genetics?.talent||null,affinity:st.genetics?.affinity||null,
+  trait:st.genetics?.talent||null,affinity:st.primaryType||st.genetics?.affinity||null,
+  primaryType:st.primaryType||st.genetics?.affinity||null,secondaryType:st.secondaryType||null,
   birthAt:l.birthAt||null,endedAt:now,days:ageDays(st,now),
   goodDays:l.goodDays||0,cause:reason,
   attributes:st.attributes&&typeof st.attributes==="object"
@@ -98,7 +99,7 @@ function newGeneration(old,base,affinity){
  return {...next,
   trainerName:old.trainerName||"",onboarding:{step:"done"},
   generation:Math.max(1,Number(old.generation)||1)+1,
-  starterEgg:s.egg,
+  starterEgg:s.egg,primaryType:pick,secondaryType:null,
   genetics:{affinity:pick,talent:s.talent,mutation:null,parent:"baby",partner:"baby"},
   pendingHeritage:{stat:s.stat,amount:Math.min(2,old.family?.length||0)},
   dex:{...old.dex,egg:true},exploration:old.exploration||null,
