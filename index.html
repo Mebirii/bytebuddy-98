@@ -475,8 +475,8 @@
     return '<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-'+(allowed.has(id)?id:'star')+'"/></svg>';
   };
 
-  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19;
-  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19)throw Error('Modules de jeu, versus ou dresseur indisponibles');
+  const BestiaryV18=window.ByteBuddyBestiaryV18,DexV18=window.ByteBuddyDexV18,V10=window.ByteBuddyV10,V10UI=window.ByteBuddyV10UI,V11UI=window.ByteBuddyV11UI,V12UI=window.ByteBuddyV12UI,TrainerV13=window.ByteBuddyTrainerV13,IntroV16=window.ByteBuddyIntro,PlayV17=window.ByteBuddyPlayV17,ExploreV19=window.ByteBuddyExploreV19,LifeV20=window.ByteBuddyLifeV20;
+  if(!BestiaryV18||!DexV18||!V10||!V10UI||!V11UI||!V12UI||!TrainerV13||!IntroV16||!PlayV17||!ExploreV19||!LifeV20)throw Error('Modules de jeu, versus ou dresseur indisponibles');
   const KEY = 'bytebuddy98-save-v1'; // Original save key, maintained for V0.1 & V0.2 migration
   const CLAMP = (v,min=0,max=100) => Math.max(min,Math.min(max,v));
   const names = {prism:'PRISMOR',auror:'AURORIX',egg:'ŒUF MYSTÈRE',baby:'BIBI',ember:'EMBERIX',verd:'VERDIX',volt:'ZAPPIX',aqua:'AQUARI',shade:'OMBRO',ember2:'INFERIX',verd2:'FLORION',volt2:'VOLTAR',aqua2:'MARÉON',shade2:'NOCTURON',lumia:'LUMIAR',nebula:'NÉBULIX',...Object.fromEntries(Object.entries(BestiaryV18.species).map(([id,entry])=>[id,entry.name]))};
