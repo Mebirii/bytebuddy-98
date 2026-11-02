@@ -60,7 +60,8 @@ function step(n){
   if(st.stage===1)st.babyBornAt=Date.now()-Math.max(21*60000,d*DAY);
   bridge.evolve();bridge.evolve();
   lived++;
-  if(life.evaluate(st)){lifeEnd=d;stop();break;}
+  // Let the real game renderer perform the death and trigger the same farewell animation.
+  if(life.ageDays(st)>=life.longevity(st)){lifeEnd=d;stop();break;}
  }
  bridge.save();bridge.render();
  if(lifeEnd!==null){stop();notice("FIN DE VIE NATURELLE AU JOUR "+lifeEnd+" · RETROUVE SES SOUVENIRS DANS LE MÉMORIAL.");}
