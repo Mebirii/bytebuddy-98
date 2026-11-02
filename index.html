@@ -317,9 +317,9 @@
 <main class="page">
   <header class="masthead">
     <div class="logo"><div class="mark" aria-hidden="true"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg></div><div><div class="brand-kicker">VIRTUAL COMPANION SYSTEM</div><div class="brand">BYTE<span>BUDDY</span> <span style="font-size:.45em;color:#b9d5d3">'98</span></div><p class="tagline">Adopte. Élève. Entraîne. Fais évoluer.</p></div></div>
-    <div class="edition">DUAL SPRITES / 0.24</div>
+    <div class="edition">FIREBASE MIGRATION / 0.25</div>
   </header>
-  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.24</strong> — 5 apparences rares · sprites LCD · doubles types</span><span>100 % navigateur • sans compte</span></div>
+  <div class="v02-ribbon v03-banner"><span><strong>NOUVEAU / V0.25</strong> — sauvegarde locale préservée · cloud Firebase en préparation</span><span>100 % navigateur • sans compte</span></div>
   <section class="layout" aria-label="Jeu de compagnon virtuel">
     <div class="device-wrap">
       <div class="device" aria-label="Console virtuelle ByteBuddy">
@@ -448,7 +448,7 @@
         <button type="button" class="tiny-btn" id="testNotification"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-bell"/></svg> ENVOYER UNE NOTIFICATION TEST</button>
         <p class="bb-setting-help">Les alertes locales fonctionnent quand le jeu reste ouvert. Sur iPhone, installe ByteBuddy sur l’écran d’accueil pour les notifications push.</p>
         <div class="bb-setting"><strong><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-phone"/></svg> PUSH — MÊME JEU FERMÉ</strong><button type="button" id="enableCloudPush" class="primary" disabled>SERVEUR EN PRÉPARATION</button></div>
-        <p id="cloudPushStatus" class="bb-setting-help" aria-live="polite">Un serveur dédié est nécessaire pour les notifications quand le jeu est fermé.</p>
+        <p id="cloudPushStatus" class="bb-setting-help" aria-live="polite">Notifications à distance suspendues pendant la migration vers Firebase. Les alertes locales restent disponibles.</p>
         <button type="button" class="tiny-btn" id="testCloudPush" disabled><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-phone"/></svg> TESTER LA NOTIFICATION PUSH</button>
       </section>
     </section>
@@ -477,9 +477,8 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script src="./qr-v015.js?v=0151"></script>
-<script src="./trainer-config.js?v=014"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
-<script src="./trainer-v013.js?v=0172"></script>
+<script src="./firebase-config.js?v=025"></script>
+<script src="./firebase-trainer-v025.js?v=025"></script>
 <script src="./onboarding-v016.js?v=023"></script>
 <script src="./play-v017.js?v=0172"></script>
 <script src="./explore-v019.js?v=0201"></script>
@@ -1418,7 +1417,7 @@
     if($('battleOverlay').classList.contains('visible')||$('helpOverlay').classList.contains('visible'))return;
     activeScreen=name;screen.dataset.screen=name;
     for(let i=0;i<sections.length;i++)sections[i].hidden=(moduleKeys[i]!==name);
-    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.24 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
+    $('lcdViewHeading').innerHTML=`${headings[name]||'BYTEBUDDY'}<span>V0.25 / GEN ${String(state.generation).padStart(2,'0')}</span>`;
     app.scrollTop=0;$('lcdMenu').scrollTop=0;
     document.querySelectorAll('[data-view]').forEach(el=>{
       const current=el.dataset.view===name;
@@ -1672,7 +1671,7 @@
   render();syncConsole();save();if(DEV_MODE)showScreen('dev');requestAnimationFrame(paint);
 })();
 </script>
-<script src="./push-config.js?v=014"></script>
-<script src="./push-client.js?v=0172"></script>
+<!-- Remote Supabase push temporarily disabled during Firebase migration.
+     Local notification controls above remain fully available. -->
 </body>
 </html>
