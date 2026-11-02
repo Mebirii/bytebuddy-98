@@ -445,7 +445,7 @@
     <div class="stack-row" style="font-size:10px;color:#c4d9ce;margin-top:12px"><span id="yourTypeLabel">TON ÉLÉMENT</span><span id="enemyTypeLabel">ÉLÉMENT ADVERSE</span></div><div class="fight-message" id="fightMessage" aria-live="polite">Choisis ton attaque !</div><div class="battle-meter"><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> IMPULSION <b id="focusMeter">0 / 3</b></span><span><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> ÉNERGIE <b id="energyMeter">100</b></span></div><div class="battle-actions"><button type="button" id="attackBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-battle"/></svg> FRAPPER <small>+1 impulsion</small></button><button type="button" id="defendBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-defense"/></svg> PARER <small>réduit les dégâts</small></button><button type="button" class="focus" id="focusBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-esprit"/></svg> CANALISER <small>énergie + impulsion</small></button><button type="button" class="super" id="specialBtn"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-star"/></svg> POUVOIR <small id="specialLabel">10 énergie</small></button></div><div class="battle-strategy"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-alert"/></svg> L’ennemi annonce son prochain mouvement. Pare un coup puissant, frappe pendant sa concentration et emploie ton pouvoir contre sa garde.</div><div class="battle-log" id="battleLog" aria-live="polite"></div><div class="battle-bottom"><span id="battleNote">Pouvoir : 10 énergie</span><button class="tiny-btn" id="leaveBattle" type="button">QUITTER</button></div>
   </div>
 </div>
-<div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button" aria-label="Fermer l'aide"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg></button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, joue, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> le bébé grandit après 20 minutes, 12 soins, 2 aliments différents et un entraînement réussi. La forme ultime demande ensuite 24 soins et 3 victoires. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Jouer / Pixel Catch :</strong> déplace ta créature à gauche ou à droite pour attraper les étoiles et éviter les bugs. Utilise OK pour le bouclier. Termine les 12 objets pour gagner des Bits, du moral et de l’XP selon ton score ; abandonner ne rapporte rien.</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme &gt; Nature &gt; Eau &gt; Flamme ; Foudre &gt; Eau ; Lumière / Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (OK). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>Élevage :</strong> Découvre les 16 entrées du bestiaire, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
+<div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="modal"><div class="modal-top"><h2 id="helpHeading">COMMENT JOUER</h2><button class="close" id="helpClose" type="button" aria-label="Fermer l'aide"><svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg></button></div><p class="modal-help">Fais éclore ton œuf, puis nourris, joue, nettoie et entraîne ton compagnon. Ses jauges diminuent progressivement : il a besoin de toi.</p><p class="modal-help"><strong>Évolutions :</strong> le bébé peut évoluer à partir du 3e jour après 12 soins, 2 aliments différents et un entraînement réussi. La forme ultime est accessible à partir du 16e jour avec 24 soins et 3 victoires. Entraînement : flamme ; jeu : nature ; nettoyage : eau ; équilibre : foudre. Une discipline de combat peut révéler l'ombre. Des formes rares ont des conditions cachées : accumule d'abord 5 victoires et prends soin de tes jauges avant le cap des 24 soins !</p><p class="modal-help"><strong>Jouer / Pixel Catch :</strong> déplace ta créature à gauche ou à droite pour attraper les étoiles et éviter les bugs. Utilise OK pour le bouclier. Termine les 12 objets pour gagner des Bits, du moral et de l’XP selon ton score ; abandonner ne rapporte rien.</p><p class="modal-help"><strong>Combats :</strong> frappe, pare, canalise ou lance ton pouvoir. L'élément de ton monstre influence les dégâts (Flamme &gt; Nature &gt; Eau &gt; Flamme ; Foudre &gt; Eau ; Lumière / Ombre). Observe l’intention ennemie : une frappe charge ton impulsion, parer amortit une attaque lourde, canaliser redonne de l’énergie et le pouvoir spécial traverse les gardes. Les combats rapportent Bits et XP. S'il perd, il est seulement blessé : soigne-le et repars à l'aventure.</p><p class="modal-help"><strong>Temps & sauvegarde :</strong> les besoins diminuent avec le temps, même quand tu quittes le jeu (avec une limite de dégradation). La partie est conservée dans le stockage local de ton navigateur. Les trois boutons physiques permettent maintenant de changer d’écran (<svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-left"/></svg> <svg class="px-icon" aria-hidden="true" focusable="false"><use href="#px-right"/></svg>) et de valider (OK). Les menus sont intégralement dans le LCD.</p><p class="modal-help"><strong>Élevage :</strong> Découvre les 16 entrées du bestiaire, crée des œufs au laboratoire (Rookie, 2 victoires, 40 Bits), choisis un œuf pour démarrer la génération suivante. Les talents Force / Garde / Esprit influencent les combats ; une mutation rare peut révéler une forme cachée à l'évolution ultime. Ton bestiaire, tes œufs non utilisés et ton arbre généalogique sont conservés. Les sauvegardes V0.1, V0.2, V0.3 et V0.4 restent compatibles. Tous les panneaux du jeu, l’arène, les menus et les réglages sont dans l’écran LCD.</p></div></div>
 <script>window.ByteBuddyDevMode = new URLSearchParams(window.location.search).get("dev") === "1";</script>
 <script src="./bestiary-v018.js?v=018"></script>
 <script src="./bestiary-ui-v018.js?v=0181"></script>
@@ -752,6 +752,38 @@
     if(options.ill) {ctx.fillStyle=dark;ctx.fillRect(startX+23*scale,startY+3*scale,2*scale,2*scale)}
     if(options.still)return;
   }
+  // 13x9 two-pixel LCD sprite: shared by the living and legacy scenes.
+  function drawPixelPoop(ctx,x,y,t){
+    const outline='#3b563d',body='#6d895f',shine='#a5c092';
+    const rows=[
+      '.....DDD.....',
+      '....DMLDD....',
+      '...DMMMMMD...',
+      '...DMMMMMMD..',
+      '..DDMMMMMDD..',
+      '.DMMMMMMMMMD.',
+      '.DMMMLMMMMMD.',
+      '.DMMMMMMMMMD.',
+      '..DDDDDDDDD..'
+    ];
+    // 2x2 real pixels: never use smooth scaling or modern emoji.
+    for(let row=0;row<rows.length;row++)for(let col=0;col<rows[row].length;col++){
+      const c=rows[row][col];if(c==='.')continue;
+      ctx.fillStyle=c==='D'?outline:c==='L'?shine:body;
+      ctx.fillRect(x+col*2,y+row*2,2,2);
+    }
+    ctx.fillStyle=outline;
+    // Two simple LCD eyes, a subtle tiny smile and grounding shadow.
+    ctx.fillRect(x+9,y+12,2,2);ctx.fillRect(x+17,y+12,2,2);
+    ctx.fillRect(x+12,y+16,4,2);
+    ctx.fillStyle='#829e75';ctx.fillRect(x+4,y+19,20,2);
+    if(!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){
+      const flip=Math.floor(t/520)%2;
+      ctx.fillStyle=flip?shine:body;
+      ctx.fillRect(x+8+flip*2,y-8,2,4);
+      ctx.fillRect(x+17-flip*2,y-12,2,3);
+    }
+  }
   function drawScene(t){
     const canvas=$('gameCanvas'),ctx=canvas.getContext('2d');
     const w=canvas.width,h=canvas.height;
@@ -767,7 +799,7 @@
     if(state.stage===0){drawPixelCreature(canvas,'egg',t,{scene:true});return}
     drawPixelCreature(canvas,state.form,t,{scene:true,ill:state.health<20});
     // Optional signs of daily life.
-    for(let i=0;i<state.poops;i++){const x=10+i*18;ctx.fillStyle='#3e593f';ctx.fillRect(x,h-50,8,5);ctx.fillRect(x+2,h-56,5,6);ctx.fillRect(x+3,h-60,3,4)}
+    for(let i=0;i<state.poops&&state.stage>0;i++)drawPixelPoop(ctx,11+i*32,h-64,t);
     if(actionFx.until>Date.now()){ctx.fillStyle='#405f3d';const yy=74-Math.sin(t/160)*4;ctx.fillRect(152,yy-11,6,23);ctx.fillRect(144,yy-3,22,6);}
     if(state.health<20){ctx.fillStyle='#405a3d';ctx.font='bold 12px monospace';ctx.fillText('!',151,80)}
   }
@@ -870,7 +902,7 @@
     // A handful of slowly moving monochrome particles gives the old LCD room some life.
     if(state.stage>0 && !state.sleeping){const beat=Math.floor(t/260);ctx.fillStyle='#7b9d6d';for(let i=0;i<4;i++){const x=32+((beat*2+i*61)%178),y=53+((i*31+Math.floor(beat/3))%73);ctx.fillRect(x,y,2,3)}}
     if(state.sleeping){ctx.fillStyle='#476948';ctx.font='bold 14px monospace';ctx.fillText('z z',162,82-Math.sin(t/330)*7)}
-    ctx.fillStyle='#395641';for(let i=0;i<state.poops;i++){const x=15+i*20;ctx.fillRect(x,h-54,13,6);ctx.fillRect(x+3,h-61,8,7);ctx.fillRect(x+5,h-65,4,4)}
+    for(let i=0;i<state.poops&&state.stage>0;i++)drawPixelPoop(ctx,11+i*32,h-64,t);
     if(actionFx.until>Date.now()){ctx.fillStyle='#3b563d';const yy=84-Math.sin(t/130)*7;ctx.fillRect(170,yy-13,6,25);ctx.fillRect(161,yy-3,24,6);}
     if(actionFx.type==='evolve'&&actionFx.until>Date.now()){
       const elapsed=(3200-(actionFx.until-Date.now()))/70;
