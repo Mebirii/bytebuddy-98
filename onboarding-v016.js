@@ -12,7 +12,7 @@ const DEFAULTS={
 const STEPS=["trainer","egg","hatch","name","ready"];
 const descriptions={
  trainer:["BIENVENUE, DRESSEUR","Choisis ton identité pour commencer l'aventure."],
- egg:["TON PREMIER ŒUF","Choisis une prédisposition. Tu décideras de sa véritable évolution en jouant."],
+ egg:["TON PREMIER ŒUF","L'œuf définit ton type principal pour toute sa vie. Tes soins choisiront sa branche, puis peut-être un second type rare."],
  hatch:["L'HEURE DE L'ÉCLOSION","Ton œuf est prêt. Découvre ton premier compagnon !"],
  name:["DONNE-LUI UN NOM","Son nom l'accompagnera tout au long de ses évolutions."],
  ready:["L'AVENTURE COMMENCE","Bienvenue dans le monde des dresseurs."]
@@ -112,7 +112,7 @@ function advance(){
  if(step==="egg"){
   if(!DEFAULTS[st.starterEgg]){showError("SÉLECTIONNE UN ŒUF POUR CONTINUER.");return;}
   const pick=DEFAULTS[st.starterEgg];
-  st.genetics={affinity:pick.affinity,talent:pick.talent,mutation:null,parent:"baby",partner:"baby"};
+  st.genetics={affinity:pick.affinity,talent:pick.talent,mutation:null,parent:"baby",partner:"baby"};st.primaryType=pick.affinity;st.secondaryType=null;
   st.attributes={vitalite:12,force:10,defense:10,vitesse:10,precision:10,endurance:10,esprit:10};
   st.attributes[pick.stat]+=3;
   setStep("hatch");return;
